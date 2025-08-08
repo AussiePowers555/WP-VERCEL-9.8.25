@@ -1,0 +1,1 @@
+console.log('SQLite schema viewer deprecated. Use Postgres introspection (psql) or scripts/verify-postgresql.js.');
