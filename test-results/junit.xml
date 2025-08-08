@@ -1,0 +1,2380 @@
+<testsuites id="" name="" tests="188" failures="18" skipped="163" errors="0" time="137.53699">
+<testsuite name="e2e\commitments-fixed.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="chromium" tests="3" failures="0" skipped="0" time="62.656" errors="0">
+<testcase name="Commitments Page - Fixed › should navigate to commitments page without errors" classname="e2e\commitments-fixed.spec.ts" time="22.672">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|e2e-commitments-fixed-Comm-d54f9-itments-page-without-errors-chromium\video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Commitments Page - Fixed › should create a new commitment without errors" classname="e2e\commitments-fixed.spec.ts" time="19.517">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|e2e-commitments-fixed-Comm-4ac7b-w-commitment-without-errors-chromium\video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Commitments Page - Fixed › commitments page loads and functions without critical errors" classname="e2e\commitments-fixed.spec.ts" time="20.467">
+<system-out>
+<![CDATA[✅ Commitments page loads without "Failed to load case data" error
+
+[[ATTACHMENT|e2e-commitments-fixed-Comm-cc83c-ons-without-critical-errors-chromium\video.webm]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="e2e\commitments.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="chromium" tests="3" failures="3" skipped="0" time="57.407" errors="0">
+<testcase name="Commitments Page › should load commitments page without errors" classname="e2e\commitments.spec.ts" time="19.361">
+<failure message="commitments.spec.ts:9:7 should load commitments page without errors" type="FAILURE">
+<![CDATA[  [chromium] › e2e\commitments.spec.ts:9:7 › Commitments Page › should load commitments page without errors 
+
+    TimeoutError: page.waitForLoadState: Timeout 10000ms exceeded.
+    =========================== logs ===========================
+      "load" event fired
+    ============================================================
+
+       9 |   test('should load commitments page without errors', async ({ page }) => {
+      10 |     // Wait for page to load
+    > 11 |     await page.waitForLoadState('networkidle', { timeout: 10000 });
+         |                ^
+      12 |     
+      13 |     // Verify no error messages appear
+      14 |     const errorMessage = page.locator('text=/failed to load|error|unable to fetch/i');
+        at D:\Coding\WP Perfect Score 19\RailWaySQlite03.08.25-main\Firebase-WhitePointer-App-master\tests\e2e\commitments.spec.ts:11:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\e2e-commitments-Commitment-719dc-itments-page-without-errors-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\e2e-commitments-Commitment-719dc-itments-page-without-errors-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\e2e-commitments-Commitment-719dc-itments-page-without-errors-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|e2e-commitments-Commitment-719dc-itments-page-without-errors-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|e2e-commitments-Commitment-719dc-itments-page-without-errors-chromium\video.webm]]
+
+[[ATTACHMENT|e2e-commitments-Commitment-719dc-itments-page-without-errors-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Commitments Page › should create and save a new commitment" classname="e2e\commitments.spec.ts" time="19.428">
+<failure message="commitments.spec.ts:24:7 should create and save a new commitment" type="FAILURE">
+<![CDATA[  [chromium] › e2e\commitments.spec.ts:24:7 › Commitments Page › should create and save a new commitment 
+
+    TimeoutError: page.waitForLoadState: Timeout 10000ms exceeded.
+    =========================== logs ===========================
+      "load" event fired
+    ============================================================
+
+      24 |   test('should create and save a new commitment', async ({ page }) => {
+      25 |     // Wait for page to load
+    > 26 |     await page.waitForLoadState('networkidle', { timeout: 10000 });
+         |                ^
+      27 |     
+      28 |     // Click on "New Commitment" or "Add Commitment" button
+      29 |     const newCommitmentButton = page.locator('button').filter({ 
+        at D:\Coding\WP Perfect Score 19\RailWaySQlite03.08.25-main\Firebase-WhitePointer-App-master\tests\e2e\commitments.spec.ts:26:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\e2e-commitments-Commitment-3eb20-e-and-save-a-new-commitment-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\e2e-commitments-Commitment-3eb20-e-and-save-a-new-commitment-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\e2e-commitments-Commitment-3eb20-e-and-save-a-new-commitment-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|e2e-commitments-Commitment-3eb20-e-and-save-a-new-commitment-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|e2e-commitments-Commitment-3eb20-e-and-save-a-new-commitment-chromium\video.webm]]
+
+[[ATTACHMENT|e2e-commitments-Commitment-3eb20-e-and-save-a-new-commitment-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Commitments Page › should display commitments list without errors" classname="e2e\commitments.spec.ts" time="18.618">
+<failure message="commitments.spec.ts:69:7 should display commitments list without errors" type="FAILURE">
+<![CDATA[  [chromium] › e2e\commitments.spec.ts:69:7 › Commitments Page › should display commitments list without errors 
+
+    TimeoutError: page.waitForLoadState: Timeout 10000ms exceeded.
+    =========================== logs ===========================
+      "load" event fired
+    ============================================================
+
+      69 |   test('should display commitments list without errors', async ({ page }) => {
+      70 |     // Wait for content to load
+    > 71 |     await page.waitForLoadState('networkidle', { timeout: 10000 });
+         |                ^
+      72 |     
+      73 |     // Check that either a table or "no commitments" message appears
+      74 |     const tableVisible = await page.locator('table').isVisible().catch(() => false);
+        at D:\Coding\WP Perfect Score 19\RailWaySQlite03.08.25-main\Firebase-WhitePointer-App-master\tests\e2e\commitments.spec.ts:71:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\e2e-commitments-Commitment-e3d1d-itments-list-without-errors-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\e2e-commitments-Commitment-e3d1d-itments-list-without-errors-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\e2e-commitments-Commitment-e3d1d-itments-list-without-errors-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|e2e-commitments-Commitment-e3d1d-itments-list-without-errors-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|e2e-commitments-Commitment-e3d1d-itments-list-without-errors-chromium\video.webm]]
+
+[[ATTACHMENT|e2e-commitments-Commitment-e3d1d-itments-list-without-errors-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="e2e\contact-provision.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="chromium" tests="3" failures="3" skipped="0" time="91.484" errors="0">
+<testcase name="Contact Auto-Provisioning › admin creates contact → workspace &amp; user auto-generated" classname="e2e\contact-provision.spec.ts" time="30.377">
+<failure message="contact-provision.spec.ts:15:7 admin creates contact → workspace &amp; user auto-generated" type="FAILURE">
+<![CDATA[  [chromium] › e2e\contact-provision.spec.ts:15:7 › Contact Auto-Provisioning › admin creates contact → workspace & user auto-generated 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.goto: Test timeout of 30000ms exceeded.
+    Call log:
+      - navigating to "http://localhost:3000/contacts", waiting until "load"
+
+
+      15 |   test('admin creates contact → workspace & user auto-generated', async ({ page }) => {
+      16 |     // Navigate to contacts page
+    > 17 |     await page.goto('/contacts');
+         |                ^
+      18 |     
+      19 |     // Click on Add Contact button
+      20 |     await page.getByRole('button', { name: /add contact/i }).click();
+        at D:\Coding\WP Perfect Score 19\RailWaySQlite03.08.25-main\Firebase-WhitePointer-App-master\tests\e2e\contact-provision.spec.ts:17:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\e2e-contact-provision-Cont-59638-rkspace-user-auto-generated-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\e2e-contact-provision-Cont-59638-rkspace-user-auto-generated-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\e2e-contact-provision-Cont-59638-rkspace-user-auto-generated-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|e2e-contact-provision-Cont-59638-rkspace-user-auto-generated-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|e2e-contact-provision-Cont-59638-rkspace-user-auto-generated-chromium\video.webm]]
+
+[[ATTACHMENT|e2e-contact-provision-Cont-59638-rkspace-user-auto-generated-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Contact Auto-Provisioning › send welcome email functionality" classname="e2e\contact-provision.spec.ts" time="30.513">
+<failure message="contact-provision.spec.ts:54:7 send welcome email functionality" type="FAILURE">
+<![CDATA[  [chromium] › e2e\contact-provision.spec.ts:54:7 › Contact Auto-Provisioning › send welcome email functionality 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: /add contact/i })
+        - locator resolved to <button type="button" data-state="closed" aria-expanded="false" aria-haspopup="dialog" aria-controls="radix-«r9»" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover…>…</button>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <nextjs-portal></nextjs-portal> intercepts pointer events
+        - retrying click action
+        - waiting 20ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <nextjs-portal></nextjs-portal> intercepts pointer events
+        - retrying click action
+          - waiting 100ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <nextjs-portal></nextjs-portal> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+        - waiting for element to be visible, enabled and stable
+
+
+      57 |     
+      58 |     // Create a new contact
+    > 59 |     await page.getByRole('button', { name: /add contact/i }).click();
+         |                                                              ^
+      60 |     
+      61 |     await page.fill('input[name="name"]', 'Test Lawyer');
+      62 |     await page.fill('input[name="email"]', 'lawyer@test.com');
+        at D:\Coding\WP Perfect Score 19\RailWaySQlite03.08.25-main\Firebase-WhitePointer-App-master\tests\e2e\contact-provision.spec.ts:59:62
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\e2e-contact-provision-Cont-2c03d-welcome-email-functionality-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\e2e-contact-provision-Cont-2c03d-welcome-email-functionality-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\e2e-contact-provision-Cont-2c03d-welcome-email-functionality-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|e2e-contact-provision-Cont-2c03d-welcome-email-functionality-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|e2e-contact-provision-Cont-2c03d-welcome-email-functionality-chromium\video.webm]]
+
+[[ATTACHMENT|e2e-contact-provision-Cont-2c03d-welcome-email-functionality-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Contact Auto-Provisioning › non-company contact types do not trigger auto-provisioning" classname="e2e\contact-provision.spec.ts" time="30.594">
+<failure message="contact-provision.spec.ts:82:7 non-company contact types do not trigger auto-provisioning" type="FAILURE">
+<![CDATA[  [chromium] › e2e\contact-provision.spec.ts:82:7 › Contact Auto-Provisioning › non-company contact types do not trigger auto-provisioning 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: /add contact/i })
+        - locator resolved to <button type="button" data-state="closed" aria-expanded="false" aria-haspopup="dialog" aria-controls="radix-«r9»" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover…>…</button>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <nextjs-portal></nextjs-portal> intercepts pointer events
+        - retrying click action
+        - waiting 20ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <nextjs-portal></nextjs-portal> intercepts pointer events
+        - retrying click action
+          - waiting 100ms
+        3 × waiting for element to be visible, enabled and stable
+          - element is visible, enabled and stable
+          - scrolling into view if needed
+          - done scrolling
+          - <nextjs-portal></nextjs-portal> intercepts pointer events
+        - retrying click action
+          - waiting 500ms
+
+
+      85 |     
+      86 |     // Create a client contact (should not trigger workspace creation)
+    > 87 |     await page.getByRole('button', { name: /add contact/i }).click();
+         |                                                              ^
+      88 |     
+      89 |     await page.fill('input[name="name"]', 'John Doe');
+      90 |     await page.fill('input[name="email"]', 'john@example.com');
+        at D:\Coding\WP Perfect Score 19\RailWaySQlite03.08.25-main\Firebase-WhitePointer-App-master\tests\e2e\contact-provision.spec.ts:87:62
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\e2e-contact-provision-Cont-88fad-t-trigger-auto-provisioning-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\e2e-contact-provision-Cont-88fad-t-trigger-auto-provisioning-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\e2e-contact-provision-Cont-88fad-t-trigger-auto-provisioning-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|e2e-contact-provision-Cont-88fad-t-trigger-auto-provisioning-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|e2e-contact-provision-Cont-88fad-t-trigger-auto-provisioning-chromium\video.webm]]
+
+[[ATTACHMENT|e2e-contact-provision-Cont-88fad-t-trigger-auto-provisioning-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="e2e\first-login.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="chromium" tests="3" failures="3" skipped="0" time="30.61" errors="0">
+<testcase name="First Login Flow › workspace user first login forces password change" classname="e2e\first-login.spec.ts" time="9.007">
+<failure message="first-login.spec.ts:9:7 workspace user first login forces password change" type="FAILURE">
+<![CDATA[  [chromium] › e2e\first-login.spec.ts:9:7 › First Login Flow › workspace user first login forces password change 
+
+    Error: Timed out 5000ms waiting for expect(page).toHaveURL(expected)
+
+    Expected string: "http://localhost:3000/first-login"
+    Received string: "http://localhost:3000/login"
+    Call log:
+      - Expect "toHaveURL" with timeout 5000ms
+        9 × unexpected value "http://localhost:3000/login"
+
+
+      15 |     
+      16 |     // Should redirect to first-login page
+    > 17 |     await expect(page).toHaveURL('/first-login');
+         |                        ^
+      18 |     
+      19 |     // Verify password change form is displayed
+      20 |     await expect(page.getByText(/set your password/i)).toBeVisible();
+        at D:\Coding\WP Perfect Score 19\RailWaySQlite03.08.25-main\Firebase-WhitePointer-App-master\tests\e2e\first-login.spec.ts:17:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\e2e-first-login-First-Logi-513b4-ogin-forces-password-change-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\e2e-first-login-First-Logi-513b4-ogin-forces-password-change-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\e2e-first-login-First-Logi-513b4-ogin-forces-password-change-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|e2e-first-login-First-Logi-513b4-ogin-forces-password-change-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|e2e-first-login-First-Logi-513b4-ogin-forces-password-change-chromium\video.webm]]
+
+[[ATTACHMENT|e2e-first-login-First-Logi-513b4-ogin-forces-password-change-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="First Login Flow › subsequent login does not require password change" classname="e2e\first-login.spec.ts" time="10.154">
+<failure message="first-login.spec.ts:50:7 subsequent login does not require password change" type="FAILURE">
+<![CDATA[  [chromium] › e2e\first-login.spec.ts:50:7 › First Login Flow › subsequent login does not require password change 
+
+    Error: Timed out 5000ms waiting for expect(page).toHaveURL(expected)
+
+    Expected string: "http://localhost:3000/"
+    Received string: "http://localhost:3000/login"
+    Call log:
+      - Expect "toHaveURL" with timeout 5000ms
+        9 × unexpected value "http://localhost:3000/login"
+
+
+      56 |     
+      57 |     // Should go directly to dashboard, not first-login
+    > 58 |     await expect(page).toHaveURL('/');
+         |                        ^
+      59 |     await expect(page).not.toHaveURL('/first-login');
+      60 |   });
+      61 |
+        at D:\Coding\WP Perfect Score 19\RailWaySQlite03.08.25-main\Firebase-WhitePointer-App-master\tests\e2e\first-login.spec.ts:58:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\e2e-first-login-First-Logi-860bb-not-require-password-change-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\e2e-first-login-First-Logi-860bb-not-require-password-change-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\e2e-first-login-First-Logi-860bb-not-require-password-change-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|e2e-first-login-First-Logi-860bb-not-require-password-change-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|e2e-first-login-First-Logi-860bb-not-require-password-change-chromium\video.webm]]
+
+[[ATTACHMENT|e2e-first-login-First-Logi-860bb-not-require-password-change-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="First Login Flow › unauthenticated access to first-login redirects to login" classname="e2e\first-login.spec.ts" time="11.449">
+<failure message="first-login.spec.ts:62:7 unauthenticated access to first-login redirects to login" type="FAILURE">
+<![CDATA[  [chromium] › e2e\first-login.spec.ts:62:7 › First Login Flow › unauthenticated access to first-login redirects to login 
+
+    Error: Timed out 5000ms waiting for expect(page).toHaveURL(expected)
+
+    Expected string: "http://localhost:3000/login"
+    Received string: "http://localhost:3000/first-login"
+    Call log:
+      - Expect "toHaveURL" with timeout 5000ms
+        8 × unexpected value "http://localhost:3000/first-login"
+
+
+      65 |     
+      66 |     // Should redirect to login page
+    > 67 |     await expect(page).toHaveURL('/login');
+         |                        ^
+      68 |   });
+      69 | });
+        at D:\Coding\WP Perfect Score 19\RailWaySQlite03.08.25-main\Firebase-WhitePointer-App-master\tests\e2e\first-login.spec.ts:67:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\e2e-first-login-First-Logi-66ca8-st-login-redirects-to-login-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\e2e-first-login-First-Logi-66ca8-st-login-redirects-to-login-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\e2e-first-login-First-Logi-66ca8-st-login-redirects-to-login-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|e2e-first-login-First-Logi-66ca8-st-login-redirects-to-login-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|e2e-first-login-First-Logi-66ca8-st-login-redirects-to-login-chromium\video.webm]]
+
+[[ATTACHMENT|e2e-first-login-First-Logi-66ca8-st-login-redirects-to-login-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="e2e\jotform-prefill.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="chromium" tests="6" failures="0" skipped="2" time="50.586" errors="0">
+<testcase name="JotForm Prefill Integration › should load JotForm with direct URL parameters" classname="e2e\jotform-prefill.spec.ts" time="12.085">
+<system-out>
+<![CDATA[Testing URL: https://form.jotform.com/232543267390861?3=Tims&4=555+555&5=Greg&6=0413063463&7=whitepointer2016%40gmail.com&8=&9=&panelShop=Tims&driver=Greg&mobileNo=0413063463&email=whitepointer2016%40gmail.com
+Found 73 form fields
+Field 0: name="formID", id="null", type="hidden", value="232543267390861"
+Field 1: name="null", id="JWTContainer", type="hidden", value=""
+Field 2: name="null", id="cardinalOrderNumber", type="hidden", value=""
+Field 3: name="jsExecutionTracker", id="jsExecutionTracker", type="hidden", value="build-date-1754646888717=>init-started:1754664087035=>validator-called:1754664087087=>validator-mounted-false:1754664087088=>init-complete:1754664087101"
+Field 4: name="submitSource", id="submitSource", type="hidden", value="mounted"
+Field 5: name="submitDate", id="submitDate", type="hidden", value="undefined"
+Field 6: name="buildDate", id="buildDate", type="hidden", value="1754646888717"
+Field 7: name="uploadServerUrl", id="null", type="hidden", value="https://upload.jotform.com/upload"
+Field 8: name="eventObserver", id="null", type="hidden", value="1"
+Field 9: name="q19_typeA19", id="input_19", type="text", value=""
+✅ SUCCESS: Found prefilled data in form
+
+[[ATTACHMENT|e2e-jotform-prefill-JotFor-77b6e--with-direct-URL-parameters-chromium\video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="JotForm Prefill Integration › should identify correct JotForm field structure" classname="e2e\jotform-prefill.spec.ts" time="8.417">
+<system-out>
+<![CDATA[JotForm Field Analysis:
+================================================================================
+Field 1:
+  Tag: INPUT (type: hidden)
+  Name: formID
+  ID: 
+  Label: No label found
+  Required: false
+  Placeholder: 
+  ---
+Field 2:
+  Tag: INPUT (type: hidden)
+  Name: 
+  ID: JWTContainer
+  Label: No label found
+  Required: false
+  Placeholder: 
+  ---
+Field 3:
+  Tag: INPUT (type: hidden)
+  Name: 
+  ID: cardinalOrderNumber
+  Label: No label found
+  Required: false
+  Placeholder: 
+  ---
+Field 4:
+  Tag: INPUT (type: hidden)
+  Name: jsExecutionTracker
+  ID: jsExecutionTracker
+  Label: No label found
+  Required: false
+  Placeholder: 
+  ---
+Field 5:
+  Tag: INPUT (type: hidden)
+  Name: submitSource
+  ID: submitSource
+  Label: No label found
+  Required: false
+  Placeholder: 
+  ---
+Field 6:
+  Tag: INPUT (type: hidden)
+  Name: submitDate
+  ID: submitDate
+  Label: No label found
+  Required: false
+  Placeholder: 
+  ---
+Field 7:
+  Tag: INPUT (type: hidden)
+  Name: buildDate
+  ID: buildDate
+  Label: No label found
+  Required: false
+  Placeholder: 
+  ---
+Field 8:
+  Tag: INPUT (type: hidden)
+  Name: uploadServerUrl
+  ID: 
+  Label: No label found
+  Required: false
+  Placeholder: 
+  ---
+Field 9:
+  Tag: INPUT (type: hidden)
+  Name: eventObserver
+  ID: 
+  Label: No label found
+  Required: false
+  Placeholder: 
+  ---
+Field 10:
+  Tag: INPUT (type: text)
+  Name: q19_typeA19
+  ID: input_19
+  Label:  Panel Shop Name 
+  Required: false
+  Placeholder: 
+  ---
+Field 11:
+  Tag: INPUT (type: text)
+  Name: q3_contact[first]
+  ID: first_3
+  Label:  Contact* 
+  Required: true
+  Placeholder: 
+  ---
+Field 12:
+  Tag: INPUT (type: text)
+  Name: q3_contact[last]
+  ID: last_3
+  Label: Last Name
+  Required: true
+  Placeholder: 
+  ---
+Field 13:
+  Tag: INPUT (type: tel)
+  Name: q26_phoneNumber[area]
+  ID: input_26_area
+  Label:  Phone Number 
+  Required: false
+  Placeholder: 
+  ---
+Field 14:
+  Tag: INPUT (type: tel)
+  Name: q26_phoneNumber[phone]
+  ID: input_26_phone
+  Label: Phone Number
+  Required: false
+  Placeholder: 
+  ---
+Field 15:
+  Tag: INPUT (type: text)
+  Name: q79_repairStart
+  ID: input_79
+  Label:  Repair Start Date 
+  Required: false
+  Placeholder: 
+  ---
+Field 16:
+  Tag: INPUT (type: checkbox)
+  Name: q54_isThe[]
+  ID: input_54_0
+  Label: DRIVEABLE
+  Required: true
+  Placeholder: 
+  ---
+Field 17:
+  Tag: INPUT (type: checkbox)
+  Name: q54_isThe[]
+  ID: input_54_1
+  Label: NON DRIVEABLE
+  Required: true
+  Placeholder: 
+  ---
+Field 18:
+  Tag: INPUT (type: checkbox)
+  Name: q54_isThe[]
+  ID: input_54_2
+  Label: TOTAL LOSS
+  Required: true
+  Placeholder: 
+  ---
+Field 19:
+  Tag: INPUT (type: text)
+  Name: q41_driver[first]
+  ID: first_41
+  Label:  Driver* 
+  Required: true
+  Placeholder: 
+  ---
+Field 20:
+  Tag: INPUT (type: text)
+  Name: q41_driver[last]
+  ID: last_41
+  Label: Last Name
+  Required: true
+  Placeholder: 
+  ---
+Field 21:
+  Tag: INPUT (type: number)
+  Name: q15_mobileNo
+  ID: input_15
+  Label:  Mobile No.* 
+  Required: true
+  Placeholder: ex: 23
+  ---
+Field 22:
+  Tag: INPUT (type: text)
+  Name: q32_address[addr_line1]
+  ID: input_32_addr_line1
+  Label:  Address 
+  Required: false
+  Placeholder: 
+  ---
+Field 23:
+  Tag: INPUT (type: text)
+  Name: q32_address[addr_line2]
+  ID: input_32_addr_line2
+  Label: Street Address Line 2
+  Required: false
+  Placeholder: 
+  ---
+Field 24:
+  Tag: INPUT (type: text)
+  Name: q32_address[city]
+  ID: input_32_city
+  Label: City
+  Required: false
+  Placeholder: 
+  ---
+Field 25:
+  Tag: INPUT (type: text)
+  Name: q32_address[state]
+  ID: input_32_state
+  Label: State / Province
+  Required: false
+  Placeholder: 
+  ---
+Field 26:
+  Tag: INPUT (type: text)
+  Name: q32_address[postal]
+  ID: input_32_postal
+  Label: Postal / Zip Code
+  Required: false
+  Placeholder: 
+  ---
+Field 27:
+  Tag: INPUT (type: email)
+  Name: q4_email
+  ID: input_4
+  Label:  Email* 
+  Required: true
+  Placeholder: 
+  ---
+Field 28:
+  Tag: INPUT (type: text)
+  Name: q42_owner[first]
+  ID: first_42
+  Label:  Owner 
+  Required: false
+  Placeholder: 
+  ---
+Field 29:
+  Tag: INPUT (type: text)
+  Name: q42_owner[last]
+  ID: last_42
+  Label: Last Name
+  Required: false
+  Placeholder: 
+  ---
+Field 30:
+  Tag: INPUT (type: number)
+  Name: q46_mobileNo46
+  ID: input_46
+  Label:  Mobile No. 
+  Required: false
+  Placeholder: ex: 23
+  ---
+Field 31:
+  Tag: INPUT (type: email)
+  Name: q48_email48
+  ID: input_48
+  Label:  Email 
+  Required: false
+  Placeholder: 
+  ---
+Field 32:
+  Tag: INPUT (type: text)
+  Name: q51_insuranceCompany
+  ID: input_51
+  Label:  Insurance Company 
+  Required: false
+  Placeholder: 
+  ---
+Field 33:
+  Tag: INPUT (type: text)
+  Name: q59_claimNumber59
+  ID: input_59
+  Label:  Claim Number 
+  Required: false
+  Placeholder: 
+  ---
+Field 34:
+  Tag: INPUT (type: text)
+  Name: q52_Make
+  ID: input_52
+  Label:  Make 
+  Required: false
+  Placeholder: 
+  ---
+Field 35:
+  Tag: INPUT (type: text)
+  Name: q56_claimNumber56
+  ID: input_56
+  Label:  Model 
+  Required: false
+  Placeholder: 
+  ---
+Field 36:
+  Tag: INPUT (type: text)
+  Name: q57_claimNumber57
+  ID: input_57
+  Label:  Year 
+  Required: false
+  Placeholder: 
+  ---
+Field 37:
+  Tag: INPUT (type: text)
+  Name: q58_claimNumber58
+  ID: input_58
+  Label:  Rego No. 
+  Required: false
+  Placeholder: 
+  ---
+Field 38:
+  Tag: INPUT (type: text)
+  Name: q61_driver61[first]
+  ID: first_61
+  Label:  Driver 
+  Required: false
+  Placeholder: 
+  ---
+Field 39:
+  Tag: INPUT (type: text)
+  Name: q61_driver61[last]
+  ID: last_61
+  Label: Last Name
+  Required: false
+  Placeholder: 
+  ---
+Field 40:
+  Tag: INPUT (type: number)
+  Name: q62_mobileNo62
+  ID: input_62
+  Label:  Mobile No. 
+  Required: false
+  Placeholder: ex: 23
+  ---
+Field 41:
+  Tag: INPUT (type: text)
+  Name: q63_address63[addr_line1]
+  ID: input_63_addr_line1
+  Label:  Address 
+  Required: false
+  Placeholder: 
+  ---
+Field 42:
+  Tag: INPUT (type: text)
+  Name: q63_address63[addr_line2]
+  ID: input_63_addr_line2
+  Label: Street Address Line 2
+  Required: false
+  Placeholder: 
+  ---
+Field 43:
+  Tag: INPUT (type: text)
+  Name: q63_address63[city]
+  ID: input_63_city
+  Label: City
+  Required: false
+  Placeholder: 
+  ---
+Field 44:
+  Tag: INPUT (type: text)
+  Name: q63_address63[state]
+  ID: input_63_state
+  Label: State / Province
+  Required: false
+  Placeholder: 
+  ---
+Field 45:
+  Tag: INPUT (type: text)
+  Name: q63_address63[postal]
+  ID: input_63_postal
+  Label: Postal / Zip Code
+  Required: false
+  Placeholder: 
+  ---
+Field 46:
+  Tag: INPUT (type: email)
+  Name: q65_email65
+  ID: input_65
+  Label:  Email 
+  Required: false
+  Placeholder: 
+  ---
+Field 47:
+  Tag: INPUT (type: text)
+  Name: q64_owner64[first]
+  ID: first_64
+  Label:  Owner 
+  Required: false
+  Placeholder: 
+  ---
+Field 48:
+  Tag: INPUT (type: text)
+  Name: q64_owner64[last]
+  ID: last_64
+  Label: Last Name
+  Required: false
+  Placeholder: 
+  ---
+Field 49:
+  Tag: INPUT (type: number)
+  Name: q66_mobileNo66
+  ID: input_66
+  Label:  Mobile No.* 
+  Required: true
+  Placeholder: ex: 23
+  ---
+Field 50:
+  Tag: INPUT (type: email)
+  Name: q67_email67
+  ID: input_67
+  Label:  Email 
+  Required: false
+  Placeholder: 
+  ---
+Field 51:
+  Tag: INPUT (type: text)
+  Name: q68_address68[addr_line1]
+  ID: input_68_addr_line1
+  Label:  Address 
+  Required: false
+  Placeholder: 
+  ---
+Field 52:
+  Tag: INPUT (type: text)
+  Name: q68_address68[addr_line2]
+  ID: input_68_addr_line2
+  Label: Street Address Line 2
+  Required: false
+  Placeholder: 
+  ---
+Field 53:
+  Tag: INPUT (type: text)
+  Name: q68_address68[city]
+  ID: input_68_city
+  Label: City
+  Required: false
+  Placeholder: 
+  ---
+Field 54:
+  Tag: INPUT (type: text)
+  Name: q68_address68[state]
+  ID: input_68_state
+  Label: State / Province
+  Required: false
+  Placeholder: 
+  ---
+Field 55:
+  Tag: INPUT (type: text)
+  Name: q68_address68[postal]
+  ID: input_68_postal
+  Label: Postal / Zip Code
+  Required: false
+  Placeholder: 
+  ---
+Field 56:
+  Tag: INPUT (type: text)
+  Name: q69_insuranceCompany69
+  ID: input_69
+  Label:  Insurance Company 
+  Required: false
+  Placeholder: 
+  ---
+Field 57:
+  Tag: INPUT (type: text)
+  Name: q70_claimNumber
+  ID: input_70
+  Label:  Claim Number 
+  Required: false
+  Placeholder: 
+  ---
+Field 58:
+  Tag: INPUT (type: text)
+  Name: q71_Make71
+  ID: input_71
+  Label:  Make 
+  Required: false
+  Placeholder: 
+  ---
+Field 59:
+  Tag: INPUT (type: text)
+  Name: q72_model
+  ID: input_72
+  Label:  Model 
+  Required: false
+  Placeholder: 
+  ---
+Field 60:
+  Tag: INPUT (type: text)
+  Name: q73_year
+  ID: input_73
+  Label:  Year 
+  Required: false
+  Placeholder: 
+  ---
+Field 61:
+  Tag: INPUT (type: text)
+  Name: q74_regoNo
+  ID: input_74
+  Label:  Rego No. 
+  Required: false
+  Placeholder: 
+  ---
+Field 62:
+  Tag: TEXTAREA (type: textarea)
+  Name: q75_accidentDetails
+  ID: input_75
+  Label:  Accident Details* 
+  Required: true
+  Placeholder: 
+  ---
+Field 63:
+  Tag: INPUT (type: text)
+  Name: q76_accidentLocation
+  ID: input_76
+  Label:  Accident Location* 
+  Required: true
+  Placeholder: 
+  ---
+Field 64:
+  Tag: INPUT (type: hidden)
+  Name: q77_typeA77
+  ID: input_77
+  Label:  Diagram/Drawing 
+  Required: false
+  Placeholder: 
+  ---
+Field 65:
+  Tag: INPUT (type: hidden)
+  Name: 
+  ID: widget_settings_77
+  Label:  Diagram/Drawing 
+  Required: false
+  Placeholder: 
+  ---
+Field 66:
+  Tag: INPUT (type: checkbox)
+  Name: q78_injuriesHas[]
+  ID: input_78_0
+  Label: Yes
+  Required: true
+  Placeholder: 
+  ---
+Field 67:
+  Tag: INPUT (type: checkbox)
+  Name: q78_injuriesHas[]
+  ID: input_78_1
+  Label: No
+  Required: true
+  Placeholder: 
+  ---
+Field 68:
+  Tag: INPUT (type: hidden)
+  Name: q14_typeA
+  ID: input_14
+  Label:  Signature 
+  Required: false
+  Placeholder: 
+  ---
+Field 69:
+  Tag: INPUT (type: hidden)
+  Name: 
+  ID: widget_settings_14
+  Label:  Signature 
+  Required: false
+  Placeholder: 
+  ---
+Field 70:
+  Tag: INPUT (type: text)
+  Name: website
+  ID: 
+  Label: No label found
+  Required: false
+  Placeholder: 
+  ---
+Field 71:
+  Tag: INPUT (type: hidden)
+  Name: simple_spc
+  ID: simple_spc
+  Label: No label found
+  Required: false
+  Placeholder: 
+  ---
+Field 72:
+  Tag: INPUT (type: hidden)
+  Name: event_id
+  ID: 
+  Label: No label found
+  Required: false
+  Placeholder: 
+  ---
+Field 73:
+  Tag: INPUT (type: hidden)
+  Name: timeToSubmit
+  ID: 
+  Label: No label found
+  Required: false
+  Placeholder: 
+  ---
+
+📝 Suggested Field Mapping:
+{
+  "_panel_shop_name_": {
+    "name": "q19_typeA19",
+    "id": "input_19",
+    "type": "text",
+    "label": " Panel Shop Name "
+  },
+  "_contact__": {
+    "name": "q3_contact[first]",
+    "id": "first_3",
+    "type": "text",
+    "label": " Contact* "
+  },
+  "last_name": {
+    "name": "q64_owner64[last]",
+    "id": "last_64",
+    "type": "text",
+    "label": "Last Name"
+  },
+  "_phone_number_": {
+    "name": "q26_phoneNumber[area]",
+    "id": "input_26_area",
+    "type": "tel",
+    "label": " Phone Number "
+  },
+  "phone_number": {
+    "name": "q26_phoneNumber[phone]",
+    "id": "input_26_phone",
+    "type": "tel",
+    "label": "Phone Number"
+  },
+  "_repair_start_date_": {
+    "name": "q79_repairStart",
+    "id": "input_79",
+    "type": "text",
+    "label": " Repair Start Date "
+  },
+  "driveable": {
+    "name": "q54_isThe[]",
+    "id": "input_54_0",
+    "type": "checkbox",
+    "label": "DRIVEABLE"
+  },
+  "non_driveable": {
+    "name": "q54_isThe[]",
+    "id": "input_54_1",
+    "type": "checkbox",
+    "label": "NON DRIVEABLE"
+  },
+  "total_loss": {
+    "name": "q54_isThe[]",
+    "id": "input_54_2",
+    "type": "checkbox",
+    "label": "TOTAL LOSS"
+  },
+  "_driver__": {
+    "name": "q41_driver[first]",
+    "id": "first_41",
+    "type": "text",
+    "label": " Driver* "
+  },
+  "_mobile_no___": {
+    "name": "q66_mobileNo66",
+    "id": "input_66",
+    "type": "number",
+    "label": " Mobile No.* "
+  },
+  "_address_": {
+    "name": "q68_address68[addr_line1]",
+    "id": "input_68_addr_line1",
+    "type": "text",
+    "label": " Address "
+  },
+  "street_address_line_2": {
+    "name": "q68_address68[addr_line2]",
+    "id": "input_68_addr_line2",
+    "type": "text",
+    "label": "Street Address Line 2"
+  },
+  "city": {
+    "name": "q68_address68[city]",
+    "id": "input_68_city",
+    "type": "text",
+    "label": "City"
+  },
+  "state___province": {
+    "name": "q68_address68[state]",
+    "id": "input_68_state",
+    "type": "text",
+    "label": "State / Province"
+  },
+  "postal___zip_code": {
+    "name": "q68_address68[postal]",
+    "id": "input_68_postal",
+    "type": "text",
+    "label": "Postal / Zip Code"
+  },
+  "_email__": {
+    "name": "q4_email",
+    "id": "input_4",
+    "type": "email",
+    "label": " Email* "
+  },
+  "_owner_": {
+    "name": "q64_owner64[first]",
+    "id": "first_64",
+    "type": "text",
+    "label": " Owner "
+  },
+  "_mobile_no__": {
+    "name": "q62_mobileNo62",
+    "id": "input_62",
+    "type": "number",
+    "label": " Mobile No. "
+  },
+  "_email_": {
+    "name": "q67_email67",
+    "id": "input_67",
+    "type": "email",
+    "label": " Email "
+  },
+  "_insurance_company_": {
+    "name": "q69_insuranceCompany69",
+    "id": "input_69",
+    "type": "text",
+    "label": " Insurance Company "
+  },
+  "_claim_number_": {
+    "name": "q70_claimNumber",
+    "id": "input_70",
+    "type": "text",
+    "label": " Claim Number "
+  },
+  "_make_": {
+    "name": "q71_Make71",
+    "id": "input_71",
+    "type": "text",
+    "label": " Make "
+  },
+  "_model_": {
+    "name": "q72_model",
+    "id": "input_72",
+    "type": "text",
+    "label": " Model "
+  },
+  "_year_": {
+    "name": "q73_year",
+    "id": "input_73",
+    "type": "text",
+    "label": " Year "
+  },
+  "_rego_no__": {
+    "name": "q74_regoNo",
+    "id": "input_74",
+    "type": "text",
+    "label": " Rego No. "
+  },
+  "_driver_": {
+    "name": "q61_driver61[first]",
+    "id": "first_61",
+    "type": "text",
+    "label": " Driver "
+  },
+  "_accident_details__": {
+    "name": "q75_accidentDetails",
+    "id": "input_75",
+    "type": "textarea",
+    "label": " Accident Details* "
+  },
+  "_accident_location__": {
+    "name": "q76_accidentLocation",
+    "id": "input_76",
+    "type": "text",
+    "label": " Accident Location* "
+  },
+  "_diagram_drawing_": {
+    "name": "q77_typeA77",
+    "id": "input_77",
+    "type": "hidden",
+    "label": " Diagram/Drawing "
+  },
+  "yes": {
+    "name": "q78_injuriesHas[]",
+    "id": "input_78_0",
+    "type": "checkbox",
+    "label": "Yes"
+  },
+  "no": {
+    "name": "q78_injuriesHas[]",
+    "id": "input_78_1",
+    "type": "checkbox",
+    "label": "No"
+  },
+  "_signature_": {
+    "name": "q14_typeA",
+    "id": "input_14",
+    "type": "hidden",
+    "label": " Signature "
+  }
+}
+
+[[ATTACHMENT|e2e-jotform-prefill-JotFor-9cbf9-ect-JotForm-field-structure-chromium\video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="JotForm Prefill Integration › should test document signing workflow integration" classname="e2e\jotform-prefill.spec.ts" time="13.538">
+<properties>
+<property name="skip" value="">
+</property>
+<property name="skip" value="">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Prefill Integration › should test email link and secure portal" classname="e2e\jotform-prefill.spec.ts" time="11.277">
+<properties>
+<property name="skip" value="">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Prefill Integration › should validate JotForm webhook endpoint" classname="e2e\jotform-prefill.spec.ts" time="4.685">
+<system-out>
+<![CDATA[⚠️  Webhook returned error status: [33m500[39m
+
+[[ATTACHMENT|e2e-jotform-prefill-JotFor-99458-te-JotForm-webhook-endpoint-chromium\video.webm]]
+]]>
+</system-out>
+</testcase>
+<testcase name="JotForm Prefill Integration › should generate comprehensive test report" classname="e2e\jotform-prefill.spec.ts" time="0.584">
+<system-out>
+<![CDATA[
+📊 JotForm Prefill Test Report
+================================================================================
+{
+  "timestamp": "2025-08-08T14:41:45.201Z",
+  "testCase": "2025-001",
+  "clientEmail": "whitepointer2016@gmail.com",
+  "jotformUrl": "https://form.jotform.com/232543267390861",
+  "findings": {
+    "directUrlAccess": "Tested with various field ID patterns",
+    "formStructure": "Analyzed field names, IDs, and labels",
+    "workflowIntegration": "Tested app integration points",
+    "securePortal": "Verified portal token handling",
+    "webhookEndpoint": "Tested webhook functionality"
+  },
+  "recommendations": [
+    "Get correct field IDs from JotForm form builder",
+    "Update field mapping in jotform.ts",
+    "Test prefilling with actual field IDs",
+    "Verify form settings (Clear Hidden Field Values)",
+    "Add comprehensive error handling and logging"
+  ],
+  "nextSteps": [
+    "Manual inspection of JotForm Claims Form (232543267390861)",
+    "Update mapClaimsFormFields() with correct field IDs",
+    "Retest with Case 2025-001 data",
+    "Verify whitepointer2016@gmail.com receives prefilled form"
+  ]
+}
+
+[[ATTACHMENT|e2e-jotform-prefill-JotFor-3e981-e-comprehensive-test-report-chromium\video.webm]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="e2e\workspace-and-fleet.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="chromium" tests="1" failures="1" skipped="0" time="31.284" errors="0">
+<testcase name="Workspace + Fleet core flows › dev login autofill, seed bikes, create contact unique email, generate temp password, first login change password" classname="e2e\workspace-and-fleet.spec.ts" time="31.284">
+<failure message="workspace-and-fleet.spec.ts:4:7 dev login autofill, seed bikes, create contact unique email, generate temp password, first login change password" type="FAILURE">
+<![CDATA[  [chromium] › e2e\workspace-and-fleet.spec.ts:4:7 › Workspace + Fleet core flows › dev login autofill, seed bikes, create contact unique email, generate temp password, first login change password 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: /Auto-fill/i })
+
+
+       6 |     await page.goto('/login');
+       7 |     await expect(page).toHaveURL(/login/);
+    >  8 |     await page.getByRole('button', { name: /Auto-fill/i }).click();
+         |                                                            ^
+       9 |     await page.getByRole('button', { name: /Sign In/i }).click();
+      10 |     await page.waitForURL(/\/$/);
+      11 |
+        at D:\Coding\WP Perfect Score 19\RailWaySQlite03.08.25-main\Firebase-WhitePointer-App-master\tests\e2e\workspace-and-fleet.spec.ts:8:60
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\e2e-workspace-and-fleet-Wo-66aed-first-login-change-password-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\e2e-workspace-and-fleet-Wo-66aed-first-login-change-password-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\e2e-workspace-and-fleet-Wo-66aed-first-login-change-password-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|e2e-workspace-and-fleet-Wo-66aed-first-login-change-password-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|e2e-workspace-and-fleet-Wo-66aed-first-login-change-password-chromium\video.webm]]
+
+[[ATTACHMENT|e2e-workspace-and-fleet-Wo-66aed-first-login-change-password-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="e2e\workspace-restrictions.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="chromium" tests="3" failures="3" skipped="0" time="92.881" errors="0">
+<testcase name="Workspace security and filtering › workspace user cannot access admin pages or menus" classname="e2e\workspace-restrictions.spec.ts" time="31.288">
+<failure message="workspace-restrictions.spec.ts:4:7 workspace user cannot access admin pages or menus" type="FAILURE">
+<![CDATA[  [chromium] › e2e\workspace-restrictions.spec.ts:4:7 › Workspace security and filtering › workspace user cannot access admin pages or menus 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('input[name="email"]')
+
+
+      4 |   test('workspace user cannot access admin pages or menus', async ({ page }) => {
+      5 |     await page.goto('/login');
+    > 6 |     await page.fill('input[name="email"]', 'aussiepowers555@gmail.com');
+        |                ^
+      7 |     await page.fill('input[name="password"]', 'abc123');
+      8 |     await page.click('button[type="submit"]');
+      9 |
+        at D:\Coding\WP Perfect Score 19\RailWaySQlite03.08.25-main\Firebase-WhitePointer-App-master\tests\e2e\workspace-restrictions.spec.ts:6:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\e2e-workspace-restrictions-15ed2-access-admin-pages-or-menus-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\e2e-workspace-restrictions-15ed2-access-admin-pages-or-menus-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\e2e-workspace-restrictions-15ed2-access-admin-pages-or-menus-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|e2e-workspace-restrictions-15ed2-access-admin-pages-or-menus-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|e2e-workspace-restrictions-15ed2-access-admin-pages-or-menus-chromium\video.webm]]
+
+[[ATTACHMENT|e2e-workspace-restrictions-15ed2-access-admin-pages-or-menus-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Workspace security and filtering › admin assigns case to workspace and it appears when workspace selected" classname="e2e\workspace-restrictions.spec.ts" time="30.753">
+<failure message="workspace-restrictions.spec.ts:18:7 admin assigns case to workspace and it appears when workspace selected" type="FAILURE">
+<![CDATA[  [chromium] › e2e\workspace-restrictions.spec.ts:18:7 › Workspace security and filtering › admin assigns case to workspace and it appears when workspace selected 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('input[name="email"]')
+
+
+      19 |     // Login as developer/admin
+      20 |     await page.goto('/login');
+    > 21 |     await page.fill('input[name="email"]', 'whitepointer2016@gmail.com');
+         |                ^
+      22 |     await page.fill('input[name="password"]', 'Tr@ders84');
+      23 |     await page.click('button[type="submit"]');
+      24 |     await page.waitForURL('/')
+        at D:\Coding\WP Perfect Score 19\RailWaySQlite03.08.25-main\Firebase-WhitePointer-App-master\tests\e2e\workspace-restrictions.spec.ts:21:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\e2e-workspace-restrictions-73b6e-ars-when-workspace-selected-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\e2e-workspace-restrictions-73b6e-ars-when-workspace-selected-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\e2e-workspace-restrictions-73b6e-ars-when-workspace-selected-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|e2e-workspace-restrictions-73b6e-ars-when-workspace-selected-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|e2e-workspace-restrictions-73b6e-ars-when-workspace-selected-chromium\video.webm]]
+
+[[ATTACHMENT|e2e-workspace-restrictions-73b6e-ars-when-workspace-selected-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Workspace security and filtering › status filter is unique per workspace and defaults to ALL" classname="e2e\workspace-restrictions.spec.ts" time="30.84">
+<failure message="workspace-restrictions.spec.ts:44:7 status filter is unique per workspace and defaults to ALL" type="FAILURE">
+<![CDATA[  [chromium] › e2e\workspace-restrictions.spec.ts:44:7 › Workspace security and filtering › status filter is unique per workspace and defaults to ALL 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('input[name="email"]')
+
+
+      44 |   test('status filter is unique per workspace and defaults to ALL', async ({ page }) => {
+      45 |     await page.goto('/login');
+    > 46 |     await page.fill('input[name="email"]', 'whitepointer2016@gmail.com');
+         |                ^
+      47 |     await page.fill('input[name="password"]', 'Tr@ders84');
+      48 |     await page.click('button[type="submit"]');
+      49 |
+        at D:\Coding\WP Perfect Score 19\RailWaySQlite03.08.25-main\Firebase-WhitePointer-App-master\tests\e2e\workspace-restrictions.spec.ts:46:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\e2e-workspace-restrictions-c6be0-rkspace-and-defaults-to-ALL-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\e2e-workspace-restrictions-c6be0-rkspace-and-defaults-to-ALL-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\e2e-workspace-restrictions-c6be0-rkspace-and-defaults-to-ALL-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|e2e-workspace-restrictions-c6be0-rkspace-and-defaults-to-ALL-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|e2e-workspace-restrictions-c6be0-rkspace-and-defaults-to-ALL-chromium\video.webm]]
+
+[[ATTACHMENT|e2e-workspace-restrictions-c6be0-rkspace-and-defaults-to-ALL-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="e2e\workspace-switch.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="chromium" tests="8" failures="5" skipped="3" time="167.872" errors="0">
+<testcase name="Workspace Switching › admin sees Main Workspace by default" classname="e2e\workspace-switch.spec.ts" time="30.625">
+<failure message="workspace-switch.spec.ts:13:7 admin sees Main Workspace by default" type="FAILURE">
+<![CDATA[  [chromium] › e2e\workspace-switch.spec.ts:13:7 › Workspace Switching › admin sees Main Workspace by default 
+
+    Test timeout of 30000ms exceeded while running "beforeEach" hook.
+
+      2 |
+      3 | test.describe('Workspace Switching', () => {
+    > 4 |   test.beforeEach(async ({ page }) => {
+        |        ^
+      5 |     // Login as admin
+      6 |     await page.goto('/login');
+      7 |     await page.fill('input[name="email"]', 'whitepointer2016@gmail.com');
+        at D:\Coding\WP Perfect Score 19\RailWaySQlite03.08.25-main\Firebase-WhitePointer-App-master\tests\e2e\workspace-switch.spec.ts:4:8
+
+    Error: page.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('input[name="email"]')
+
+
+       5 |     // Login as admin
+       6 |     await page.goto('/login');
+    >  7 |     await page.fill('input[name="email"]', 'whitepointer2016@gmail.com');
+         |                ^
+       8 |     await page.fill('input[name="password"]', 'Tr@ders84');
+       9 |     await page.click('button[type="submit"]');
+      10 |     await page.waitForURL('/');
+        at D:\Coding\WP Perfect Score 19\RailWaySQlite03.08.25-main\Firebase-WhitePointer-App-master\tests\e2e\workspace-switch.spec.ts:7:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\e2e-workspace-switch-Works-d6aea-s-Main-Workspace-by-default-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\e2e-workspace-switch-Works-d6aea-s-Main-Workspace-by-default-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\e2e-workspace-switch-Works-d6aea-s-Main-Workspace-by-default-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|e2e-workspace-switch-Works-d6aea-s-Main-Workspace-by-default-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|e2e-workspace-switch-Works-d6aea-s-Main-Workspace-by-default-chromium\video.webm]]
+
+[[ATTACHMENT|e2e-workspace-switch-Works-d6aea-s-Main-Workspace-by-default-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Workspace Switching › admin can switch to a specific workspace" classname="e2e\workspace-switch.spec.ts" time="30.63">
+<failure message="workspace-switch.spec.ts:21:7 admin can switch to a specific workspace" type="FAILURE">
+<![CDATA[  [chromium] › e2e\workspace-switch.spec.ts:21:7 › Workspace Switching › admin can switch to a specific workspace 
+
+    Test timeout of 30000ms exceeded while running "beforeEach" hook.
+
+      2 |
+      3 | test.describe('Workspace Switching', () => {
+    > 4 |   test.beforeEach(async ({ page }) => {
+        |        ^
+      5 |     // Login as admin
+      6 |     await page.goto('/login');
+      7 |     await page.fill('input[name="email"]', 'whitepointer2016@gmail.com');
+        at D:\Coding\WP Perfect Score 19\RailWaySQlite03.08.25-main\Firebase-WhitePointer-App-master\tests\e2e\workspace-switch.spec.ts:4:8
+
+    Error: page.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('input[name="email"]')
+
+
+       5 |     // Login as admin
+       6 |     await page.goto('/login');
+    >  7 |     await page.fill('input[name="email"]', 'whitepointer2016@gmail.com');
+         |                ^
+       8 |     await page.fill('input[name="password"]', 'Tr@ders84');
+       9 |     await page.click('button[type="submit"]');
+      10 |     await page.waitForURL('/');
+        at D:\Coding\WP Perfect Score 19\RailWaySQlite03.08.25-main\Firebase-WhitePointer-App-master\tests\e2e\workspace-switch.spec.ts:7:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\test-results\e2e-workspace-switch-Works-7259a-tch-to-a-specific-workspace-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    ..\test-results\e2e-workspace-switch-Works-7259a-tch-to-a-specific-workspace-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\test-results\e2e-workspace-switch-Works-7259a-tch-to-a-specific-workspace-chromium\error-context.md
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|e2e-workspace-switch-Works-7259a-tch-to-a-specific-workspace-chromium\test-failed-1.png]]
+
+[[ATTACHMENT|e2e-workspace-switch-Works-7259a-tch-to-a-specific-workspace-chromium\video.webm]]
+
+[[ATTACHMENT|e2e-workspace-switch-Works-7259a-tch-to-a-specific-workspace-chromium\error-context.md]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Workspace Switching › Back to Main button returns to main workspace" classname="e2e\workspace-switch.spec.ts" time="24.11">
+<failure message="workspace-switch.spec.ts:53:7 Back to Main button returns to main workspace" type="FAILURE">
+<![CDATA[  [chromium] › e2e\workspace-switch.spec.ts:53:7 › Workspace Switching › Back to Main button returns to main workspace 
+
+    Error: page.fill: Target page, context or browser has been closed
+    Call log:
+      - waiting for locator('input[name="email"]')
+
+
+       5 |     // Login as admin
+       6 |     await page.goto('/login');
+    >  7 |     await page.fill('input[name="email"]', 'whitepointer2016@gmail.com');
+         |                ^
+       8 |     await page.fill('input[name="password"]', 'Tr@ders84');
+       9 |     await page.click('button[type="submit"]');
+      10 |     await page.waitForURL('/');
+        at D:\Coding\WP Perfect Score 19\RailWaySQlite03.08.25-main\Firebase-WhitePointer-App-master\tests\e2e\workspace-switch.spec.ts:7:16
+
+    Error: browserContext._wrapApiCall: Test ended.
+    Browser logs:
+
+    <launching> C:\Users\micha\AppData\Local\ms-playwright\chromium_headless_shell-1181\chrome-win\headless_shell.exe --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AutoExpandDetailsElement,AvoidUnnecessaryBeforeUnloadCheckSync,CertificateTransparencyComponentUpdater,DestroyProfileOnBrowserClose,DialMediaRouteProvider,ExtensionManifestV2Disabled,GlobalMediaControls,HttpsUpgrades,ImprovedCookieControls,LazyFrameLoading,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=C:\Users\micha\AppData\Local\Temp\playwright_chromiumdev_profile-JlY1Dy --remote-debugging-pipe --no-startup-window
+    <launched> pid=9636
+    [pid=9636] <gracefully close start>
+]]>
+</failure>
+</testcase>
+<testcase name="Workspace Switching › workspace context persists across page navigation" classname="e2e\workspace-switch.spec.ts" time="24.336">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace Switching › workspace filtering affects case and bike visibility" classname="e2e\workspace-switch.spec.ts" time="16.742">
+<failure message="workspace-switch.spec.ts:91:7 workspace filtering affects case and bike visibility" type="FAILURE">
+<![CDATA[  [chromium] › e2e\workspace-switch.spec.ts:91:7 › Workspace Switching › workspace filtering affects case and bike visibility 
+
+    Error: page.fill: Target page, context or browser has been closed
+    Call log:
+      - waiting for locator('input[name="email"]')
+
+
+       5 |     // Login as admin
+       6 |     await page.goto('/login');
+    >  7 |     await page.fill('input[name="email"]', 'whitepointer2016@gmail.com');
+         |                ^
+       8 |     await page.fill('input[name="password"]', 'Tr@ders84');
+       9 |     await page.click('button[type="submit"]');
+      10 |     await page.waitForURL('/');
+        at D:\Coding\WP Perfect Score 19\RailWaySQlite03.08.25-main\Firebase-WhitePointer-App-master\tests\e2e\workspace-switch.spec.ts:7:16
+
+    Error: browserContext._wrapApiCall: Test ended.
+    Browser logs:
+
+    <launching> C:\Users\micha\AppData\Local\ms-playwright\chromium_headless_shell-1181\chrome-win\headless_shell.exe --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AutoExpandDetailsElement,AvoidUnnecessaryBeforeUnloadCheckSync,CertificateTransparencyComponentUpdater,DestroyProfileOnBrowserClose,DialMediaRouteProvider,ExtensionManifestV2Disabled,GlobalMediaControls,HttpsUpgrades,ImprovedCookieControls,LazyFrameLoading,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=C:\Users\micha\AppData\Local\Temp\playwright_chromiumdev_profile-DYDmkS --remote-debugging-pipe --no-startup-window
+    <launched> pid=26356
+    [pid=26356] <gracefully close start>
+]]>
+</failure>
+</testcase>
+<testcase name="Workspace Switching › keyboard shortcut Alt+M returns to main workspace" classname="e2e\workspace-switch.spec.ts" time="16.762">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace User Access › workspace user sees only their workspace" classname="e2e\workspace-switch.spec.ts" time="16.682">
+<failure message="workspace-switch.spec.ts:125:7 workspace user sees only their workspace" type="FAILURE">
+<![CDATA[  [chromium] › e2e\workspace-switch.spec.ts:125:7 › Workspace User Access › workspace user sees only their workspace 
+
+    Error: page.fill: Target page, context or browser has been closed
+    Call log:
+      - waiting for locator('input[name="email"]')
+
+
+      126 |     // Login as a workspace user
+      127 |     await page.goto('/login');
+    > 128 |     await page.fill('input[name="email"]', 'workspace.user@example.com');
+          |                ^
+      129 |     await page.fill('input[name="password"]', 'WorkspacePass123!');
+      130 |     await page.click('button[type="submit"]');
+      131 |     
+        at D:\Coding\WP Perfect Score 19\RailWaySQlite03.08.25-main\Firebase-WhitePointer-App-master\tests\e2e\workspace-switch.spec.ts:128:16
+
+    Error: browserContext._wrapApiCall: Target page, context or browser has been closed
+]]>
+</failure>
+</testcase>
+<testcase name="Workspace User Access › workspace user cannot access workspace switching" classname="e2e\workspace-switch.spec.ts" time="7.985">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="unit\jotform.test.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="chromium" tests="12" failures="0" skipped="12" time="0" errors="0">
+<testcase name="JotForm Integration › buildJotFormURL creates correct URL for claims form" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › buildJotFormURL creates correct URL for not-at-fault rental" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › buildJotFormURL throws error for unknown document type" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › validateJotFormWebhook validates correct payload" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › validateJotFormWebhook validates JSON string payload" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › validateJotFormWebhook rejects payload without submission ID" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › validateJotFormWebhook rejects payload without form ID" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › validateJotFormWebhook rejects invalid JSON" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › getDocumentTypeFromFormId returns correct document type" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › getDocumentTypeFromFormId returns null for unknown form ID" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › buildJotFormURL handles special characters in case data" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › buildJotFormURL handles missing optional fields gracefully" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="unit\signature-tokens.test.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="chromium" tests="5" failures="0" skipped="5" time="0" errors="0">
+<testcase name="Signature Token Management › generateSignatureToken creates unique tokens" classname="unit\signature-tokens.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Signature Token Management › isTokenValid returns true for valid tokens" classname="unit\signature-tokens.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Signature Token Management › isTokenValid returns false for expired tokens" classname="unit\signature-tokens.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Signature Token Management › isTokenValid returns false for completed tokens" classname="unit\signature-tokens.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Signature Token Management › isTokenValid returns false for explicitly expired status" classname="unit\signature-tokens.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\commitments-fixed.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="webkit" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Commitments Page - Fixed › should navigate to commitments page without errors" classname="e2e\commitments-fixed.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Commitments Page - Fixed › should create a new commitment without errors" classname="e2e\commitments-fixed.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Commitments Page - Fixed › commitments page loads and functions without critical errors" classname="e2e\commitments-fixed.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\commitments.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="webkit" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Commitments Page › should load commitments page without errors" classname="e2e\commitments.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Commitments Page › should create and save a new commitment" classname="e2e\commitments.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Commitments Page › should display commitments list without errors" classname="e2e\commitments.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\contact-provision.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="webkit" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Contact Auto-Provisioning › admin creates contact → workspace &amp; user auto-generated" classname="e2e\contact-provision.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Auto-Provisioning › send welcome email functionality" classname="e2e\contact-provision.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Auto-Provisioning › non-company contact types do not trigger auto-provisioning" classname="e2e\contact-provision.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\first-login.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="webkit" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="First Login Flow › workspace user first login forces password change" classname="e2e\first-login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="First Login Flow › subsequent login does not require password change" classname="e2e\first-login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="First Login Flow › unauthenticated access to first-login redirects to login" classname="e2e\first-login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\jotform-prefill.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="webkit" tests="6" failures="0" skipped="6" time="0" errors="0">
+<testcase name="JotForm Prefill Integration › should load JotForm with direct URL parameters" classname="e2e\jotform-prefill.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Prefill Integration › should identify correct JotForm field structure" classname="e2e\jotform-prefill.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Prefill Integration › should test document signing workflow integration" classname="e2e\jotform-prefill.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Prefill Integration › should test email link and secure portal" classname="e2e\jotform-prefill.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Prefill Integration › should validate JotForm webhook endpoint" classname="e2e\jotform-prefill.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Prefill Integration › should generate comprehensive test report" classname="e2e\jotform-prefill.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\workspace-and-fleet.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="webkit" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Workspace + Fleet core flows › dev login autofill, seed bikes, create contact unique email, generate temp password, first login change password" classname="e2e\workspace-and-fleet.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\workspace-restrictions.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="webkit" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Workspace security and filtering › workspace user cannot access admin pages or menus" classname="e2e\workspace-restrictions.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace security and filtering › admin assigns case to workspace and it appears when workspace selected" classname="e2e\workspace-restrictions.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace security and filtering › status filter is unique per workspace and defaults to ALL" classname="e2e\workspace-restrictions.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\workspace-switch.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="webkit" tests="8" failures="0" skipped="8" time="0" errors="0">
+<testcase name="Workspace Switching › admin sees Main Workspace by default" classname="e2e\workspace-switch.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace Switching › admin can switch to a specific workspace" classname="e2e\workspace-switch.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace Switching › Back to Main button returns to main workspace" classname="e2e\workspace-switch.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace Switching › workspace context persists across page navigation" classname="e2e\workspace-switch.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace Switching › workspace filtering affects case and bike visibility" classname="e2e\workspace-switch.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace Switching › keyboard shortcut Alt+M returns to main workspace" classname="e2e\workspace-switch.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace User Access › workspace user sees only their workspace" classname="e2e\workspace-switch.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace User Access › workspace user cannot access workspace switching" classname="e2e\workspace-switch.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="unit\jotform.test.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="webkit" tests="12" failures="0" skipped="12" time="0" errors="0">
+<testcase name="JotForm Integration › buildJotFormURL creates correct URL for claims form" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › buildJotFormURL creates correct URL for not-at-fault rental" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › buildJotFormURL throws error for unknown document type" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › validateJotFormWebhook validates correct payload" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › validateJotFormWebhook validates JSON string payload" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › validateJotFormWebhook rejects payload without submission ID" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › validateJotFormWebhook rejects payload without form ID" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › validateJotFormWebhook rejects invalid JSON" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › getDocumentTypeFromFormId returns correct document type" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › getDocumentTypeFromFormId returns null for unknown form ID" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › buildJotFormURL handles special characters in case data" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › buildJotFormURL handles missing optional fields gracefully" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="unit\signature-tokens.test.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="webkit" tests="5" failures="0" skipped="5" time="0" errors="0">
+<testcase name="Signature Token Management › generateSignatureToken creates unique tokens" classname="unit\signature-tokens.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Signature Token Management › isTokenValid returns true for valid tokens" classname="unit\signature-tokens.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Signature Token Management › isTokenValid returns false for expired tokens" classname="unit\signature-tokens.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Signature Token Management › isTokenValid returns false for completed tokens" classname="unit\signature-tokens.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Signature Token Management › isTokenValid returns false for explicitly expired status" classname="unit\signature-tokens.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\commitments-fixed.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="Mobile Chrome" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Commitments Page - Fixed › should navigate to commitments page without errors" classname="e2e\commitments-fixed.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Commitments Page - Fixed › should create a new commitment without errors" classname="e2e\commitments-fixed.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Commitments Page - Fixed › commitments page loads and functions without critical errors" classname="e2e\commitments-fixed.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\commitments.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="Mobile Chrome" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Commitments Page › should load commitments page without errors" classname="e2e\commitments.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Commitments Page › should create and save a new commitment" classname="e2e\commitments.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Commitments Page › should display commitments list without errors" classname="e2e\commitments.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\contact-provision.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="Mobile Chrome" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Contact Auto-Provisioning › admin creates contact → workspace &amp; user auto-generated" classname="e2e\contact-provision.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Auto-Provisioning › send welcome email functionality" classname="e2e\contact-provision.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Auto-Provisioning › non-company contact types do not trigger auto-provisioning" classname="e2e\contact-provision.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\first-login.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="Mobile Chrome" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="First Login Flow › workspace user first login forces password change" classname="e2e\first-login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="First Login Flow › subsequent login does not require password change" classname="e2e\first-login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="First Login Flow › unauthenticated access to first-login redirects to login" classname="e2e\first-login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\jotform-prefill.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="Mobile Chrome" tests="6" failures="0" skipped="6" time="0" errors="0">
+<testcase name="JotForm Prefill Integration › should load JotForm with direct URL parameters" classname="e2e\jotform-prefill.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Prefill Integration › should identify correct JotForm field structure" classname="e2e\jotform-prefill.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Prefill Integration › should test document signing workflow integration" classname="e2e\jotform-prefill.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Prefill Integration › should test email link and secure portal" classname="e2e\jotform-prefill.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Prefill Integration › should validate JotForm webhook endpoint" classname="e2e\jotform-prefill.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Prefill Integration › should generate comprehensive test report" classname="e2e\jotform-prefill.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\workspace-and-fleet.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="Mobile Chrome" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Workspace + Fleet core flows › dev login autofill, seed bikes, create contact unique email, generate temp password, first login change password" classname="e2e\workspace-and-fleet.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\workspace-restrictions.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="Mobile Chrome" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Workspace security and filtering › workspace user cannot access admin pages or menus" classname="e2e\workspace-restrictions.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace security and filtering › admin assigns case to workspace and it appears when workspace selected" classname="e2e\workspace-restrictions.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace security and filtering › status filter is unique per workspace and defaults to ALL" classname="e2e\workspace-restrictions.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\workspace-switch.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="Mobile Chrome" tests="8" failures="0" skipped="8" time="0" errors="0">
+<testcase name="Workspace Switching › admin sees Main Workspace by default" classname="e2e\workspace-switch.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace Switching › admin can switch to a specific workspace" classname="e2e\workspace-switch.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace Switching › Back to Main button returns to main workspace" classname="e2e\workspace-switch.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace Switching › workspace context persists across page navigation" classname="e2e\workspace-switch.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace Switching › workspace filtering affects case and bike visibility" classname="e2e\workspace-switch.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace Switching › keyboard shortcut Alt+M returns to main workspace" classname="e2e\workspace-switch.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace User Access › workspace user sees only their workspace" classname="e2e\workspace-switch.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace User Access › workspace user cannot access workspace switching" classname="e2e\workspace-switch.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="unit\jotform.test.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="Mobile Chrome" tests="12" failures="0" skipped="12" time="0" errors="0">
+<testcase name="JotForm Integration › buildJotFormURL creates correct URL for claims form" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › buildJotFormURL creates correct URL for not-at-fault rental" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › buildJotFormURL throws error for unknown document type" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › validateJotFormWebhook validates correct payload" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › validateJotFormWebhook validates JSON string payload" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › validateJotFormWebhook rejects payload without submission ID" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › validateJotFormWebhook rejects payload without form ID" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › validateJotFormWebhook rejects invalid JSON" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › getDocumentTypeFromFormId returns correct document type" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › getDocumentTypeFromFormId returns null for unknown form ID" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › buildJotFormURL handles special characters in case data" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › buildJotFormURL handles missing optional fields gracefully" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="unit\signature-tokens.test.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="Mobile Chrome" tests="5" failures="0" skipped="5" time="0" errors="0">
+<testcase name="Signature Token Management › generateSignatureToken creates unique tokens" classname="unit\signature-tokens.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Signature Token Management › isTokenValid returns true for valid tokens" classname="unit\signature-tokens.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Signature Token Management › isTokenValid returns false for expired tokens" classname="unit\signature-tokens.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Signature Token Management › isTokenValid returns false for completed tokens" classname="unit\signature-tokens.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Signature Token Management › isTokenValid returns false for explicitly expired status" classname="unit\signature-tokens.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\commitments-fixed.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="Mobile Safari" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Commitments Page - Fixed › should navigate to commitments page without errors" classname="e2e\commitments-fixed.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Commitments Page - Fixed › should create a new commitment without errors" classname="e2e\commitments-fixed.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Commitments Page - Fixed › commitments page loads and functions without critical errors" classname="e2e\commitments-fixed.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\commitments.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="Mobile Safari" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Commitments Page › should load commitments page without errors" classname="e2e\commitments.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Commitments Page › should create and save a new commitment" classname="e2e\commitments.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Commitments Page › should display commitments list without errors" classname="e2e\commitments.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\contact-provision.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="Mobile Safari" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Contact Auto-Provisioning › admin creates contact → workspace &amp; user auto-generated" classname="e2e\contact-provision.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Auto-Provisioning › send welcome email functionality" classname="e2e\contact-provision.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Contact Auto-Provisioning › non-company contact types do not trigger auto-provisioning" classname="e2e\contact-provision.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\first-login.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="Mobile Safari" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="First Login Flow › workspace user first login forces password change" classname="e2e\first-login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="First Login Flow › subsequent login does not require password change" classname="e2e\first-login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="First Login Flow › unauthenticated access to first-login redirects to login" classname="e2e\first-login.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\jotform-prefill.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="Mobile Safari" tests="6" failures="0" skipped="6" time="0" errors="0">
+<testcase name="JotForm Prefill Integration › should load JotForm with direct URL parameters" classname="e2e\jotform-prefill.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Prefill Integration › should identify correct JotForm field structure" classname="e2e\jotform-prefill.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Prefill Integration › should test document signing workflow integration" classname="e2e\jotform-prefill.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Prefill Integration › should test email link and secure portal" classname="e2e\jotform-prefill.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Prefill Integration › should validate JotForm webhook endpoint" classname="e2e\jotform-prefill.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Prefill Integration › should generate comprehensive test report" classname="e2e\jotform-prefill.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\workspace-and-fleet.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="Mobile Safari" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Workspace + Fleet core flows › dev login autofill, seed bikes, create contact unique email, generate temp password, first login change password" classname="e2e\workspace-and-fleet.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\workspace-restrictions.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="Mobile Safari" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="Workspace security and filtering › workspace user cannot access admin pages or menus" classname="e2e\workspace-restrictions.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace security and filtering › admin assigns case to workspace and it appears when workspace selected" classname="e2e\workspace-restrictions.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace security and filtering › status filter is unique per workspace and defaults to ALL" classname="e2e\workspace-restrictions.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="e2e\workspace-switch.spec.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="Mobile Safari" tests="8" failures="0" skipped="8" time="0" errors="0">
+<testcase name="Workspace Switching › admin sees Main Workspace by default" classname="e2e\workspace-switch.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace Switching › admin can switch to a specific workspace" classname="e2e\workspace-switch.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace Switching › Back to Main button returns to main workspace" classname="e2e\workspace-switch.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace Switching › workspace context persists across page navigation" classname="e2e\workspace-switch.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace Switching › workspace filtering affects case and bike visibility" classname="e2e\workspace-switch.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace Switching › keyboard shortcut Alt+M returns to main workspace" classname="e2e\workspace-switch.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace User Access › workspace user sees only their workspace" classname="e2e\workspace-switch.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Workspace User Access › workspace user cannot access workspace switching" classname="e2e\workspace-switch.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="unit\jotform.test.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="Mobile Safari" tests="12" failures="0" skipped="12" time="0" errors="0">
+<testcase name="JotForm Integration › buildJotFormURL creates correct URL for claims form" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › buildJotFormURL creates correct URL for not-at-fault rental" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › buildJotFormURL throws error for unknown document type" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › validateJotFormWebhook validates correct payload" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › validateJotFormWebhook validates JSON string payload" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › validateJotFormWebhook rejects payload without submission ID" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › validateJotFormWebhook rejects payload without form ID" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › validateJotFormWebhook rejects invalid JSON" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › getDocumentTypeFromFormId returns correct document type" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › getDocumentTypeFromFormId returns null for unknown form ID" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › buildJotFormURL handles special characters in case data" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="JotForm Integration › buildJotFormURL handles missing optional fields gracefully" classname="unit\jotform.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="unit\signature-tokens.test.ts" timestamp="2025-08-08T14:40:36.918Z" hostname="Mobile Safari" tests="5" failures="0" skipped="5" time="0" errors="0">
+<testcase name="Signature Token Management › generateSignatureToken creates unique tokens" classname="unit\signature-tokens.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Signature Token Management › isTokenValid returns true for valid tokens" classname="unit\signature-tokens.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Signature Token Management › isTokenValid returns false for expired tokens" classname="unit\signature-tokens.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Signature Token Management › isTokenValid returns false for completed tokens" classname="unit\signature-tokens.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Signature Token Management › isTokenValid returns false for explicitly expired status" classname="unit\signature-tokens.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+</testsuites>

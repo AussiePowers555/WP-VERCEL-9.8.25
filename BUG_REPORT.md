@@ -122,3 +122,33 @@
 - **User Confirmation**: Bug confirmed fixed by user - 2025-08-08
 - **Signed**: Claude Code Terminal - 2025-08-08
 
+## BUG-008: Workspace role defaulting to admin (Privacy risk)
+- Reported by: Mick - Lead Developer
+- Date: 2025-08-08
+- Description: Workspace context defaulted to `admin` when role not yet set, causing workspace users to see admin UI in some paths.
+- Fix: Changed `WorkspaceProvider` default role to `workspace`; hardened bikes API unauthenticated role to `workspace_user`; gated workspaces API with admin checks.
+- Files: `src/contexts/WorkspaceContext.tsx`, `src/app/api/bikes/route.ts`, `src/app/api/workspaces/route.ts`, `src/app/api/workspaces/[id]/route.ts`
+- Tests: Added `tests/e2e/workspace-restrictions.spec.ts` security checks.
+- Status: Fixed
+- Signed: GPT5 (2025-08-08 HH:mm)
+
+## BUG-009: Case workspace assignment not persisted; workspace filters sticky/empty list
+- Reported by: Mick - Lead Developer
+- Date: 2025-08-08
+- Symptoms:
+  - Assigning a case to a workspace via dropdown (e.g., "Martin Lawyer") did not update DB; Martin's workspace remained empty.
+  - Navigating back to Case Management sometimes showed no cases until toggling "Remove filter".
+- Root Cause:
+  - `handleWorkspaceAssignment` only updated client state; no API call to `/api/cases/[id]`.
+  - Workspace filtering logic depended on a session-stored `activeWorkspace` object and treated undefined as "show unassigned only"; status filter state was global, not per workspace.
+- Fix:
+  - Implemented server persistence in `handleWorkspaceAssignment` to `PUT /api/cases/[id|caseNumber]` with `workspace_id`.
+  - Switched cases view to use `WorkspaceContext` (`id` for active workspace) and default Main to show ALL cases.
+  - Made status-filter state key unique per workspace (`cases:statusFilter:<workspaceId|MAIN>`), defaulting to ALL.
+  - Clear filter uses `backToMain()` from context to reset globally.
+- Files: `src/app/(app)/cases/cases-list-client.tsx` (edits), `src/app/(app)/layout.tsx` (read context), `src/contexts/WorkspaceContext.tsx` (role default).
+- Tests:
+  - Added admin assignment flow and per-workspace status filter checks in `tests/e2e/workspace-restrictions.spec.ts`.
+- Status: Fixed
+- Signed: GPT5 (2025-08-08 HH:mm)
+

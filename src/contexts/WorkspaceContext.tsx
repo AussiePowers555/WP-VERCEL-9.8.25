@@ -29,7 +29,7 @@ interface WorkspaceProviderProps {
 export function WorkspaceProvider({ 
   children, 
   initialWorkspaceId,
-  initialRole = 'admin',
+  initialRole = 'workspace',
   initialWorkspaceName = 'Main Workspace',
   initialContactType
 }: WorkspaceProviderProps) {

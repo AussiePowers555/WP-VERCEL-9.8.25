@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { DatabaseService, ensureDatabaseInitialized } from '@/lib/database';
+import { requireAdmin } from '@/lib/server-auth';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     await ensureDatabaseInitialized();
-        const workspaces = await DatabaseService.getAllWorkspaces();
+    // Only admins/developers can list and switch workspaces
+    const auth = await requireAdmin(request);
+    if (auth instanceof Response) return auth;
+    const workspaces = await DatabaseService.getAllWorkspaces();
     return NextResponse.json(workspaces);
   } catch (error) {
     console.error('Error fetching workspaces:', error);
@@ -15,6 +19,8 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     await ensureDatabaseInitialized();
+    const auth = await requireAdmin(request);
+    if (auth instanceof Response) return auth;
     const workspaceData = await request.json();
         const newWorkspace = await DatabaseService.createWorkspace(workspaceData);
     return NextResponse.json(newWorkspace, { status: 201 });

@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
 
     // Best-effort auth (do not block list rendering if cookie not yet hydrated)
     const authUser = await getUserFromRequest(request).catch(() => null);
-    const userRole = (authUser as any)?.role || 'developer';
+    const userRole = (authUser as any)?.role || 'workspace_user';
     const workspaceId = (authUser as any)?.workspaceId || (authUser as any)?.workspace_id;
 
     // Get bikes filtered by workspace if user is workspace-scoped

@@ -12,6 +12,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { NewCaseForm } from "./new-case-form";
 import { useSessionStorage } from "@/hooks/use-session-storage";
+import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { useCases } from "@/hooks/use-database";
 /* Removed unused/invalid import - no exported member useAuthFetch */
 import CommunicationLog from "./[caseId]/communication-log";
@@ -63,8 +64,8 @@ export default function CasesListClient({
 }: CasesListClientProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { create: createCase } = useCases();
+  const { id: workspaceIdCtx, name: workspaceNameCtx, backToMain, role: workspaceRole } = useWorkspace();
   const [hydratedCases, setHydratedCases] = useState<Case[]>(initialCases);
-  const [activeWorkspace, setActiveWorkspace] = useSessionStorage<any>('activeWorkspace', null);
   const [openRows, setOpenRows] = useState<Set<string>>(new Set());
   const [currentUser] = useSessionStorage<any>("currentUser", null);
 
@@ -227,14 +228,33 @@ export default function CasesListClient({
   };
 
   const clearWorkspaceFilter = () => {
-    setActiveWorkspace(null);
+    // Use context so the entire app is consistent
+    backToMain();
   };
 
-  const handleWorkspaceAssignment = (caseNumber: string, workspaceId: string) => {
+  const handleWorkspaceAssignment = async (caseNumber: string, newWorkspaceId: string) => {
+    const target = hydratedCases.find(c => c.caseNumber === caseNumber);
+    const caseIdOrNumber = target?.id || caseNumber;
+
+    // Persist to API (maps caseNumber → id in route)
+    try {
+      await fetch(`/api/cases/${caseIdOrNumber}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          workspace_id: newWorkspaceId === 'none' ? null : newWorkspaceId,
+          last_updated: new Date().toISOString()
+        })
+      });
+    } catch (e) {
+      console.error('Failed to update workspace assignment', e);
+    }
+
+    // Optimistic UI update
     setHydratedCases(prevCases =>
       prevCases.map(c =>
         c.caseNumber === caseNumber
-          ? { ...c, workspaceId: workspaceId === 'none' ? undefined : workspaceId, lastUpdated: 'Just now' }
+          ? { ...c, workspaceId: newWorkspaceId === 'none' ? undefined : newWorkspaceId, lastUpdated: 'Just now' }
           : c
       )
     );
@@ -350,6 +370,10 @@ export default function CasesListClient({
     };
   }, [searchQuery]);
   
+  // Status filter per-workspace (unique key per active workspace)
+  const statusKey = `cases:statusFilter:${workspaceIdCtx || 'MAIN'}`;
+  const [statusFilter, setStatusFilter] = useSessionStorage<Case['status'] | 'ALL'>(statusKey, 'ALL');
+
   const filteredAndSortedCases = hydratedCases
     .filter(c => {
       // First apply workspace/user visibility rules
@@ -363,25 +387,18 @@ export default function CasesListClient({
         // Check if case is assigned to this user's contact (either as lawyer or rental company)
         visibilityPassed = c.assigned_lawyer_id === userContactId || c.assigned_rental_company_id === userContactId;
       } else {
-        // For admin/developer users, show all cases or filtered by workspace
-        if (activeWorkspace) {
-          // Check if this is the Main Workspace (special case: shows ALL cases)
-          if (activeWorkspace.name === 'Main Workspace') {
-            visibilityPassed = true; // Main Workspace shows ALL cases
-          } else {
-            // Regular workspace: show only cases assigned to this workspace
-            visibilityPassed = c.workspaceId === activeWorkspace.id;
-          }
+        // Admin/developer users: filter by active workspace context id. If undefined (Main) show all
+        if (workspaceIdCtx) {
+          visibilityPassed = c.workspaceId === workspaceIdCtx;
         } else {
-          // No workspace selected: show only cases NOT assigned to any workspace
-          visibilityPassed = !c.workspaceId;
+          visibilityPassed = true; // Main Workspace shows all
         }
       }
       
       // If visibility check fails, exclude the case
       if (!visibilityPassed) return false;
       
-      // Apply optional status filter first
+      // Apply optional status filter
       if (statusFilter !== 'ALL' && c.status !== statusFilter) return false;
       // Then apply search filter
       return searchFilter(c);
@@ -551,12 +568,12 @@ export default function CasesListClient({
         
         <div className="px-6 pb-4 border-b">
             <div className="flex items-center gap-3 flex-wrap">
-              {activeWorkspace && currentUser?.role !== 'workspace_user' ? (
+              {workspaceIdCtx && currentUser?.role !== 'workspace_user' ? (
                   <Button variant="outline" size="sm" onClick={clearWorkspaceFilter}>
                       <FilterX className="mr-2 h-4 w-4" />
                       Clear Workspace Filter
                   </Button>
-              ) : activeWorkspace && currentUser?.role === 'workspace_user' ? (
+              ) : workspaceIdCtx && currentUser?.role === 'workspace_user' ? (
                   <p className="text-sm text-muted-foreground">Viewing your assigned cases only.</p>
               ) : (
                   <p className="text-sm text-muted-foreground">Go to Workspaces page to apply a saved filter.</p>
@@ -565,7 +582,7 @@ export default function CasesListClient({
               {/* Status filter */}
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted-foreground">Status filter:</span>
-                <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as any)}>
+                   <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as any)}>
                   <SelectTrigger className="h-8 w-[200px] text-xs">
                     <SelectValue placeholder="All statuses" />
                   </SelectTrigger>
@@ -643,7 +660,7 @@ export default function CasesListClient({
                   const isOpen = openRows.has(c.caseNumber);
                   return (
                     <React.Fragment key={c.caseNumber}>
-                      <TableRow>
+                      <TableRow data-test="case-row">
                           <TableCell>
                             <Button variant="ghost" size="sm" className="w-9 p-0" onClick={() => toggleRow(c.caseNumber)}>
                               {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}

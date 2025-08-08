@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { DatabaseService, ensureDatabaseInitialized } from '@/lib/database';
+import { requireAdmin } from '@/lib/server-auth';
 
 export async function PUT(
   request: NextRequest,
@@ -7,6 +8,8 @@ export async function PUT(
 ) {
   try {
     await ensureDatabaseInitialized();
+    const auth = await requireAdmin(request);
+    if (auth instanceof Response) return auth;
     const { id } = await context.params;
     const updates = await request.json();
         await DatabaseService.updateWorkspace(id, updates);
@@ -23,6 +26,8 @@ export async function DELETE(
 ) {
   try {
     await ensureDatabaseInitialized();
+    const auth = await requireAdmin(request);
+    if (auth instanceof Response) return auth;
     const { id } = await context.params;
         await DatabaseService.deleteWorkspace(id);
     return NextResponse.json({ success: true });
