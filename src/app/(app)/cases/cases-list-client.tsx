@@ -71,6 +71,9 @@ export default function CasesListClient({
   // Sorting state
   const [sortField, setSortField] = useState<'caseNumber' | 'clientName' | 'lastUpdated' | 'status'>('lastUpdated');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+
+  // Status filter state
+  const [statusFilter, setStatusFilter] = useState<Case['status'] | 'ALL'>('ALL');
   
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
@@ -127,9 +130,29 @@ export default function CasesListClient({
     }
   };
   
-  const handleStatusChange = (caseNumber: string, newStatus: Case['status']) => {
-    // TODO: Implement case update functionality
-    console.log('Status change requested:', caseNumber, newStatus);
+  const handleStatusChange = async (caseNumber: string, newStatus: Case['status']) => {
+    try {
+      // Find the case to get its id for the API call
+      const target = hydratedCases.find(c => c.caseNumber === caseNumber);
+      const caseIdOrNumber = target?.id || caseNumber; // API supports id or caseNumber
+
+      const res = await fetch(`/api/cases/${caseIdOrNumber}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus, last_updated: new Date().toISOString() })
+      });
+      if (!res.ok) {
+        const text = await res.text().catch(() => '');
+        console.error('Failed to update status:', res.status, text);
+      }
+
+      // Update local state optimistically
+      setHydratedCases(prev => prev.map(c =>
+        c.caseNumber === caseNumber ? { ...c, status: newStatus, lastUpdated: new Date().toISOString() } : c
+      ));
+    } catch (e) {
+      console.error('Error updating case status:', e);
+    }
   }
 
   const handleDeleteCase = async (caseId: string, caseNumber: string) => {
@@ -331,7 +354,9 @@ export default function CasesListClient({
       // If visibility check fails, exclude the case
       if (!visibilityPassed) return false;
       
-      // Apply search filter
+      // Apply optional status filter first
+      if (statusFilter !== 'ALL' && c.status !== statusFilter) return false;
+      // Then apply search filter
       return searchFilter(c);
     })
     .sort((a, b) => {
@@ -352,21 +377,19 @@ export default function CasesListClient({
           bValue = b.status;
           break;
         case 'lastUpdated':
-        default:
-          // Convert relative time to sortable format
-          const timeToMinutes = (time: string) => {
-            if (!time) return 999999; // Handle undefined/null/empty time
-            if (time.includes('Just now')) return 0;
-            if (time.includes('hour')) return parseInt(time) * 60;
-            if (time.includes('day')) return parseInt(time) * 24 * 60;
-            if (time.includes('week')) return parseInt(time) * 7 * 24 * 60;
-            return 999999; // Very old
+        default: {
+          // Robust timestamp parsing: supports Date objects and ISO strings
+          const getMs = (v: Date | string | undefined) => {
+            if (!v) return 0;
+            if (v instanceof Date) return v.getTime();
+            if (v === 'Just now') return Date.now();
+            const t = Date.parse(v);
+            return Number.isNaN(t) ? 0 : t;
           };
-          const aTime = a.lastUpdated instanceof Date ? a.lastUpdated.toISOString() : a.lastUpdated;
-          const bTime = b.lastUpdated instanceof Date ? b.lastUpdated.toISOString() : b.lastUpdated;
-          aValue = timeToMinutes(aTime);
-          bValue = timeToMinutes(bTime);
+          aValue = getMs(a.lastUpdated as any);
+          bValue = getMs(b.lastUpdated as any);
           break;
+        }
       }
 
       if (typeof aValue === 'string' && typeof bValue === 'string') {
@@ -481,23 +504,58 @@ export default function CasesListClient({
                     </>
                   )}
               </div>
-              <div className="text-sm text-muted-foreground">
-                Sorted by {sortField.replace(/([A-Z])/g, ' $1').toLowerCase()} ({sortDirection === 'asc' ? 'ascending' : 'descending'})
+              <div className="flex items-center gap-2">
+                <div className="text-sm text-muted-foreground">
+                  Sorted by {sortField.replace(/([A-Z])/g, ' $1').toLowerCase()} ({sortDirection === 'asc' ? 'ascending' : 'descending'})
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setSortField('lastUpdated');
+                    setSortDirection(prev => (prev === 'asc' ? 'desc' : 'asc'));
+                  }}
+                >
+                  Toggle Last Updated {sortDirection === 'asc' ? <ArrowUp className="ml-1 h-4 w-4"/> : <ArrowDown className="ml-1 h-4 w-4"/>}
+                </Button>
               </div>
           </div>
         </CardHeader>
         
         <div className="px-6 pb-4 border-b">
-            {activeWorkspace && currentUser?.role !== 'workspace_user' ? (
-                <Button variant="outline" size="sm" onClick={clearWorkspaceFilter}>
-                    <FilterX className="mr-2 h-4 w-4" />
-                    Clear Workspace Filter
-                </Button>
-            ) : activeWorkspace && currentUser?.role === 'workspace_user' ? (
-                <p className="text-sm text-muted-foreground">Viewing your assigned cases only.</p>
-            ) : (
-                <p className="text-sm text-muted-foreground">Go to Workspaces page to apply a saved filter.</p>
-            )}
+            <div className="flex items-center gap-3 flex-wrap">
+              {activeWorkspace && currentUser?.role !== 'workspace_user' ? (
+                  <Button variant="outline" size="sm" onClick={clearWorkspaceFilter}>
+                      <FilterX className="mr-2 h-4 w-4" />
+                      Clear Workspace Filter
+                  </Button>
+              ) : activeWorkspace && currentUser?.role === 'workspace_user' ? (
+                  <p className="text-sm text-muted-foreground">Viewing your assigned cases only.</p>
+              ) : (
+                  <p className="text-sm text-muted-foreground">Go to Workspaces page to apply a saved filter.</p>
+              )}
+
+              {/* Status filter */}
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">Status filter:</span>
+                <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as any)}>
+                  <SelectTrigger className="h-8 w-[200px] text-xs">
+                    <SelectValue placeholder="All statuses" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ALL">All statuses</SelectItem>
+                    {statusOptions.map(opt => (
+                      <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {statusFilter !== 'ALL' && (
+                  <Button variant="ghost" size="sm" onClick={() => setStatusFilter('ALL')}>
+                    <X className="mr-1 h-4 w-4"/> Remove filter
+                  </Button>
+                )}
+              </div>
+            </div>
         </div>
         
         <CardContent className="pt-4">
