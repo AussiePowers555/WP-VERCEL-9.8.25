@@ -31,11 +31,16 @@ export function UserHeader() {
   const { name, role, backToMain } = useWorkspace();
   const router = useRouter();
   const { toast } = useToast();
+  
+  // User is admin if their role from workspace context is 'admin'
+  // This is derived from their actual database role (admin/developer = admin, others = workspace)
+  const isAdmin = role === "admin";
+  const isWorkspaceUser = role === "workspace" || user?.role === "workspace_user";
 
   // Keyboard shortcut for Back to Main (Alt+M)
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.altKey && e.key === 'm' && role === "admin" && name !== 'Main Workspace') {
+      if (e.altKey && e.key === 'm' && isAdmin && name !== 'Main Workspace') {
         e.preventDefault();
         handleBackToMain();
       }
@@ -74,7 +79,7 @@ export function UserHeader() {
       <div className="flex items-center gap-4">
         <SidebarTrigger className="md:hidden" />
         <WorkspaceName />
-        {role === "admin" && name !== 'Main Workspace' && (
+        {isAdmin && name !== 'Main Workspace' && (
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -98,7 +103,7 @@ export function UserHeader() {
       </div>
       
       <div className="flex items-center gap-4">
-        {role === "admin" && (
+        {isAdmin && (
           <Badge variant="outline" className="hidden sm:inline-flex">
             Administrator
           </Badge>
@@ -123,7 +128,7 @@ export function UserHeader() {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            {role === "admin" && (
+            {isAdmin && (
               <>
                 <DropdownMenuItem onClick={() => router.push("/workspaces")}>
                   Manage Workspaces

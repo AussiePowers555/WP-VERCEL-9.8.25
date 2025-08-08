@@ -64,7 +64,8 @@ export async function POST(request: NextRequest) {
         id: user.id,
         email: user.email,
         role: user.role,
-        workspaceId: user.workspace_id,
+        workspaceId: user.workspace_id || null,
+        contactId: user.contact_id || null,
         firstLogin: user.first_login
       },
       token
@@ -82,7 +83,8 @@ export async function POST(request: NextRequest) {
     const cookiePayload = JSON.stringify({
       id: user.id,
       email: user.email,
-      role: user.role
+      role: user.role,
+      workspaceId: user.workspace_id || null
     });
     
     response.cookies.set('wpa_auth', cookiePayload, {

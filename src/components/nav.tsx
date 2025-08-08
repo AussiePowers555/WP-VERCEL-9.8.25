@@ -56,7 +56,10 @@ const settingsNavItems = [
 export function Nav() {
     const [currentUser] = useSessionStorage<any>("currentUser", null);
     const { role } = useWorkspace();
+    // User is admin if their role from workspace context is 'admin'
+    // This is derived from their actual database role (admin/developer = admin, others = workspace)
     const isAdmin = role === "admin";
+    const isWorkspaceUser = role === "workspace" || currentUser?.role === "workspace_user";
     const pathname = usePathname()
 
     const rentalAgreementRegex = /^\/rental-agreement\/.*/;
@@ -76,11 +79,12 @@ export function Nav() {
                     {mainNavItems
                         .filter(item => {
                             // For workspace users, only show specific items
-                            if (role === 'workspace') {
-                                return ['Case Management'].includes(item.label);
+                            if (isWorkspaceUser) {
+                                // Workspace users can only see Case Management and Documents
+                                return ['Dashboard', 'Case Management', 'Documents', 'Interactions'].includes(item.label);
                             }
-                            // For admins, respect adminOnly flag
-                            return !item.adminOnly || isAdmin;
+                            // For admins, show everything
+                            return true;
                         })
                         .map((item) => (
                         <SidebarMenuItem key={item.href}>
@@ -103,12 +107,12 @@ export function Nav() {
                     <SidebarMenu>
                         {settingsNavItems
                             .filter(item => {
-                                // For workspace users, hide all settings
-                                if (role === 'workspace') {
-                                    return false;
+                                // For workspace users, only show basic settings
+                                if (isWorkspaceUser) {
+                                    return item.label === 'Settings';
                                 }
-                                // For admins, respect adminOnly flag
-                                return !item.adminOnly || isAdmin;
+                                // For admins, show everything
+                                return true;
                             })
                             .map((item) => (
                              <SidebarMenuItem key={item.href}>

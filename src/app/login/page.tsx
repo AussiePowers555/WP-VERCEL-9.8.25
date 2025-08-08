@@ -41,9 +41,19 @@ export default function LoginPage() {
         email: data.user.email,
         name: data.user.name ?? "User",
         role: data.user.role ?? "user",
-        workspaceId: null,
+        workspaceId: data.user.workspaceId || null,
+        contactId: data.user.contactId || null,
       };
       sessionStorage.setItem("currentUser", JSON.stringify(userData));
+      
+      // Set role in session storage for WorkspaceContext
+      const userRole = data.user.role === 'admin' || data.user.role === 'developer' ? 'admin' : 'workspace';
+      sessionStorage.setItem('role', JSON.stringify(userRole));
+      
+      // Set active workspace
+      const activeWorkspace = data.user.workspaceId ?? 'MAIN';
+      sessionStorage.setItem('activeWorkspace', JSON.stringify(activeWorkspace));
+      
       window.dispatchEvent(
         new CustomEvent("sessionStorageChange", {
           detail: { key: "currentUser", value: userData },

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   SidebarProvider,
   Sidebar,
@@ -19,11 +21,20 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { AuthGuard } from "@/components/auth-guard"
 import { UserHeader } from "@/components/user-header"
 import { WorkspaceProvider } from "@/contexts/WorkspaceContext"
+import { useAuth } from "@/context/AuthContext"
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth();
+  
+  // Determine the correct role based on user data
+  const userRole = user?.role === 'admin' || user?.role === 'developer' ? 'admin' : 'workspace';
+  
   return (
     <AuthGuard>
-      <WorkspaceProvider>
+      <WorkspaceProvider 
+        initialRole={userRole as 'admin' | 'workspace'}
+        initialWorkspaceId={user?.workspaceId}
+      >
         <SidebarProvider>
           <Sidebar>
             <Nav />

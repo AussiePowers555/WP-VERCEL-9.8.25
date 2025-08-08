@@ -63,6 +63,8 @@ export async function POST(request: NextRequest) {
         email: auth.user.email,
         role: (auth.user as any).role,
         name: (auth.user as any).name ?? 'User',
+        workspaceId: (auth.user as any).workspace_id || null,
+        contactId: (auth.user as any).contact_id || null,
       },
       firstLogin: firstLogin,
     });
@@ -71,6 +73,7 @@ export async function POST(request: NextRequest) {
       id: auth.user.id,
       email: auth.user.email,
       role: (auth.user as any).role,
+      workspaceId: (auth.user as any).workspace_id || null,
     });
 
     // Legacy/dev session cookie
