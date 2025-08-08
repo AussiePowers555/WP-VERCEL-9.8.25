@@ -7,10 +7,10 @@ export async function GET(request: NextRequest) {
     // Ensure database is initialized
     await ensureDatabaseInitialized();
 
-    // Get authenticated user
+    // Best-effort auth to avoid early-hydration 401s. If no user yet, return empty list
     const user = await getUserFromRequest(request);
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json([]); // let UI render gracefully
     }
 
     let cases;
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     // Ensure database is initialized
     await ensureDatabaseInitialized();
 
-    // Get authenticated user
+    // Get authenticated user (strict for creating)
     const user = await getUserFromRequest(request);
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
