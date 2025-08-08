@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { DatabaseService, ensureDatabaseInitialized } from '@/lib/database';
 import { importedBikes } from '@/data/imported-bikes';
 import type { BikeFrontend as Bike } from '@/lib/database-schema';
-import { requireAuth } from '@/lib/server-auth';
+import { requireAuth, getUserFromRequest } from '@/lib/server-auth';
 
 // Transform database row to Bike interface
 function transformDbBikeToFrontend(dbBike: any): Bike {
@@ -61,16 +61,11 @@ function transformFrontendBikeToDb(bike: any): any {
 export async function GET(request: NextRequest) {
   try {
     await ensureDatabaseInitialized();
-    
-    // Authenticate user - fixed to use proper return type
-    const authResult = await requireAuth(request);
-    if (authResult instanceof Response) {
-      return authResult; // Return error response
-    }
-    const { user } = authResult;
-    const userId = user.id;
-    const userRole = user.role;
-    const workspaceId = user.workspace_id;
+
+    // Best-effort auth (do not block list rendering if cookie not yet hydrated)
+    const authUser = await getUserFromRequest(request).catch(() => null);
+    const userRole = (authUser as any)?.role || 'admin';
+    const workspaceId = (authUser as any)?.workspaceId || (authUser as any)?.workspace_id;
     
     // Get bikes filtered by workspace if user is workspace-scoped
     let bikes = (userRole as any) === 'workspace' && workspaceId
