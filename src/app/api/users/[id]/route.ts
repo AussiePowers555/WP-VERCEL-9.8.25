@@ -63,9 +63,9 @@ export async function POST(
 
     await DatabaseService.updateUserAccount(id, {
       password_hash,
-      status: 'pending_password_change',
+      status: 'active',  // Keep active so user can login
       updated_at: new Date() as any,
-      first_login: 1
+      first_login: 1  // This triggers the password change flow
     });
 
     return NextResponse.json({
