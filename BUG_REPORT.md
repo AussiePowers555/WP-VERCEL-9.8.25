@@ -70,6 +70,22 @@
   - Commit: db77a03 - "fix: allow first-login users to change password without full auth"
   - Deployed to: https://wp-rental-9h2k7r0m0-michaelalanwilson-4866s-projects.vercel.app
 - **Production Verification #2**: PENDING - awaiting user confirmation
+- **Fix Attempt #3**: DEPLOYED - 2025-08-08 12:20 PM
+  - Modified `/api/auth/login` to set both auth-token and wpa_auth cookies
+  - Ensures change-password endpoint can find user session during first-login
+  - Commit: a40972b - "fix: set wpa_auth cookie during login for first-login compatibility"
+  - Deployed to: https://wp-rental-6wflnth62-michaelalanwilson-4866s-projects.vercel.app
+- **Production Verification #3**: PENDING - awaiting user confirmation
+- **Fix Attempt #4**: DEPLOYED - 2025-08-08 12:28 PM
+  - Implemented special `first-login-session` cookie for first-time users
+  - Login sets this cookie when `first_login` is true
+  - Change-password checks for this cookie first, bypassing normal auth
+  - Cookie has 30-minute expiry for security
+  - Multiple fallback methods (wpa_auth, JWT) if primary session fails
+  - Added debug logging to diagnose auth flow
+  - Commit: 53ef5f1 - "fix: implement first-login-session cookie for password change flow"
+  - Deployed to: https://wp-rental-fsxgl7wx5-michaelalanwilson-4866s-projects.vercel.app
+- **Production Verification #4**: PENDING - awaiting user confirmation
 - **Signed**: Claude Code Terminal - 2025-08-08
 
 ## BUG-007: Menu Button Navigation Errors

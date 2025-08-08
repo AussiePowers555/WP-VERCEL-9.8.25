@@ -10,12 +10,32 @@ export async function POST(request: NextRequest) {
 
     // Get request body first to check if it's a first login
     const body = await request.json();
-    const { newPassword, isFirstLogin } = body;
+    const { newPassword, isFirstLogin, email } = body;
 
     let user: any;
 
-    // For first login, check the special first-login-session cookie
-    if (isFirstLogin) {
+    // For first login, allow password change with just email
+    if (isFirstLogin && email) {
+      // Direct email-based password change for first-login users
+      console.log('First-login password change requested for email:', email);
+      
+      try {
+        const dbUser = await DatabaseService.getUserByEmail(email.toLowerCase());
+        if (dbUser && dbUser.first_login) {
+          user = dbUser;
+          console.log('First-login user found, allowing password change without auth');
+        } else if (dbUser && !dbUser.first_login) {
+          console.error('User is not in first-login state');
+          return NextResponse.json(
+            { error: 'This account has already set a password. Please use the regular password change process.' },
+            { status: 400 }
+          );
+        }
+      } catch (e) {
+        console.error('Error fetching user for first-login:', e);
+      }
+    } else if (isFirstLogin) {
+      // Fallback to cookie-based auth for first-login
       const firstLoginSession = request.cookies.get('first-login-session')?.value;
       
       if (firstLoginSession) {

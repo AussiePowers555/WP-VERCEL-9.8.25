@@ -54,15 +54,17 @@ export default function LoginPage() {
 
       // Check if this is the user's first login
       if (data.firstLogin) {
-        // Redirect to first-login page
+        // Store email for first-login page
+        sessionStorage.setItem('firstLoginEmail', email);
+        // Redirect to first-login page with email in URL as backup
         setTimeout(() => {
           try {
-            window.location.href = "/first-login";
+            window.location.href = `/first-login?email=${encodeURIComponent(email)}`;
           } catch {
             try {
-              window.location.replace("/first-login");
+              window.location.replace(`/first-login?email=${encodeURIComponent(email)}`);
             } catch {
-              window.location.assign("/first-login");
+              window.location.assign(`/first-login?email=${encodeURIComponent(email)}`);
             }
           }
         }, 200);

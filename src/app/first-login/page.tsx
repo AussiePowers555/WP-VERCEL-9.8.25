@@ -49,6 +49,10 @@ export default function FirstLoginPage() {
     setLoading(true);
 
     try {
+      // Get email from URL params or session storage
+      const urlParams = new URLSearchParams(window.location.search);
+      const userEmail = urlParams.get('email') || sessionStorage.getItem('firstLoginEmail');
+      
       const response = await fetch("/api/auth/change-password", {
         method: "POST",
         headers: {
@@ -57,6 +61,7 @@ export default function FirstLoginPage() {
         body: JSON.stringify({
           newPassword: password,
           isFirstLogin: true,
+          email: userEmail, // Pass email directly for first-login
         }),
       });
 
