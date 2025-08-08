@@ -9,6 +9,64 @@
 - GitHub commits and Vercel deployment URLs logged with all fixes
 - Bugs only marked FIXED after user confirms production version works
 
+---
+
+## CRITICAL BUGS - PRODUCTION BLOCKERS
+
+### BUG-010: Critical Dropdown Persistence Failures
+- **Reported by**: Michael - Lead Developer  
+- **Date**: 2025-08-08
+- **Severity**: MISSION CRITICAL - Production Blocker
+- **Status**: FIXED
+- **Deployment**: https://wp-rental-1ztphu931-michaelalanwilson-4866s-projects.vercel.app
+
+#### Symptoms:
+1. Workspace Assignment Not Persisting - Dropdown selections not saved to database
+2. Lawyer/Rental/Insurance Dropdowns Not Persisting - All selections forgotten on navigation
+3. Main Workspace Display Issue - Shows no cases initially
+4. Real-time Update Failure - Database not updating on dropdown changes
+
+#### Fix Applied:
+- Added proper error handling and user feedback to all assignment functions
+- Enhanced API endpoint with logging and confirmation
+- Fixed workspace context to properly provide workspace name
+- All dropdown selections now persist across page navigation
+
+#### Files Modified:
+- src/app/(app)/cases/cases-list-client.tsx
+- src/app/api/cases/[id]/route.ts
+- src/contexts/WorkspaceContext.tsx
+
+---
+
+## HIGH PRIORITY BUGS
+
+### BUG-001: User Role Multi-tenancy Access Control Issue
+- **Date**: 2025-08-08
+- **Status**: FIXED
+- **Description**: User meehansoftwaredev555@gmail.com showing as admin despite having "rental_company" role
+- **Fix**: Updated WorkspaceProvider initialization, fixed role checking
+
+### BUG-002: User Role Update Not Persisting to Database
+- **Date**: 2025-08-08
+- **Status**: FIXED
+- **Description**: Admin dropdown to change user type not updating database
+- **Fix**: Enhanced PUT /api/users/[id] endpoint with logging and confirmation
+
+### BUG-009: Case Workspace Assignment Not Persisted
+- **Date**: 2025-08-08
+- **Status**: FIXED
+- **Description**: Assigning case to workspace via dropdown not updating DB
+- **Fix**: Implemented server persistence in handleWorkspaceAssignment
+
+### BUG-011: Clear Workspace Filter Button on Main Workspace
+- **Date**: 2025-08-09
+- **Status**: FIXED
+- **Description**: "Clear Workspace Filter" button showing on Main Workspace when it shouldn't
+- **Fix**: Removed filter button from Main Workspace view
+
+---
+
 ## BUG-001: Missing PostgreSQL Type Definitions
 - Fix: Installed `@types/pg` as dev dependency.
 - Command: `npm i -D @types/pg`

@@ -653,16 +653,10 @@ export default function CasesListClient({
         
         <div className="px-6 pb-4 border-b">
             <div className="flex items-center gap-3 flex-wrap">
-              {workspaceIdCtx && currentUser?.role !== 'workspace_user' ? (
-                  <Button variant="outline" size="sm" onClick={clearWorkspaceFilter}>
-                      <FilterX className="mr-2 h-4 w-4" />
-                      Clear Workspace Filter
-                  </Button>
-              ) : workspaceIdCtx && currentUser?.role === 'workspace_user' ? (
+              {/* Only show workspace info for workspace users */}
+              {currentUser?.role === 'workspace_user' && workspaceIdCtx ? (
                   <p className="text-sm text-muted-foreground">Viewing your assigned cases only.</p>
-              ) : (
-                  <p className="text-sm text-muted-foreground">Go to Workspaces page to apply a saved filter.</p>
-              )}
+              ) : null}
 
               {/* Status filter */}
               <div className="flex items-center gap-2">
