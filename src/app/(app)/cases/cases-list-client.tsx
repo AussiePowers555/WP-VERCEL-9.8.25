@@ -260,15 +260,42 @@ export default function CasesListClient({
     );
   };
 
+  const handleInsurerAssignment = async (caseNumber: string, insurerId: string) => {
+    try {
+      const insurerName = insurerId === 'none' ? '' : getContactName(insurerId);
+      const target = hydratedCases.find(c => c.caseNumber === caseNumber);
+      const caseIdOrNumber = target?.id || caseNumber;
+
+      await fetch(`/api/cases/${caseIdOrNumber}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ at_fault_party_insurance_company: insurerName || null, last_updated: new Date().toISOString() })
+      }).catch(() => {});
+
+      setHydratedCases(prev => prev.map(c =>
+        c.caseNumber === caseNumber ? { ...c, atFaultPartyInsuranceCompany: insurerName || undefined, lastUpdated: new Date().toISOString() } : c
+      ));
+    } catch (e) {
+      console.error('Failed to assign insurer', e);
+    }
+  };
+
   // Get filtered contacts for dropdowns
   const getLawyerContacts = () => (initialContacts as Contact[]).filter(c => c.type === 'Lawyer');
   const getRentalCompanyContacts = () => (initialContacts as Contact[]).filter(c => c.type === 'Rental Company');
+  const getInsurerContacts = () => (initialContacts as Contact[]).filter(c => c.type === 'Insurer');
 
   // Get contact name by ID
   const getContactName = (contactId?: string) => {
     if (!contactId) return '';
     const contact = (initialContacts as Contact[]).find(c => c.id === contactId);
     return contact?.name || '';
+  };
+
+  const getInsurerIdFromName = (name?: string) => {
+    if (!name) return 'none';
+    const match = getInsurerContacts().find(i => i.name === name);
+    return match?.id || 'none';
   };
 
   const handleSort = (field: typeof sortField) => {
@@ -669,7 +696,22 @@ export default function CasesListClient({
                               </SelectContent>
                             </Select>
                           </TableCell>
-                          <TableCell>{c.atFaultPartyInsuranceCompany}</TableCell>
+                          <TableCell>
+                            <Select
+                              value={getInsurerIdFromName(c.atFaultPartyInsuranceCompany)}
+                              onValueChange={(insurerId) => handleInsurerAssignment(c.caseNumber, insurerId)}
+                            >
+                              <SelectTrigger className="h-8 w-[160px] text-xs">
+                                <SelectValue placeholder="No insurer" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="none">No insurer</SelectItem>
+                                {getInsurerContacts().map((ins: Contact) => (
+                                  <SelectItem key={ins.id} value={ins.id}>{ins.name}</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </TableCell>
                           <TableCell>
                             <Select
                               value={c.workspaceId || "none"}
