@@ -95,6 +95,12 @@
   - Commit: f057058 - "fix: bypass auth completely for first-login password change"
   - Deployed to: https://wp-rental-g2ygehuqm-michaelalanwilson-4866s-projects.vercel.app
 - **Production Verification #5**: PENDING - awaiting user confirmation
+- **Fix Attempt #6**: DEPLOYED - 2025-08-08 13:13 PM
+  - Fixed temp password generation to set status='active' instead of 'pending_password_change'
+  - Ensures users can login with generated temp passwords
+  - Commit: f93d6cf - "fix: ensure temp password generation sets correct status"
+  - Deployed to: https://wp-rental-l1fb6780r-michaelalanwilson-4866s-projects.vercel.app
+- **Production Verification #6**: PENDING - awaiting user confirmation
 - **Signed**: Claude Code Terminal - 2025-08-08
 
 ## BUG-007: Menu Button Navigation Errors

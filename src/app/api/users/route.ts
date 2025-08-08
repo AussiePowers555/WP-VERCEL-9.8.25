@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
       status: 'active',  // Changed from 'pending_password_change' to allow login
       contact_id: contact_id || null,
       workspace_id: workspace_id || null,
-      first_login: true,  // Changed from false to true for first-time users
+      first_login: false,  // Set to false - no forced password change
       remember_login: false
     });
     

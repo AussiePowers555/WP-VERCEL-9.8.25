@@ -65,7 +65,7 @@ export async function POST(
       password_hash,
       status: 'active',  // Keep active so user can login
       updated_at: new Date() as any,
-      first_login: 1  // This triggers the password change flow
+      first_login: 0  // Set to 0 - no forced password change
     });
 
     return NextResponse.json({

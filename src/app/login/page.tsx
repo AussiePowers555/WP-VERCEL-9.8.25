@@ -52,8 +52,9 @@ export default function LoginPage() {
 
       setMessage("✅ Login successful! Redirecting...");
 
-      // Check if this is the user's first login
-      if (data.firstLogin) {
+      // Check if this is the user's first login (disabled - no forced password change)
+      if (data.firstLogin && false) {
+        // This code is disabled - users just use temp password
         // Store email for first-login page
         sessionStorage.setItem('firstLoginEmail', email);
         // Redirect to first-login page with email in URL as backup
@@ -69,7 +70,7 @@ export default function LoginPage() {
           }
         }, 200);
       } else {
-        // Redirect to next or dashboard
+        // Always redirect to next or dashboard (no first-login flow)
         const url = new URL(window.location.href);
         const next = url.searchParams.get("next") || "/";
         setTimeout(() => {
