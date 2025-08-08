@@ -38,11 +38,34 @@ export async function getUserFromRequest(request: NextRequest): Promise<AuthUser
   const authHeader = request.headers.get('authorization');
   const token = authHeader?.replace('Bearer ', '') || request.cookies.get('auth-token')?.value;
 
-  if (!token) {
-    return null;
+  // Primary: verify JWT if present
+  if (token) {
+    const verified = await verifyToken(token);
+    if (verified) return verified;
   }
 
-  return verifyToken(token);
+  // Fallback: accept legacy session cookie 'wpa_auth' (JSON payload)
+  const legacyCookie = request.cookies.get('wpa_auth')?.value;
+  if (legacyCookie) {
+    try {
+      const payload = JSON.parse(legacyCookie);
+      if (payload?.email) {
+        const user = await DatabaseService.getUserByEmail(payload.email);
+        if (user && user.status === 'active') {
+          return {
+            id: user.id,
+            email: user.email,
+            role: user.role,
+            workspaceId: user.workspace_id,
+          };
+        }
+      }
+    } catch (e) {
+      console.warn('Failed to parse legacy wpa_auth cookie', e);
+    }
+  }
+
+  return null;
 }
 
 export function createToken(user: { id: string; email: string; role: string; workspaceId?: string }): string {

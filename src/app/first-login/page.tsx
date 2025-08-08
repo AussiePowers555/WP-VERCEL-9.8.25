@@ -73,8 +73,12 @@ export default function FirstLoginPage() {
 
       // Redirect to dashboard after successful password change
       setTimeout(() => {
-        router.push("/");
-      }, 1500);
+        try {
+          window.location.href = "/";
+        } catch {
+          router.push("/");
+        }
+      }, 800);
     } catch (error) {
       console.error("Password change error:", error);
       setError(error instanceof Error ? error.message : "Failed to change password");
