@@ -72,9 +72,6 @@ export default function CasesListClient({
   // Sorting state
   const [sortField, setSortField] = useState<'caseNumber' | 'clientName' | 'lastUpdated' | 'status'>('lastUpdated');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
-
-  // Status filter state
-  const [statusFilter, setStatusFilter] = useState<Case['status'] | 'ALL'>('ALL');
   
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
@@ -117,7 +114,7 @@ export default function CasesListClient({
         reserve: 0,
         agreed: 0,
         paid: 0,
-        workspaceId: activeWorkspace?.name === 'Main Workspace' ? undefined : activeWorkspace?.id,
+        workspaceId: data.workspaceId || workspaceIdCtx,
       };
       await createCase(newCaseData);
       
@@ -260,7 +257,25 @@ export default function CasesListClient({
     );
   };
 
-  const handleLawyerAssignment = (caseNumber: string, lawyerId: string) => {
+  const handleLawyerAssignment = async (caseNumber: string, lawyerId: string) => {
+    const target = hydratedCases.find(c => c.caseNumber === caseNumber);
+    const caseIdOrNumber = target?.id || caseNumber;
+
+    // Persist to API
+    try {
+      await fetch(`/api/cases/${caseIdOrNumber}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          assigned_lawyer_id: lawyerId === 'none' ? null : lawyerId,
+          last_updated: new Date().toISOString()
+        })
+      });
+    } catch (e) {
+      console.error('Failed to update lawyer assignment', e);
+    }
+
+    // Optimistic UI update
     setHydratedCases(prevCases =>
       prevCases.map(c =>
         c.caseNumber === caseNumber
@@ -270,7 +285,25 @@ export default function CasesListClient({
     );
   };
 
-  const handleRentalCompanyAssignment = (caseNumber: string, rentalCompanyId: string) => {
+  const handleRentalCompanyAssignment = async (caseNumber: string, rentalCompanyId: string) => {
+    const target = hydratedCases.find(c => c.caseNumber === caseNumber);
+    const caseIdOrNumber = target?.id || caseNumber;
+
+    // Persist to API
+    try {
+      await fetch(`/api/cases/${caseIdOrNumber}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          assigned_rental_company_id: rentalCompanyId === 'none' ? null : rentalCompanyId,
+          last_updated: new Date().toISOString()
+        })
+      });
+    } catch (e) {
+      console.error('Failed to update rental company assignment', e);
+    }
+
+    // Optimistic UI update
     setHydratedCases(prevCases =>
       prevCases.map(c =>
         c.caseNumber === caseNumber
@@ -491,7 +524,7 @@ export default function CasesListClient({
               </DialogDescription>
             </DialogHeader>
             <ScrollArea className="h-full pr-6">
-              <NewCaseForm onCaseCreate={handleAddCase} setDialogOpen={setIsDialogOpen} activeWorkspaceId={activeWorkspace?.id} />
+              <NewCaseForm onCaseCreate={handleAddCase} setDialogOpen={setIsDialogOpen} activeWorkspaceId={workspaceIdCtx} />
             </ScrollArea>
           </DialogContent>
         </Dialog>
@@ -531,20 +564,17 @@ export default function CasesListClient({
         <CardHeader>
            <div className="flex flex-wrap items-center justify-between gap-y-4">
               <div className="flex-1 min-w-[250px]">
-                  {activeWorkspace ? (
+                  {workspaceIdCtx ? (
                     <>
-                      <CardTitle>Workspace: {activeWorkspace.name}</CardTitle>
+                      <CardTitle>Workspace: {workspaceNameCtx}</CardTitle>
                       <CardDescription>
-                        {activeWorkspace.name === 'Main Workspace' 
-                          ? 'Showing all cases across all workspaces and unassigned cases'
-                          : `Showing cases filtered by ${activeWorkspace.type}: ${activeWorkspace.name}`
-                        }
+                        Showing cases filtered by workspace: {workspaceNameCtx}
                       </CardDescription>
                     </>
                   ) : (
                     <>
-                      <CardTitle>All Cases</CardTitle>
-                      <CardDescription>Here you can view, edit, and manage all rental cases.</CardDescription>
+                      <CardTitle>Main Workspace</CardTitle>
+                      <CardDescription>Showing all cases across all workspaces</CardDescription>
                     </>
                   )}
               </div>
