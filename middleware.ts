@@ -5,6 +5,7 @@ const PUBLIC_PATHS = [
   '/', // landing if exists
   '/about',
   '/login',
+  '/first-login',
   '/simple-login', // if exposed
   '/forms',
   '/document-signing',
