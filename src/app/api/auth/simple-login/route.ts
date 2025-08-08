@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ensureDatabaseInitialized } from '@/lib/database';
+import { createToken } from '@/lib/server-auth';
 import { authenticateUser, initializeDeveloperAccounts } from '@/lib/user-auth';
 
 export async function POST(request: NextRequest) {
@@ -71,12 +72,28 @@ export async function POST(request: NextRequest) {
       role: (auth.user as any).role,
     });
 
+    // Legacy/dev session cookie
     res.cookies.set('wpa_auth', cookiePayload, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
       maxAge: 60 * 60 * 12, // 12 hours
+    });
+
+    // Also issue JWT auth-token so API routes using requireAuth work uniformly
+    const jwt = createToken({
+      id: auth.user.id,
+      email: auth.user.email,
+      role: (auth.user as any).role,
+      workspaceId: (auth.user as any).workspace_id,
+    });
+    res.cookies.set('auth-token', jwt, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 12,
     });
 
     return res;
