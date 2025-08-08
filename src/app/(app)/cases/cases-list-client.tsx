@@ -69,6 +69,7 @@ export default function CasesListClient({
   const [hydratedCases, setHydratedCases] = useState<Case[]>(initialCases);
   const [openRows, setOpenRows] = useState<Set<string>>(new Set());
   const [currentUser] = useSessionStorage<any>("currentUser", null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Sorting state
   const [sortField, setSortField] = useState<'caseNumber' | 'clientName' | 'lastUpdated' | 'status'>('lastUpdated');
@@ -91,6 +92,23 @@ export default function CasesListClient({
       setHydratedCases(initialCases);
     }
   }, [isClient, initialCases]);
+
+  // Function to refresh cases from the server
+  const refreshCases = async () => {
+    setIsRefreshing(true);
+    try {
+      const response = await fetch('/api/cases');
+      if (response.ok) {
+        const freshCases = await response.json();
+        setHydratedCases(freshCases);
+        console.log('[Refresh] Updated cases from server');
+      }
+    } catch (error) {
+      console.error('[Refresh] Failed to fetch cases:', error);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
   
   const toggleRow = (caseNumber: string) => {
     setOpenRows(prev => {
@@ -256,14 +274,8 @@ export default function CasesListClient({
 
       console.log('[Workspace Assignment] Successfully updated');
 
-      // Only update UI if API call succeeded
-      setHydratedCases(prevCases =>
-        prevCases.map(c =>
-          c.caseNumber === caseNumber
-            ? { ...c, workspaceId: newWorkspaceId === 'none' ? undefined : newWorkspaceId, lastUpdated: new Date().toISOString() }
-            : c
-        )
-      );
+      // Refresh cases from server to ensure we have the latest data
+      await refreshCases();
     } catch (e) {
       console.error('[Workspace Assignment] Failed:', e);
       alert('Failed to update workspace assignment. Please try again.');
@@ -296,14 +308,8 @@ export default function CasesListClient({
 
       console.log('[Lawyer Assignment] Successfully updated');
 
-      // Only update UI if API call succeeded
-      setHydratedCases(prevCases =>
-        prevCases.map(c =>
-          c.caseNumber === caseNumber
-            ? { ...c, assigned_lawyer_id: lawyerId === 'none' ? undefined : lawyerId, lastUpdated: new Date().toISOString() }
-            : c
-        )
-      );
+      // Refresh cases from server to ensure we have the latest data
+      await refreshCases();
     } catch (e) {
       console.error('[Lawyer Assignment] Failed:', e);
       alert('Failed to update lawyer assignment. Please try again.');
@@ -336,14 +342,8 @@ export default function CasesListClient({
 
       console.log('[Rental Assignment] Successfully updated');
 
-      // Only update UI if API call succeeded
-      setHydratedCases(prevCases =>
-        prevCases.map(c =>
-          c.caseNumber === caseNumber
-            ? { ...c, assigned_rental_company_id: rentalCompanyId === 'none' ? undefined : rentalCompanyId, lastUpdated: new Date().toISOString() }
-            : c
-        )
-      );
+      // Refresh cases from server to ensure we have the latest data
+      await refreshCases();
     } catch (e) {
       console.error('[Rental Assignment] Failed:', e);
       alert('Failed to update rental company assignment. Please try again.');
@@ -376,12 +376,8 @@ export default function CasesListClient({
 
       console.log('[Insurer Assignment] Successfully updated');
 
-      // Only update UI if API call succeeded
-      setHydratedCases(prev => prev.map(c =>
-        c.caseNumber === caseNumber 
-          ? { ...c, atFaultPartyInsuranceCompany: insurerName || undefined, lastUpdated: new Date().toISOString() } 
-          : c
-      ));
+      // Refresh cases from server to ensure we have the latest data
+      await refreshCases();
     } catch (e) {
       console.error('[Insurer Assignment] Failed:', e);
       alert('Failed to update insurer assignment. Please try again.');
@@ -477,7 +473,17 @@ export default function CasesListClient({
       } else {
         // Admin/developer users: filter by active workspace context id. If undefined (Main) show all
         if (workspaceIdCtx) {
-          visibilityPassed = c.workspaceId === workspaceIdCtx;
+          // Check if this workspace has a contact_id (lawyer or rental company workspace)
+          const activeWorkspace = (initialWorkspaces as Workspace[]).find(w => w.id === workspaceIdCtx);
+          if (activeWorkspace?.contactId) {
+            // This is a lawyer/rental company workspace - show cases assigned to this contact
+            visibilityPassed = c.assigned_lawyer_id === activeWorkspace.contactId || 
+                             c.assigned_rental_company_id === activeWorkspace.contactId ||
+                             c.workspaceId === workspaceIdCtx;
+          } else {
+            // Regular workspace - show cases assigned to this workspace
+            visibilityPassed = c.workspaceId === workspaceIdCtx;
+          }
         } else {
           visibilityPassed = true; // Main Workspace shows all
         }
@@ -553,6 +559,14 @@ export default function CasesListClient({
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Case List</h1>
         <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={refreshCases}
+            disabled={isRefreshing}
+          >
+            <RefreshCw className={`mr-2 h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+            Refresh
+          </Button>
           <Button
             variant="outline"
             onClick={handleCreateMockCases}

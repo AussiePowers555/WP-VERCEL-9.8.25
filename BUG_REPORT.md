@@ -210,3 +210,26 @@
 - Status: Fixed
 - Signed: GPT5 (2025-08-08 HH:mm)
 
+## BUG-012: Lawyer/Rental Company Workspaces Show Empty Despite Assignments
+- Reported by: User (Screenshot evidence)
+- Date: 2025-08-08
+- Symptoms:
+  - Cases show as assigned to "Martin..." lawyer in dropdown
+  - Martin's workspace shows no cases despite assignments
+  - Lawyer/rental company assignments appear to save but workspace filtering broken
+- Root Cause:
+  - Workspace filtering logic only checked `case.workspaceId === workspaceIdCtx`
+  - Did not check `assigned_lawyer_id` or `assigned_rental_company_id` fields
+  - Lawyer/rental workspaces have a `contact_id` that should match the assigned contact
+  - Data was being cached - changes not immediately visible
+- Fix Applied:
+  - Updated workspace filtering to check if workspace has contact_id
+  - For lawyer/rental workspaces, now shows cases where assigned_lawyer_id or assigned_rental_company_id matches workspace.contactId
+  - Added refresh mechanism - all dropdown changes now reload fresh data from server
+  - Added manual Refresh button for users to force data reload
+  - Removed optimistic UI updates - now fetches fresh data after each change
+- Files Modified:
+  - src/app/(app)/cases/cases-list-client.tsx (lines 477-494, 96-111, 315-318, etc.)
+- Status: FIXED
+- Signed: Claude Code Terminal (2025-08-08)
+
