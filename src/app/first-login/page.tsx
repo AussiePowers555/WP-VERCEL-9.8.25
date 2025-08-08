@@ -20,12 +20,9 @@ export default function FirstLoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    // Redirect if user is not logged in
-    if (!user) {
-      router.push("/login");
-    }
-  }, [user, router]);
+  // Do not redirect away on initial mount.
+  // On first load, auth context may not be hydrated yet which caused a flash back to /login.
+  // We allow password change form to render regardless and rely on the httpOnly cookie for auth.
 
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();

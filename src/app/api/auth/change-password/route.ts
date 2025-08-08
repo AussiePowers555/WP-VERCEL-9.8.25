@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { DatabaseService, ensureDatabaseInitialized } from '@/lib/database';
-import { requireAuth } from '@/lib/server-auth';
+import { requireAuth, createToken } from '@/lib/server-auth';
 import CryptoJS from 'crypto-js';
 
 export async function POST(request: NextRequest) {
@@ -72,6 +72,21 @@ export async function POST(request: NextRequest) {
           sameSite: 'lax',
           path: '/',
           maxAge: 60 * 60 * 12, // 12 hours
+        });
+
+        // Also refresh JWT so protected APIs work immediately after change
+        const jwt = createToken({
+          id: updatedUser.id,
+          email: updatedUser.email,
+          role: updatedUser.role,
+          workspaceId: (updatedUser as any).workspace_id,
+        });
+        res.cookies.set('auth-token', jwt, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          path: '/',
+          maxAge: 60 * 60 * 12,
         });
 
         return res;
