@@ -65,6 +65,7 @@ export default function CasesListClient({
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { create: createCase } = useCases();
   const { id: workspaceIdCtx, name: workspaceNameCtx, backToMain, role: workspaceRole } = useWorkspace();
+  console.log('[DEBUG] Workspace Context:', { workspaceIdCtx, workspaceNameCtx, workspaceRole });
   const [hydratedCases, setHydratedCases] = useState<Case[]>(initialCases);
   const [openRows, setOpenRows] = useState<Set<string>>(new Set());
   const [currentUser] = useSessionStorage<any>("currentUser", null);
@@ -233,9 +234,11 @@ export default function CasesListClient({
     const target = hydratedCases.find(c => c.caseNumber === caseNumber);
     const caseIdOrNumber = target?.id || caseNumber;
 
-    // Persist to API (maps caseNumber → id in route)
+    console.log('[Workspace Assignment] Updating case:', caseNumber, 'to workspace:', newWorkspaceId);
+
+    // Persist to API
     try {
-      await fetch(`/api/cases/${caseIdOrNumber}`, {
+      const response = await fetch(`/api/cases/${caseIdOrNumber}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -243,27 +246,39 @@ export default function CasesListClient({
           last_updated: new Date().toISOString()
         })
       });
-    } catch (e) {
-      console.error('Failed to update workspace assignment', e);
-    }
 
-    // Optimistic UI update
-    setHydratedCases(prevCases =>
-      prevCases.map(c =>
-        c.caseNumber === caseNumber
-          ? { ...c, workspaceId: newWorkspaceId === 'none' ? undefined : newWorkspaceId, lastUpdated: 'Just now' }
-          : c
-      )
-    );
+      if (!response.ok) {
+        const error = await response.text();
+        console.error('[Workspace Assignment] API Error:', error);
+        alert(`Failed to update workspace assignment: ${error}`);
+        return;
+      }
+
+      console.log('[Workspace Assignment] Successfully updated');
+
+      // Only update UI if API call succeeded
+      setHydratedCases(prevCases =>
+        prevCases.map(c =>
+          c.caseNumber === caseNumber
+            ? { ...c, workspaceId: newWorkspaceId === 'none' ? undefined : newWorkspaceId, lastUpdated: new Date().toISOString() }
+            : c
+        )
+      );
+    } catch (e) {
+      console.error('[Workspace Assignment] Failed:', e);
+      alert('Failed to update workspace assignment. Please try again.');
+    }
   };
 
   const handleLawyerAssignment = async (caseNumber: string, lawyerId: string) => {
     const target = hydratedCases.find(c => c.caseNumber === caseNumber);
     const caseIdOrNumber = target?.id || caseNumber;
 
+    console.log('[Lawyer Assignment] Updating case:', caseNumber, 'lawyer:', lawyerId);
+
     // Persist to API
     try {
-      await fetch(`/api/cases/${caseIdOrNumber}`, {
+      const response = await fetch(`/api/cases/${caseIdOrNumber}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -271,27 +286,39 @@ export default function CasesListClient({
           last_updated: new Date().toISOString()
         })
       });
-    } catch (e) {
-      console.error('Failed to update lawyer assignment', e);
-    }
 
-    // Optimistic UI update
-    setHydratedCases(prevCases =>
-      prevCases.map(c =>
-        c.caseNumber === caseNumber
-          ? { ...c, assigned_lawyer_id: lawyerId === 'none' ? undefined : lawyerId, lastUpdated: 'Just now' }
-          : c
-      )
-    );
+      if (!response.ok) {
+        const error = await response.text();
+        console.error('[Lawyer Assignment] API Error:', error);
+        alert(`Failed to update lawyer assignment: ${error}`);
+        return;
+      }
+
+      console.log('[Lawyer Assignment] Successfully updated');
+
+      // Only update UI if API call succeeded
+      setHydratedCases(prevCases =>
+        prevCases.map(c =>
+          c.caseNumber === caseNumber
+            ? { ...c, assigned_lawyer_id: lawyerId === 'none' ? undefined : lawyerId, lastUpdated: new Date().toISOString() }
+            : c
+        )
+      );
+    } catch (e) {
+      console.error('[Lawyer Assignment] Failed:', e);
+      alert('Failed to update lawyer assignment. Please try again.');
+    }
   };
 
   const handleRentalCompanyAssignment = async (caseNumber: string, rentalCompanyId: string) => {
     const target = hydratedCases.find(c => c.caseNumber === caseNumber);
     const caseIdOrNumber = target?.id || caseNumber;
 
+    console.log('[Rental Assignment] Updating case:', caseNumber, 'rental company:', rentalCompanyId);
+
     // Persist to API
     try {
-      await fetch(`/api/cases/${caseIdOrNumber}`, {
+      const response = await fetch(`/api/cases/${caseIdOrNumber}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -299,37 +326,65 @@ export default function CasesListClient({
           last_updated: new Date().toISOString()
         })
       });
-    } catch (e) {
-      console.error('Failed to update rental company assignment', e);
-    }
 
-    // Optimistic UI update
-    setHydratedCases(prevCases =>
-      prevCases.map(c =>
-        c.caseNumber === caseNumber
-          ? { ...c, assigned_rental_company_id: rentalCompanyId === 'none' ? undefined : rentalCompanyId, lastUpdated: 'Just now' }
-          : c
-      )
-    );
+      if (!response.ok) {
+        const error = await response.text();
+        console.error('[Rental Assignment] API Error:', error);
+        alert(`Failed to update rental company assignment: ${error}`);
+        return;
+      }
+
+      console.log('[Rental Assignment] Successfully updated');
+
+      // Only update UI if API call succeeded
+      setHydratedCases(prevCases =>
+        prevCases.map(c =>
+          c.caseNumber === caseNumber
+            ? { ...c, assigned_rental_company_id: rentalCompanyId === 'none' ? undefined : rentalCompanyId, lastUpdated: new Date().toISOString() }
+            : c
+        )
+      );
+    } catch (e) {
+      console.error('[Rental Assignment] Failed:', e);
+      alert('Failed to update rental company assignment. Please try again.');
+    }
   };
 
   const handleInsurerAssignment = async (caseNumber: string, insurerId: string) => {
-    try {
-      const insurerName = insurerId === 'none' ? '' : getContactName(insurerId);
-      const target = hydratedCases.find(c => c.caseNumber === caseNumber);
-      const caseIdOrNumber = target?.id || caseNumber;
+    const insurerName = insurerId === 'none' ? '' : getContactName(insurerId);
+    const target = hydratedCases.find(c => c.caseNumber === caseNumber);
+    const caseIdOrNumber = target?.id || caseNumber;
 
-      await fetch(`/api/cases/${caseIdOrNumber}`, {
+    console.log('[Insurer Assignment] Updating case:', caseNumber, 'insurer:', insurerId, 'name:', insurerName);
+
+    try {
+      const response = await fetch(`/api/cases/${caseIdOrNumber}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ at_fault_party_insurance_company: insurerName || null, last_updated: new Date().toISOString() })
-      }).catch(() => {});
+        body: JSON.stringify({ 
+          at_fault_party_insurance_company: insurerName || null, 
+          last_updated: new Date().toISOString() 
+        })
+      });
 
+      if (!response.ok) {
+        const error = await response.text();
+        console.error('[Insurer Assignment] API Error:', error);
+        alert(`Failed to update insurer assignment: ${error}`);
+        return;
+      }
+
+      console.log('[Insurer Assignment] Successfully updated');
+
+      // Only update UI if API call succeeded
       setHydratedCases(prev => prev.map(c =>
-        c.caseNumber === caseNumber ? { ...c, atFaultPartyInsuranceCompany: insurerName || undefined, lastUpdated: new Date().toISOString() } : c
+        c.caseNumber === caseNumber 
+          ? { ...c, atFaultPartyInsuranceCompany: insurerName || undefined, lastUpdated: new Date().toISOString() } 
+          : c
       ));
     } catch (e) {
-      console.error('Failed to assign insurer', e);
+      console.error('[Insurer Assignment] Failed:', e);
+      alert('Failed to update insurer assignment. Please try again.');
     }
   };
 
@@ -566,9 +621,9 @@ export default function CasesListClient({
               <div className="flex-1 min-w-[250px]">
                   {workspaceIdCtx ? (
                     <>
-                      <CardTitle>Workspace: {workspaceNameCtx}</CardTitle>
+                      <CardTitle>Workspace: {workspaceNameCtx || 'Loading...'}</CardTitle>
                       <CardDescription>
-                        Showing cases filtered by workspace: {workspaceNameCtx}
+                        Showing cases filtered by workspace
                       </CardDescription>
                     </>
                   ) : (

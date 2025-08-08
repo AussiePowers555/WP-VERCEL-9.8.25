@@ -78,14 +78,39 @@ export async function PUT(
 
     const updates = await request.json();
     
+    console.log(`[PUT /api/cases/${id}] Received updates:`, updates);
+    console.log(`[PUT /api/cases/${id}] Case ID: ${(caseData as any).id}, Case Number: ${(caseData as any).caseNumber}`);
+    
     // Prevent workspace users from changing workspace assignment 
     if (user.role === 'workspace_user' && updates.workspace_id && updates.workspace_id !== user.workspace_id) {
       return NextResponse.json({ error: 'Cannot modify workspace assignment' }, { status: 403 });
     }
     
     // Use the actual database ID for the update, not the parameter which might be case number
-    await DatabaseService.updateCase((caseData as any).id, updates);
-    return NextResponse.json({ success: true });
+    const actualId = (caseData as any).id;
+    console.log(`[PUT /api/cases/${id}] Updating case with ID: ${actualId}`);
+    
+    await DatabaseService.updateCase(actualId, updates);
+    
+    // Fetch updated case to confirm changes
+    const updatedCase = await DatabaseService.getCaseById(actualId);
+    console.log(`[PUT /api/cases/${id}] Updated case:`, {
+      id: updatedCase?.id,
+      caseNumber: updatedCase?.caseNumber,
+      workspace_id: updatedCase?.workspace_id,
+      assigned_lawyer_id: updatedCase?.assigned_lawyer_id,
+      assigned_rental_company_id: updatedCase?.assigned_rental_company_id,
+      at_fault_party_insurance_company: updatedCase?.at_fault_party_insurance_company
+    });
+    
+    return NextResponse.json({ 
+      success: true,
+      updated: {
+        workspace_id: updatedCase?.workspace_id,
+        assigned_lawyer_id: updatedCase?.assigned_lawyer_id,
+        assigned_rental_company_id: updatedCase?.assigned_rental_company_id
+      }
+    });
   } catch (error) {
     console.error('Error updating case:', error);
     return NextResponse.json({ error: 'Failed to update case' }, { status: 500 });
