@@ -5,6 +5,9 @@ import { hashPassword } from '@/lib/passwords';
 
 export async function POST(request: NextRequest) {
   try {
+    // Ensure DB initialized BEFORE auth, since auth verification reads DB
+    await ensureDatabaseInitialized();
+
     // Authenticate user
     const authResult = await requireAuth(request);
     if (authResult instanceof Response) {
@@ -44,7 +47,7 @@ export async function POST(request: NextRequest) {
 
     // Update user's password and first_login status
     await ensureDatabaseInitialized();
-    DatabaseService.updateUserAccount(user.id, {
+    await DatabaseService.updateUserAccount(user.id, {
       password_hash: passwordHash,
       first_login: false,
       updated_at: new Date() as any,
