@@ -64,28 +64,48 @@ export async function GET(request: NextRequest) {
 
     // Best-effort auth (do not block list rendering if cookie not yet hydrated)
     const authUser = await getUserFromRequest(request).catch(() => null);
-    const userRole = (authUser as any)?.role || 'admin';
+    const userRole = (authUser as any)?.role || 'developer';
     const workspaceId = (authUser as any)?.workspaceId || (authUser as any)?.workspace_id;
-    
+
     // Get bikes filtered by workspace if user is workspace-scoped
-    let bikes = (userRole as any) === 'workspace' && workspaceId
-      ? await (DatabaseService as any).getBikes?.(workspaceId)
-      : await (DatabaseService as any).getBikes?.();
-    
-    // If no bikes in database, import them from the CSV data (admin only)
-    if (bikes.length === 0 && userRole === 'admin') {
-      console.log('No bikes in database, importing from CSV data...');
-      await (DatabaseService as any).bulkInsertBikes?.(importedBikes);
-      bikes = await (DatabaseService as any).getBikes?.();
+    let bikes: any[] | undefined;
+    try {
+      if (((userRole as any) === 'workspace' || (userRole as any) === 'workspace_user') && workspaceId) {
+        bikes = await (DatabaseService as any).getBikes?.(workspaceId);
+      } else {
+        bikes = await (DatabaseService as any).getBikes?.();
+      }
+    } catch (innerErr) {
+      console.warn('⚠️ getBikes failed, falling back to empty list:', (innerErr as any)?.message);
+      bikes = [];
     }
-    
-    // Transform bikes to frontend format
-    const transformedBikes = bikes.map(transformDbBikeToFrontend);
-    
+
+    if (!Array.isArray(bikes)) {
+      bikes = [];
+    }
+
+    // If no bikes in database, import seed for admin/developer
+    if (bikes.length === 0 && (userRole === 'admin' || userRole === 'developer')) {
+      try {
+        console.log('No bikes in database, importing initial seed...');
+        await (DatabaseService as any).bulkInsertBikes?.(importedBikes);
+        bikes = (await (DatabaseService as any).getBikes?.()) || [];
+      } catch (seedErr) {
+        console.warn('⚠️ Bike seed failed, serving inline seed only:', (seedErr as any)?.message);
+        bikes = importedBikes as any[];
+      }
+    }
+
+    // Transform bikes to frontend format (idempotent for already-frontend shaped items)
+    const transformedBikes = (bikes as any[]).map((b) => {
+      try { return transformDbBikeToFrontend(b); } catch { return b; }
+    });
+
     return NextResponse.json(transformedBikes);
   } catch (error) {
-    console.error('Error fetching bikes:', error);
-    return NextResponse.json({ error: 'Failed to fetch bikes' }, { status: 500 });
+    console.error('Error fetching bikes (outer):', error);
+    // Never block the UI — return empty list
+    return NextResponse.json([]);
   }
 }
 
