@@ -21,8 +21,8 @@ export function WorkspaceName() {
           <TooltipTrigger asChild>
             <h1
               className={cn(
-                "text-2xl font-semibold text-primary",
-                "md:text-2xl",
+                "text-xl font-semibold text-navy-800",
+                "md:text-xl",
                 "max-w-[200px] md:max-w-none",
                 "truncate"
               )}

@@ -1,0 +1,336 @@
+================================================================================
+                    DEVELOPMENT WORKFLOW GUIDE
+          Complete Non-Technical Guide: Dev & Production Environments
+================================================================================
+
+PART 1: CREATE YOUR DEVELOPMENT ENVIRONMENT
+================================================================================
+
+Step 1: Open Terminal in VS Code
+---------------------------------
+1. Open VS Code
+2. Click "Terminal" menu at the top
+3. Click "New Terminal"
+4. A black window appears at the bottom
+
+Step 2: Create Development Branch
+----------------------------------
+1. In the terminal, type exactly:
+   git checkout -b develop
+2. Press Enter
+3. You'll see: "Switched to a new branch 'develop'"
+
+Step 3: Create Development Database in Neon
+--------------------------------------------
+1. Open your browser
+2. Go to https://console.neon.tech
+3. Click on your project
+4. Click "Branches" in left menu
+5. Click "Create Branch" button
+6. Name it: "development"
+7. Click "Create"
+8. Click on the new branch
+9. Find "Connection string" 
+10. Click "Copy" button next to it
+11. Save this somewhere safe (Notepad)
+
+Step 4: Create Development Project in Vercel
+---------------------------------------------
+1. In VS Code terminal, type:
+   vercel
+2. Press Enter
+3. It asks: "Set up and deploy?"
+4. Type Y and press Enter
+5. It asks: "Which scope?"
+6. Press Enter (use default)
+7. It asks: "Link to existing project?"
+8. Type N and press Enter
+9. It asks: "What's your project's name?"
+10. Type: wp-rental-app-dev
+11. Press Enter
+12. It asks: "In which directory?"
+13. Press Enter (use current)
+14. It asks: "Want to override settings?"
+15. Type N and press Enter
+16. Wait for deployment to finish
+17. Copy the URL it gives you (like https://wp-rental-app-dev-xxxxx.vercel.app)
+
+Step 5: Add Database to Development Environment
+------------------------------------------------
+1. In terminal, type:
+   vercel env add DATABASE_URL
+2. Press Enter
+3. It asks: "What's the value?"
+4. Paste your Neon development connection string (from Step 3)
+5. Press Enter
+6. When asked which environments, type:
+   Production, Preview, Development
+7. Press Enter
+
+Step 6: Deploy Development Version
+-----------------------------------
+1. In terminal, type:
+   vercel --prod
+2. Press Enter
+3. Wait for deployment
+4. Your dev site is now live!
+
+================================================================================
+PART 2: DAILY DEVELOPMENT WORKFLOW
+================================================================================
+
+Making Changes in Development:
+-------------------------------
+1. Make your code changes in VS Code
+2. Test locally with:
+   npm run dev
+3. Open http://localhost:3000 in browser
+4. Test your changes
+
+Deploy to Development:
+----------------------
+1. In VS Code terminal:
+   git add -A
+2. Press Enter
+3. Type:
+   git commit -m "describe your changes here"
+4. Press Enter
+5. Type:
+   git push origin develop
+6. Press Enter
+7. Type:
+   vercel --prod
+8. Press Enter
+9. Visit your dev URL to test
+
+================================================================================
+PART 3: PUSH CHANGES TO PRODUCTION
+================================================================================
+
+When Development is Ready for Production:
+
+Step 1: Make Sure Development is Saved
+---------------------------------------
+1. In terminal, type:
+   git status
+2. If you see red files, type:
+   git add -A
+   git commit -m "ready for production"
+   git push origin develop
+
+Step 2: Switch to Master Branch
+--------------------------------
+1. Type:
+   git checkout master
+2. Press Enter
+3. You'll see: "Switched to branch 'master'"
+
+Step 3: Get Latest Production Code
+-----------------------------------
+1. Type:
+   git pull origin master
+2. Press Enter
+
+Step 4: Merge Development into Production
+------------------------------------------
+1. Type:
+   git merge develop
+2. Press Enter
+3. If successful, you'll see: "Fast-forward" or "Merge made"
+
+Step 5: Push to Production
+---------------------------
+1. Type:
+   git push origin master
+2. Press Enter
+
+Step 6: Deploy to Production Vercel
+------------------------------------
+1. Type:
+   vercel --prod
+2. Press Enter
+3. IMPORTANT: Make sure you're in the PRODUCTION project
+4. If it asks which project, choose "wp-rental-app" (NOT dev)
+
+Step 7: Go Back to Development
+-------------------------------
+1. Type:
+   git checkout develop
+2. Press Enter
+3. You're back in development mode
+
+================================================================================
+PART 4: QUICK REFERENCE CHEAT SHEET
+================================================================================
+
+Your Two Sites:
+---------------
+- Development: https://wp-rental-app-dev.vercel.app (test here)
+- Production: https://wp-rental-app.vercel.app (real customers)
+
+Daily Commands:
+---------------
+# Start local development
+npm run dev
+
+# Save changes to development
+git add -A
+git commit -m "what I changed"
+git push origin develop
+vercel --prod
+
+# Push to production (only when ready!)
+git checkout master
+git merge develop
+git push origin master
+vercel --prod
+git checkout develop
+
+Emergency: Undo Production Deploy
+----------------------------------
+git checkout master
+git reset --hard HEAD~1
+git push origin master --force
+
+================================================================================
+VISUAL INDICATOR: WHICH ENVIRONMENT AM I IN?
+================================================================================
+
+Check Current Branch:
+---------------------
+1. Look at bottom-left corner of VS Code
+2. It shows branch name (develop or master)
+3. "develop" = Development
+4. "master" = Production
+
+Or in terminal:
+---------------
+git branch
+The one with * is current branch
+
+================================================================================
+GOLDEN RULES
+================================================================================
+
+1. ALWAYS test on development first
+2. NEVER edit master directly  
+3. Only merge to master when development is perfect
+4. If unsure, ask before merging to master
+
+================================================================================
+HOW TO MERGE DEVELOP → MASTER (DETAILED)
+================================================================================
+
+Basic Merge Process:
+--------------------
+# 1. First, make sure develop branch is up to date
+git checkout develop
+git add .
+git commit -m "final changes before merge"
+git push origin develop
+
+# 2. Switch to master branch
+git checkout master
+
+# 3. Pull latest master (in case of any hotfixes)
+git pull origin master
+
+# 4. Merge develop into master
+git merge develop
+
+# 5. Push to production
+git push origin master
+
+Handling Merge Conflicts (if they occur):
+------------------------------------------
+# If you see "CONFLICT" message after merge:
+
+# 1. Check which files have conflicts
+git status
+
+# 2. Open conflicted files in VS Code
+# Look for markers like:
+<<<<<<< HEAD
+current master code
+=======
+develop branch code
+>>>>>>> develop
+
+# 3. Edit files to resolve conflicts
+# Remove the markers and keep the code you want
+
+# 4. After fixing all conflicts
+git add .
+git commit -m "resolved merge conflicts"
+git push origin master
+
+Safe Merge with Testing:
+-------------------------
+# RECOMMENDED: Test merge locally first
+git checkout master
+git pull origin master
+git checkout -b test-merge  # Create temporary branch
+git merge develop           # Test the merge here first
+
+# If everything looks good
+git checkout master
+git merge develop
+git push origin master
+
+# Delete test branch
+git branch -d test-merge
+
+Visual Studio Code Method:
+---------------------------
+1. Open VS Code
+2. Click Source Control (left sidebar)
+3. Click "..." menu → Checkout to → master
+4. Click "..." menu → Branch → Merge Branch
+5. Select "develop"
+6. Click Sync Changes button
+
+Best Practice Workflow:
+------------------------
+# Before starting new work
+git checkout develop
+git pull origin master  # Keep develop updated with master
+
+# After finishing feature
+git add .
+git commit -m "feature complete"
+git push origin develop
+
+# Test on dev environment
+# Visit: https://wp-rental-app-dev.vercel.app
+
+# If everything works, merge to production
+git checkout master
+git merge develop
+git push origin master
+
+# Go back to develop for next feature
+git checkout develop
+
+Pro Tips:
+---------
+1. Always test on dev first before merging
+2. Never commit directly to master - always go through develop
+3. Tag your releases for easy rollback:
+   git tag v1.0.0
+   git push origin v1.0.0
+
+4. Check before merging:
+   # See what will be merged
+   git checkout master
+   git diff master..develop  # Shows all changes
+
+================================================================================
+SUMMARY
+================================================================================
+
+The key is: develop is your playground, master is your stable production. 
+Only merge when you're confident the dev version is working perfectly!
+
+This workflow ensures you never break production while testing new features!
+
+================================================================================

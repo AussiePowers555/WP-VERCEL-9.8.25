@@ -75,9 +75,8 @@ export function UserHeader() {
   };
 
   return (
-    <header className="flex h-16 items-center justify-between border-b bg-background/80 backdrop-blur-sm px-4 md:px-6 sticky top-0 z-30">
+    <header className="flex h-14 items-center justify-between border-b border-navy-200 bg-white/90 backdrop-blur-sm px-4 md:px-6 shadow-sm">
       <div className="flex items-center gap-4">
-        <SidebarTrigger className="md:hidden" />
         <WorkspaceName />
         {isAdmin && name !== 'Main Workspace' && (
           <TooltipProvider>
@@ -86,7 +85,7 @@ export function UserHeader() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-8 px-3 text-xs font-medium"
+                  className="h-8 px-3 text-xs font-medium bg-navy-50 border-navy-200 text-navy-700 hover:bg-navy-100 hover:border-navy-300"
                   onClick={handleBackToMain}
                   aria-label="Return to main workspace (Alt+M)"
                 >
