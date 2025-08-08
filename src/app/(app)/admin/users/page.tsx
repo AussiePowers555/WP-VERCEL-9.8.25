@@ -177,6 +177,8 @@ export default function UsersPage() {
 
   const handleEditUser = async (user: User, updates: Partial<User>) => {
     try {
+      console.log(`Updating user ${user.email} with:`, updates);
+      
       const response = await fetch(`/api/users/${user.id}`, {
         method: 'PUT',
         headers: getAuthHeaders(),
@@ -186,6 +188,9 @@ export default function UsersPage() {
       
       const data = await response.json();
       if (data.success) {
+        // Show success message with the actual updated role
+        alert(data.message || `User ${user.email} updated successfully`);
+        console.log('User update response:', data);
         fetchUsers();
         setEditingUser(null);
       } else {
