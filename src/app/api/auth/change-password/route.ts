@@ -14,41 +14,67 @@ export async function POST(request: NextRequest) {
 
     let user: any;
 
-    // For first login, check the session cookie directly instead of requireAuth
+    // For first login, check the special first-login-session cookie
     if (isFirstLogin) {
-      // Try to get user from cookies during first login
-      const legacyCookie = request.cookies.get('wpa_auth')?.value;
-      const authToken = request.cookies.get('auth-token')?.value;
+      const firstLoginSession = request.cookies.get('first-login-session')?.value;
       
-      if (legacyCookie) {
+      if (firstLoginSession) {
         try {
-          const payload = JSON.parse(legacyCookie);
-          if (payload?.email) {
-            const dbUser = await DatabaseService.getUserByEmail(payload.email);
-            if (dbUser) {
+          const session = JSON.parse(firstLoginSession);
+          console.log('First-login session found:', session);
+          
+          // Verify the session is recent (within 30 minutes)
+          if (session.timestamp && (Date.now() - session.timestamp) < 30 * 60 * 1000) {
+            // Get user by email from the session
+            const dbUser = await DatabaseService.getUserByEmail(session.email);
+            if (dbUser && dbUser.first_login) {
               user = dbUser;
+              console.log('User found for first-login password change:', user.email);
             }
           }
         } catch (e) {
-          console.warn('Failed to parse wpa_auth cookie during first login', e);
+          console.warn('Failed to parse first-login-session cookie', e);
         }
       }
       
-      if (!user && authToken) {
-        // Try JWT token as fallback
-        try {
-          const jwt = require('jsonwebtoken');
-          const decoded = jwt.verify(authToken, process.env.JWT_SECRET || 'your-jwt-secret-key') as any;
-          const dbUser = await DatabaseService.getUserByEmail(decoded.email);
-          if (dbUser) {
-            user = dbUser;
+      // Fallback: try other cookies if first-login-session doesn't work
+      if (!user) {
+        const legacyCookie = request.cookies.get('wpa_auth')?.value;
+        const authToken = request.cookies.get('auth-token')?.value;
+        
+        if (legacyCookie) {
+          try {
+            const payload = JSON.parse(legacyCookie);
+            if (payload?.email) {
+              const dbUser = await DatabaseService.getUserByEmail(payload.email);
+              if (dbUser) {
+                user = dbUser;
+                console.log('User found via wpa_auth cookie:', user.email);
+              }
+            }
+          } catch (e) {
+            console.warn('Failed to parse wpa_auth cookie during first login', e);
           }
-        } catch (e) {
-          console.warn('Failed to verify JWT during first login', e);
+        }
+        
+        if (!user && authToken) {
+          // Try JWT token as fallback
+          try {
+            const jwt = require('jsonwebtoken');
+            const decoded = jwt.verify(authToken, process.env.JWT_SECRET || 'your-jwt-secret-key') as any;
+            const dbUser = await DatabaseService.getUserByEmail(decoded.email);
+            if (dbUser) {
+              user = dbUser;
+              console.log('User found via JWT token:', user.email);
+            }
+          } catch (e) {
+            console.warn('Failed to verify JWT during first login', e);
+          }
         }
       }
 
       if (!user) {
+        console.error('No valid session found for first-login password change');
         return NextResponse.json(
           { error: 'Authentication required - please login again' },
           { status: 401 }
@@ -112,6 +138,9 @@ export async function POST(request: NextRequest) {
           success: true,
           message: 'Password changed successfully',
         });
+
+        // Clear the first-login-session cookie since password has been changed
+        res.cookies.delete('first-login-session');
 
         // Update the auth cookie
         res.cookies.set('wpa_auth', cookiePayload, {

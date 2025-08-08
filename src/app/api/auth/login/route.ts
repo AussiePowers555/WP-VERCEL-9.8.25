@@ -93,6 +93,21 @@ export async function POST(request: NextRequest) {
       maxAge: 7 * 24 * 60 * 60 // 7 days
     });
 
+    // Set special first-login session if this is a first login
+    if (user.first_login) {
+      response.cookies.set('first-login-session', JSON.stringify({
+        userId: user.id,
+        email: user.email,
+        timestamp: Date.now()
+      }), {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 60 * 30 // 30 minutes for password change
+      });
+    }
+
     return response;
   } catch (error) {
     console.error('Login error:', error);
