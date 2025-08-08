@@ -1,11 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { DatabaseService, ensureDatabaseInitialized } from '@/lib/database';
 import { createToken } from '@/lib/server-auth';
-import CryptoJS from 'crypto-js';
-
-const hashPassword = (password: string): string => {
-  return CryptoJS.SHA256(password + 'salt_pbr_2024').toString();
-};
+import { hashPassword } from '@/lib/passwords';
 
 export async function POST(request: NextRequest) {
   try {

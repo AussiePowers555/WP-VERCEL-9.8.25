@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { DatabaseService, ensureDatabaseInitialized } from '@/lib/database';
 import { requireAuth, createToken } from '@/lib/server-auth';
-import CryptoJS from 'crypto-js';
+import { hashPassword } from '@/lib/passwords';
 
 export async function POST(request: NextRequest) {
   try {
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Hash the new password
-    const passwordHash = CryptoJS.SHA256(newPassword + 'salt_pbr_2024').toString();
+    const passwordHash = hashPassword(newPassword);
 
     // Update user's password and first_login status
     await ensureDatabaseInitialized();

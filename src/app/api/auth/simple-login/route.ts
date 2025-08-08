@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { ensureDatabaseInitialized } from '@/lib/database';
 import { createToken } from '@/lib/server-auth';
 import { authenticateUser, initializeDeveloperAccounts } from '@/lib/user-auth';
+import { verifyPassword } from '@/lib/passwords';
 
 export async function POST(request: NextRequest) {
   try {
@@ -32,7 +33,7 @@ export async function POST(request: NextRequest) {
             remember_login: true,
           } as any,
         };
-      } else if ((email === 'admin' || email === 'admin@whitepointer.com') && password === 'admin') {
+      } else if ((email === 'admin' || email === 'admin@whitepointer.com') && verifyPassword(password, 'admin')) {
         auth = {
           success: true,
           user: {

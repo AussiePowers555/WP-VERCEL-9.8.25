@@ -1,20 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { DatabaseService, ensureDatabaseInitialized } from '@/lib/database';
-import crypto from 'crypto';
-
-// Simple password hashing for now (in production, use bcrypt)
-function hashPassword(password: string): string {
-  return crypto.createHash('sha256').update(password).digest('hex');
-}
+import { hashPassword, generateTempPassword as genTemp } from '@/lib/passwords';
 
 // Utility to generate a reasonably strong temp password
-function generateTempPassword(): string {
-  // 12 chars: upper, lower, digits
-  const part = () => Math.random().toString(36).slice(-6);
-  const mix = (s: string) =>
-    s.replace(/[a-z]/, (c) => c.toUpperCase()).replace(/[0-9]/, '7');
-  return mix(part() + part());
-}
+const generateTempPassword = () => genTemp(12);
 
 export async function PUT(
   request: NextRequest,

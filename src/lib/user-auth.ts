@@ -1,21 +1,9 @@
 import { UserAccount, UserRole, UserStatus } from './database-schema';
 import { DatabaseService } from './database';
-import CryptoJS from 'crypto-js';
-
-// Password hashing utility
-const hashPassword = (password: string): string => {
-  return CryptoJS.SHA256(password + 'salt_pbr_2024').toString();
-};
+import { hashPassword, generateTempPassword as genTemp } from '@/lib/passwords';
 
 // Generate random password
-export const generateRandomPassword = (): string => {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = '';
-  for (let i = 0; i < 12; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
-};
+export const generateRandomPassword = (): string => genTemp(12);
 
 // Password validation
 export const validatePassword = (password: string): { valid: boolean; errors: string[] } => {

@@ -1,15 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { DatabaseService, ensureDatabaseInitialized } from '@/lib/database';
-import crypto from 'crypto';
+import { hashPassword, generateTempPassword } from '@/lib/passwords';
 
-// Simple password hashing for now (in production, use bcrypt)
-function hashPassword(password: string): string {
-  return crypto.createHash('sha256').update(password).digest('hex');
-}
-
-function generateRandomPassword(): string {
-  return Math.random().toString(36).slice(-12) + Math.random().toString(36).slice(-12).toUpperCase();
-}
+// keep legacy name used below
+const generateRandomPassword = generateTempPassword;
 
 export async function GET(request: NextRequest) {
   try {

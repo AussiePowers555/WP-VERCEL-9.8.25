@@ -1,11 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { DatabaseService, ensureDatabaseInitialized } from '@/lib/database';
-import crypto from 'crypto';
-
-// Simple password hashing for now (in production, use bcrypt)
-function hashPassword(password: string): string {
-  return crypto.createHash('sha256').update(password).digest('hex');
-}
+import { hashPassword } from '@/lib/passwords';
 
 export async function POST(request: NextRequest) {
   try {
