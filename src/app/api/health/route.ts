@@ -38,14 +38,35 @@ export async function GET() {
       
       await pool.end();
 
+      // Check memory usage
+      const memUsage = process.memoryUsage();
+      const memoryUsedMB = Math.round(memUsage.heapUsed / 1024 / 1024);
+      const memoryTotalMB = Math.round(memUsage.heapTotal / 1024 / 1024);
+      
       return NextResponse.json({
         status: 'healthy',
-        message: 'PostgreSQL connection successful',
-        database: 'postgresql',
-        server_time: result.rows[0].current_time,
-        postgres_version: result.rows[0].postgres_version.split(' ')[0],
-        database_url_configured: !!databaseUrl,
-        environment: process.env.NODE_ENV || 'development'
+        message: 'All systems operational',
+        timestamp: new Date().toISOString(),
+        uptime: Math.round(process.uptime()),
+        checks: {
+          database: {
+            status: 'healthy',
+            type: 'postgresql',
+            server_time: result.rows[0].current_time,
+            version: result.rows[0].postgres_version.split(' ')[0],
+          },
+          memory: {
+            status: memoryUsedMB < memoryTotalMB * 0.9 ? 'healthy' : 'warning',
+            used_mb: memoryUsedMB,
+            total_mb: memoryTotalMB,
+            percentage: Math.round((memoryUsedMB / memoryTotalMB) * 100)
+          },
+          environment: {
+            node_env: process.env.NODE_ENV || 'development',
+            node_version: process.version,
+            platform: process.platform
+          }
+        }
       });
     } catch (dbError) {
       await pool.end();

@@ -30,12 +30,12 @@ async function RecentCasesServer() {
   
   // Get the 4 most recent cases
   const recentCases = cases
-    .sort((a, b) => new Date(b.lastUpdated || '').getTime() - new Date(a.lastUpdated || '').getTime())
+    .sort((a: any, b: any) => new Date(b.lastUpdated || '').getTime() - new Date(a.lastUpdated || '').getTime())
     .slice(0, 4);
 
   const getContactName = (contactId?: string) => {
     if (!contactId) return '-';
-    const contact = contacts.find(c => c.id === contactId);
+    const contact = contacts.find((c: any) => c.id === contactId);
     return contact?.name || '-';
   };
 
@@ -67,7 +67,7 @@ async function RecentCasesServer() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {recentCases.map((case_) => (
+            {recentCases.map((case_: any) => (
               <TableRow key={case_.caseNumber}>
                 <TableCell className="font-medium">{case_.caseNumber}</TableCell>
                 <TableCell>{case_.clientName}</TableCell>
@@ -94,7 +94,7 @@ async function FleetChartServer() {
   const bikes = await (DatabaseService as any).getBikesAsync?.();
   
   // Calculate fleet status distribution
-  const statusCounts = bikes.reduce((acc, bike) => {
+  const statusCounts = bikes.reduce((acc: Record<string, number>, bike: any) => {
     const status = bike.status || 'Available';
     acc[status] = (acc[status] || 0) + 1;
     return acc;

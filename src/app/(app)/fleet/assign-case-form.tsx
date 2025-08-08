@@ -31,7 +31,6 @@ import type { BikeFrontend as Bike, CaseFrontend as Case } from "@/lib/database-
 const formSchema = z.object({
   caseNumber: z.string().min(1, "Please select a case."),
   startDate: z.string().min(1, "Please select a start date."),
-  endDate: z.string().min(1, "Please select an end date."),
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -39,7 +38,7 @@ type FormValues = z.infer<typeof formSchema>
 interface AssignCaseFormProps {
     bike: Bike;
     cases: Case[];
-    onAssign: (bikeId: string, caseNumber: string, startDate: string, endDate: string) => void;
+    onAssign: (bikeId: string, caseNumber: string, startDate: string) => void;
     setDialogOpen: (open: boolean) => void;
 }
 
@@ -54,7 +53,7 @@ export function AssignCaseForm({ bike, cases, onAssign, setDialogOpen }: AssignC
     setIsLoading(true);
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
-    onAssign(bike.id, values.caseNumber, values.startDate, values.endDate);
+    onAssign(bike.id, values.caseNumber, values.startDate);
     setIsLoading(false);
     setDialogOpen(false);
   }
@@ -99,19 +98,7 @@ export function AssignCaseForm({ bike, cases, onAssign, setDialogOpen }: AssignC
           )}
         />
         
-        <FormField
-          control={form.control}
-          name="endDate"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Assignment End Date</FormLabel>
-              <FormControl>
-                <Input type="date" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {/* End date removed by design. The bike returns to the unassigned pool to end the assignment. */}
         <DialogFooter>
           <Button type="button" variant="ghost" onClick={() => setDialogOpen(false)}>Cancel</Button>
           <Button type="submit" disabled={isLoading}>

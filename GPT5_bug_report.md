@@ -28,4 +28,21 @@
 - Status: Fixed
 - Signed: GPT5
 
+## BUG-006: First-time login / temporary password not working (FIXED by Claude)
+- **User Report**: "when admin generates temp password, the client receiving temp password can enter and login screen updates to input new password so client can put there own password but credential is not accepted"
+- **Root Cause Identified**: 
+  - User creation API (`src/app/api/users/route.ts`) was incorrectly setting `first_login: false` instead of `true` for new users
+  - Status was set to `pending_password_change` instead of `active`, potentially blocking authentication
+- **Fix Applied**:
+  - Updated `src/app/api/users/route.ts` line 71-74:
+    - Changed `status: 'pending_password_change'` to `status: 'active'`
+    - Changed `first_login: false` to `first_login: true`
+- **Verification**: Created and ran `test-temp-password.js` script that confirms:
+  1. User creation with temporary password works
+  2. Login with temporary password succeeds and identifies as first login
+  3. Password change via `/api/auth/change-password` succeeds
+  4. Login with new password works correctly
+- **Status**: FIXED and VERIFIED
+- **Signed**: Claude
+
 

@@ -78,6 +78,21 @@ export async function POST(request: NextRequest) {
       maxAge: 7 * 24 * 60 * 60 // 7 days
     });
 
+    // Also set legacy wpa_auth cookie for first-login compatibility
+    const cookiePayload = JSON.stringify({
+      id: user.id,
+      email: user.email,
+      role: user.role
+    });
+    
+    response.cookies.set('wpa_auth', cookiePayload, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 7 * 24 * 60 * 60 // 7 days
+    });
+
     return response;
   } catch (error) {
     console.error('Login error:', error);

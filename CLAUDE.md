@@ -114,9 +114,43 @@ npm run dev:auto-restart
 **Remember**: Next.js only reads environment variables at startup, so restart is mandatory for testing!
 - PDF generation and signature processes are tested through the Cloudflare tunnel
 
+## Bug Management Protocol
+
+### Automated Bug Scanning and Fixing Workflow
+On startup, Claude Code Terminal will:
+
+1. **Scan bug_report.md** for documented bugs
+2. **Identify the next bug without a known fix** and prompt: "Should I attempt to fix the following bug? [Bug ID: {id}, Description: {description}]"
+3. **Maintain bug_report.md** by:
+   - Logging all known bugs with unique ID, description, status (open/fixed), and date/time of discovery
+   - Documenting each fix attempt with code changes, signed "Claude Code Terminal" with date/time
+   - Using Playwright to develop and run tests to verify bug fixes
+   - Logging test results (pass/fail) with signature and date/time
+
+4. **After local tests pass**, automatically:
+   - Commit changes to GitHub with message "fix: {description} - Bug ID: {id}"
+   - Push to GitHub repository
+   - Deploy to Vercel production using `vercel --prod`
+   - Log commit hash and deployment URL with signature and date/time
+
+5. **After deployment**, ask user: "Is the production version on Vercel functioning as intended? [Bug ID: {id}, Description: {description}]"
+   - If **YES**: Mark bug as FIXED in bug_report.md, log production verification with signature and date/time
+   - If **NO**: Continue debugging, attempting fixes, and redeploying until resolved
+
+6. **Sign every log entry** as "Claude Code Terminal" with current date/time
+7. **Auto-deployment required**: All bug fixes must be automatically pushed to GitHub and deployed to Vercel for production testing
+
 ## Memory Log
 
 ### Deployment and Infrastructure
 - I am working to perfect my Vercel deployment to work perfectly with my Neon database
 - Currently getting errors when clicking on different menu buttons
 - Need to perfect the schema, business logic, functions so this rental bike app works perfectly and is production ready for release without client experiencing any bugs
+
+- On startup, scan bug_report.md for documented bugs. Identify the next bug without a known fix and prompt the user: "Should I attempt to fix the following bug? [Insert bug description]." Maintain bug_report.md by:
+
+Logging all known bugs with a unique ID, description, status (open/fixed), and date/time of discovery.
+Documenting each fix attempt, including code changes, with your signature "Claude Code Terminal" and the date/time.
+Using Playwright to develop and run tests to verify the bug fix. Log test results (pass/fail) with your signature and date/time.
+After tests pass, ask the user: "Is this bug fixed? [Insert bug description]." If the user confirms "yes," mark the bug as fixed in bug_report.md and ignore it henceforth. If "no," continue testing and attempting fixes, logging each attempt.
+Sign every log entry (bug discovery, fix attempt, test result, user confirmation) as "Claude Code Terminal" with the current date/time.

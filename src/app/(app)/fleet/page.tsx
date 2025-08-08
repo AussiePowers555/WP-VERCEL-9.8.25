@@ -115,10 +115,9 @@ export default function FleetPage() {
     return contact?.name || '';
   };
 
-  const handleAssignBikeToCase = async (bikeId: string, caseNumber: string, startDate: string, endDate: string) => {
+  const handleAssignBikeToCase = async (bikeId: string, caseNumber: string, startDate: string) => {
     const today = new Date().toISOString().split('T')[0];
     const assignmentStartDate = startDate || today;
-    const assignmentEndDate = endDate || '';
     
     try {
       await updateBike(bikeId, {
@@ -127,7 +126,7 @@ export default function FleetPage() {
         location: 'On-road',
         assignedCaseId: caseNumber,
         assignmentStartDate,
-        assignmentEndDate
+        // end date intentionally omitted; bike returns to pool to end assignment
       });
       
       await refetchBikes();
