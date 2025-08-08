@@ -362,8 +362,10 @@ export default function CasesListClient({
             if (time.includes('week')) return parseInt(time) * 7 * 24 * 60;
             return 999999; // Very old
           };
-          aValue = timeToMinutes(a.lastUpdated);
-          bValue = timeToMinutes(b.lastUpdated);
+          const aTime = a.lastUpdated instanceof Date ? a.lastUpdated.toISOString() : a.lastUpdated;
+          const bTime = b.lastUpdated instanceof Date ? b.lastUpdated.toISOString() : b.lastUpdated;
+          aValue = timeToMinutes(aTime);
+          bValue = timeToMinutes(bTime);
           break;
       }
 
@@ -641,7 +643,7 @@ export default function CasesListClient({
                                 </SelectContent>
                             </Select>
                           </TableCell>
-                          <TableCell>{c.lastUpdated}</TableCell>
+                          <TableCell>{c.lastUpdated instanceof Date ? c.lastUpdated.toLocaleString() : c.lastUpdated}</TableCell>
                           <TableCell>
                             <div className="flex gap-2">
                               <Button variant="outline" size="sm" onClick={() => router.push(`/cases/${c.id}`)}>

@@ -56,11 +56,12 @@ export async function POST(request: NextRequest) {
     
     await ensureDatabaseInitialized();
     
-    // Check if user already exists
+    // Check if user already exists (also prevent duplicate contact email)
     const existingUser = await DatabaseService.getUserByEmail(email);
-    if (existingUser) {
+    const existingContact = (await DatabaseService.getAllContacts()).find((c: any) => c.email === email);
+    if (existingUser || existingContact) {
       return NextResponse.json(
-        { success: false, error: 'User with this email already exists' },
+        { success: false, error: 'Email already exists in the system' },
         { status: 400 }
       );
     }

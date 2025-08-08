@@ -73,11 +73,17 @@ export function NewCommitmentForm({ cases, commitmentToEdit, onSubmit, setDialog
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {cases.map(c => (
-                    <SelectItem key={c.caseNumber} value={c.caseNumber}>
-                      {c.caseNumber} - {c.clientName}
+                  {cases && cases.length > 0 ? (
+                    cases.map(c => (
+                      <SelectItem key={c.caseNumber} value={c.caseNumber}>
+                        {c.caseNumber} - {c.clientName}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <SelectItem value="manual" disabled>
+                      No cases available - Enter manually
                     </SelectItem>
-                  ))}
+                  )}
                 </SelectContent>
               </Select>
               <FormMessage />

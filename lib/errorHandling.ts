@@ -13,6 +13,5 @@ export function logDatabaseError(
   }
   
   // Log the database configuration
-  console.error('[DB ERROR] Database file:', process.env.SQLITE_DB_PATH);
-  console.error('[DB ERROR] Database initialized:', DatabaseService.isInitialized());
+  console.error('[DB ERROR] Database URL:', process.env.DATABASE_URL ? 'Set' : 'Not set');
 }

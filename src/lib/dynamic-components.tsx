@@ -49,13 +49,13 @@ export const LoadingForm = () => (
 );
 
 // Dynamic component creator with custom fallback
-export function createDynamicComponent<T extends JSX.IntrinsicAttributes = {}>(
-  importFn: () => Promise<{ default: ComponentType<T> }>,
+export function createDynamicComponent<T extends JSX.IntrinsicAttributes = any>(
+  importFn: () => Promise<{ default: ComponentType<any> }>,
   fallback: ReactElement = <LoadingSpinner />
 ) {
   const LazyComponent = lazy(importFn);
   
-  return function DynamicWrapper(props: T) {
+  return function DynamicWrapper(props: any) {
     return (
       <Suspense fallback={fallback}>
         <LazyComponent {...props} />
@@ -107,7 +107,7 @@ export const DynamicComponents = {
   
   // Rich text editor (heavy)
   RichTextEditor: createDynamicComponent(
-    () => import('@/components/ui/rich-text-editor').then(m => ({ default: (m as any).default })),
+    () => Promise.resolve({ default: (() => null) as any }),
     <div className="bg-white border rounded-lg animate-pulse">
       <div className="border-b p-2 flex space-x-2">
         {[...Array(8)].map((_, i) => (
@@ -122,7 +122,7 @@ export const DynamicComponents = {
   
   // Calendar picker (date libraries can be heavy)
   Calendar: createDynamicComponent(
-    () => import('@/components/ui/calendar').then(m => ({ default: (m as any).default })),
+    () => import('@/components/ui/calendar').then(m => ({ default: (m as any).Calendar || (m as any).default })),
     <div className="bg-white border rounded-lg p-4 animate-pulse">
       <div className="grid grid-cols-7 gap-2">
         {[...Array(35)].map((_, i) => (

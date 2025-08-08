@@ -113,7 +113,7 @@ export const CaseService = {
     const client = await getClient();
     try {
       const result = await client.query('DELETE FROM cases WHERE id = $1', [id]);
-      return result.rowCount > 0;
+      return (result.rowCount ?? 0) > 0;
     } finally {
       client.release();
     }
@@ -256,7 +256,7 @@ export const BikeService = {
         'UPDATE bikes SET status = $1, assignment = NULL, updated_at = NOW() WHERE id = $2',
         ['Available', bikeId]
       );
-      return result.rowCount > 0;
+      return (result.rowCount ?? 0) > 0;
     } finally {
       client.release();
     }
@@ -390,7 +390,7 @@ export const SignatureTokenService = {
         'UPDATE signature_tokens SET status = $1, updated_at = NOW() WHERE id = $2',
         [status, id]
       );
-      return result.rowCount > 0;
+      return (result.rowCount ?? 0) > 0;
     } finally {
       client.release();
     }

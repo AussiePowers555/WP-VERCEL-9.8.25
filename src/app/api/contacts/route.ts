@@ -21,6 +21,15 @@ export async function POST(request: NextRequest) {
     
     await ensureDatabaseInitialized();
     const contactData = await request.json();
+
+    // Enforce unique email if provided
+    if (contactData.email) {
+      const existing = await (DatabaseService as any).getUserByEmail?.(contactData.email) ||
+                       (await DatabaseService.getAllContacts()).find((c: any) => c.email === contactData.email);
+      if (existing) {
+        return NextResponse.json({ error: 'A contact or user with this email already exists' }, { status: 409 });
+      }
+    }
     
     // Create the contact
     const newContact = await DatabaseService.createContact(contactData);

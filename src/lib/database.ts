@@ -209,7 +209,7 @@ async function createTables() {
       )
     `);
 
-    // Contacts table
+    // Contacts table (email unique)
     await client.query(`
       CREATE TABLE IF NOT EXISTS contacts (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -217,7 +217,7 @@ async function createTables() {
         company VARCHAR(255),
         type VARCHAR(100) NOT NULL,
         phone VARCHAR(50),
-        email VARCHAR(255),
+        email VARCHAR(255) UNIQUE,
         address TEXT,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
@@ -991,7 +991,7 @@ const PostgreSQLService = {
     
     try {
       const result = await client.query('DELETE FROM cases WHERE id = $1', [id]);
-      return result.rowCount > 0;
+      return (result.rowCount ?? 0) > 0;
     } finally {
       client.release();
     }
@@ -1077,7 +1077,7 @@ const PostgreSQLService = {
     
     try {
       const result = await client.query('DELETE FROM contacts WHERE id = $1', [id]);
-      return result.rowCount > 0;
+      return (result.rowCount ?? 0) > 0;
     } finally {
       client.release();
     }
@@ -1530,7 +1530,7 @@ const PostgreSQLService = {
     
     try {
       const result = await client.query('DELETE FROM cases');
-      return result.rowCount;
+      return result.rowCount ?? 0;
     } finally {
       client.release();
     }
@@ -1542,7 +1542,7 @@ const PostgreSQLService = {
     
     try {
       const result = await client.query('DELETE FROM signature_tokens WHERE case_id = $1', [caseId]);
-      return result.rowCount;
+      return result.rowCount ?? 0;
     } finally {
       client.release();
     }
@@ -1554,7 +1554,7 @@ const PostgreSQLService = {
     
     try {
       const result = await client.query('DELETE FROM digital_signatures WHERE case_id = $1', [caseId]);
-      return result.rowCount;
+      return result.rowCount ?? 0;
     } finally {
       client.release();
     }
@@ -1655,7 +1655,7 @@ const PostgreSQLService = {
     
     try {
       const result = await client.query('DELETE FROM case_interactions WHERE id = $1', [id]);
-      return result.rowCount > 0;
+      return (result.rowCount ?? 0) > 0;
     } finally {
       client.release();
     }
@@ -1816,7 +1816,7 @@ const PostgreSQLService = {
     
     try {
       const result = await client.query('DELETE FROM signed_documents WHERE id = $1', [id]);
-      return result.rowCount > 0;
+      return (result.rowCount ?? 0) > 0;
     } finally {
       client.release();
     }

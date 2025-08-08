@@ -22,7 +22,11 @@ export default function AccidentDetails({ caseData, onCaseUpdate }: AccidentDeta
   const sigPadRef = useRef<SignatureCanvas>(null);
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const [accidentDate, setAccidentDate] = useState(caseData.accidentDate || "");
+  const [accidentDate, setAccidentDate] = useState(
+    caseData.accidentDate instanceof Date 
+      ? caseData.accidentDate.toISOString().split('T')[0]
+      : caseData.accidentDate || ""
+  );
   const [accidentTime, setAccidentTime] = useState(caseData.accidentTime || "");
   const [accidentDescription, setAccidentDescription] = useState(caseData.accidentDescription || "");
   const [isSaving, setIsSaving] = useState(false);

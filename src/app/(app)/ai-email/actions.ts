@@ -6,7 +6,7 @@
 
 export type GenerateAiAssistedEmailTemplatesInput = {
     caseDetails: string;
-    tone: 'professional' | 'firm' | 'friendly';
+    tone: 'professional' | 'firm' | 'friendly' | 'formal' | 'urgent' | 'apologetic' | 'persuasive';
     purpose: string;
 };
 
@@ -25,7 +25,7 @@ export async function generateEmailAction(input: GenerateAiAssistedEmailTemplate
 function generateTemplatesByTone(input: GenerateAiAssistedEmailTemplatesInput) {
     const { caseDetails, tone, purpose } = input;
     
-    const templates = {
+    const templates: Record<string, string> = {
         professional: `Dear [Client Name],
 
 We are writing regarding ${purpose} for ${caseDetails}.
@@ -51,15 +51,50 @@ Hope you're doing well! Just a quick note about ${purpose} regarding ${caseDetai
 Let us know if you have any questions - we're here to help!
 
 Cheers,
+PBikeRescue Team`,
+
+        formal: `To Whom It May Concern,
+
+Re: ${caseDetails}
+
+We formally request your attention to ${purpose}.
+
+Please acknowledge receipt of this correspondence.
+
+Sincerely,
+PBikeRescue Legal Department`,
+
+        urgent: `IMMEDIATE ACTION REQUIRED
+
+${caseDetails}
+
+This is a time-sensitive matter regarding ${purpose}. Response required within 24 hours.
+
+PBikeRescue Urgent Response Team`,
+
+        apologetic: `Dear [Client Name],
+
+We sincerely apologize for any inconvenience regarding ${caseDetails}.
+
+We're reaching out about ${purpose} and want to resolve this matter promptly.
+
+With apologies,
+PBikeRescue Customer Care`,
+
+        persuasive: `Dear [Client Name],
+
+We have an important opportunity regarding ${caseDetails}.
+
+${purpose} - We believe this will be mutually beneficial and urge you to consider our proposal.
+
+Looking forward to your positive response,
 PBikeRescue Team`
     };
     
+    const selectedTone = templates[tone] || templates.professional;
+    
     return {
-        templates: [
-            { tone: 'professional', content: templates.professional },
-            { tone: 'firm', content: templates.firm },
-            { tone: 'friendly', content: templates.friendly }
-        ],
-        selectedTemplate: templates[tone]
+        templates: Object.entries(templates).map(([t, content]) => ({ tone: t, content })),
+        selectedTemplate: selectedTone
     };
 }

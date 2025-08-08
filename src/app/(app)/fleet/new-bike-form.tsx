@@ -77,7 +77,7 @@ const serviceCenterOptions = ["Official Yamaha Service", "City Bikes", "Pro-Tune
 export function NewBikeForm({ onBikeSubmit, bikeToEdit }: NewBikeFormProps) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const defaultValues = bikeToEdit ? {
+  const defaultValues: any = bikeToEdit ? {
     ...bikeToEdit,
     registrationExpires: bikeToEdit.registrationExpires ? new Date(bikeToEdit.registrationExpires) : undefined,
     lastServiceDate: bikeToEdit.lastServiceDate ? new Date(bikeToEdit.lastServiceDate) : undefined,
@@ -110,7 +110,7 @@ export function NewBikeForm({ onBikeSubmit, bikeToEdit }: NewBikeFormProps) {
     }
   };
 
-  async function onSubmit(values: FormValues) {
+  async function onSubmit(values: any) {
     setIsLoading(true);
     await new Promise(resolve => setTimeout(resolve, 1000));
     

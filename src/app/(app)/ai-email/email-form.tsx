@@ -129,11 +129,24 @@ export function EmailForm({ caseNumber }: EmailFormProps) {
   async function onSubmit(values: FormValues) {
     setIsLoading(true);
     setGeneratedEmail(null);
-    const result = await generateEmailAction(values);
+    
+    // Transform form values to match the expected input
+    const emailInput = {
+      caseDetails: `Case #${values.caseNumber || 'N/A'} - ${values.additionalContext || ''}`,
+      tone: values.tone,
+      purpose: values.purpose
+    };
+    
+    const result = await generateEmailAction(emailInput);
     setIsLoading(false);
 
     if (result.success && result.data) {
-      setGeneratedEmail(result.data);
+      // Convert the result to the expected format
+      const emailData = {
+        subject: `${values.purpose} - Case ${values.caseNumber}`,
+        body: result.data.selectedTemplate
+      };
+      setGeneratedEmail(emailData);
       toast({
         title: "Success",
         description: "Email content generated successfully.",

@@ -502,7 +502,15 @@ export type Insurance = any; // Placeholder for insurance type
 export type CollectionsClient = any; // Placeholder for collections client type
 export type CommunicationLog = any; // Placeholder for communication log type
 export type FollowupNote = any; // Placeholder for followup note type
-export type Commitment = any; // Placeholder for commitment type
+export interface Commitment {
+  id: string;
+  caseNumber: string;
+  dueDate: string;
+  note: string;
+  status: 'Open' | 'Closed';
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
 /**
  * Collection names for compatibility

@@ -93,12 +93,10 @@ export async function authenticateRequest(request: NextRequest): Promise<AuthRes
       const workspace = await (DatabaseService as any).getWorkspaceById?.(user.workspaceId);
       if (workspace) {
         userWithWorkspace = {
-          id: user.id,
-          email: user.email,
-          role: user.role as any,
-          workspace_id: user.workspaceId!, // Ensure consistency with UserWithWorkspace
+          ...user,
+          workspace_id: user.workspaceId!,
           workspace: workspace
-        };
+        } as UserWithWorkspace;
       } else {
         // Handle case where workspaceId is present but workspace not found
         console.warn(`Workspace with ID ${user.workspaceId} not found for user ${user.email}`);
@@ -107,12 +105,10 @@ export async function authenticateRequest(request: NextRequest): Promise<AuthRes
     } else {
        // If user has no workspace_id, create a UserWithWorkspace object without workspace details
        userWithWorkspace = {
-         id: user.id,
-         email: user.email,
-         role: user.role as any,
+         ...user,
          workspace_id: undefined,
          workspace: undefined
-       } as any;
+       } as UserWithWorkspace;
     }
     
     // Ensure userWithWorkspace is defined before returning
@@ -127,12 +123,10 @@ export async function authenticateRequest(request: NextRequest): Promise<AuthRes
        // Re-construct userWithWorkspace to ensure it always exists if user exists
        const workspaceData = user.workspaceId ? await (DatabaseService as any).getWorkspaceById?.(user.workspaceId) : undefined;
        userWithWorkspace = {
-           id: user.id,
-           email: user.email,
-           role: user.role as any,
+           ...user,
            workspace_id: user.workspaceId || undefined,
            workspace: workspaceData
-       };
+       } as UserWithWorkspace;
     }
 
 

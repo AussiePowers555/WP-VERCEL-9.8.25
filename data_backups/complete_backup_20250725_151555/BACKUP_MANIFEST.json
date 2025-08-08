@@ -1,0 +1,15 @@
+{
+  "backup_type": "complete_business_backup",
+  "created": "20250725_151555",
+  "database_records": {
+    "cases": 13,
+    "bikes": 31,
+    "financial_records": 0,
+    "insurance_companies": 15,
+    "documents": 0,
+    "bike_assignments": 0,
+    "followup_notes": 0
+  },
+  "files_included": 8,
+  "restore_instructions": "Use backup_restore.py restore command or admin panel"
+}

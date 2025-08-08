@@ -80,6 +80,23 @@ export default function FleetPage() {
       setCasesLoading(false);
     }
   }, [user]);
+
+  // Auto-seed bikes from backup when empty
+  useEffect(() => {
+    async function seedIfEmpty() {
+      if (!bikesLoading && Array.isArray(bikes) && bikes.length === 0) {
+        try {
+          const res = await fetch('/api/bikes/seed-from-backup', { method: 'POST' });
+          if (res.ok) {
+            await refetchBikes();
+          }
+        } catch (e) {
+          console.warn('Bike seed failed:', e);
+        }
+      }
+    }
+    seedIfEmpty();
+  }, [bikesLoading, bikes, refetchBikes]);
   
   const { toast } = useToast();
   const [isClient, setIsClient] = useState(false)
@@ -238,9 +255,22 @@ export default function FleetPage() {
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Fleet Tracking</h1>
-        <Button onClick={() => router.push('/fleet/new')}>
-            <PlusCircle className="mr-2 h-4 w-4" /> Add New Bike
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            onClick={async () => {
+              const res = await fetch('/api/bikes/seed-from-backup', { method: 'POST' });
+              if (res.ok) {
+                await refetchBikes();
+              }
+            }}
+          >
+            Import From Backup
+          </Button>
+          <Button onClick={() => router.push('/fleet/new')}>
+              <PlusCircle className="mr-2 h-4 w-4" /> Add New Bike
+          </Button>
+        </div>
       </div>
       <Card>
         <CardHeader>

@@ -19,7 +19,7 @@ export function createDynamicIcon(iconName: string) {
     }))
   );
 
-  return function IconWrapper(props: LucideProps) {
+  return function IconWrapper(props: any) {
     return (
       <Suspense fallback={<FallbackIcon {...props} />}>
         <DynamicIcon {...props} />
