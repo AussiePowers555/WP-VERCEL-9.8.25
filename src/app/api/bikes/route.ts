@@ -60,6 +60,14 @@ function transformFrontendBikeToDb(bike: any): any {
 
 export async function GET(request: NextRequest) {
   try {
+    // If database is not configured (e.g., preview without env vars), return seed
+    if (!process.env.DATABASE_URL) {
+      console.warn('⚠️ DATABASE_URL not set. Serving seeded bikes list for preview environment.');
+      return NextResponse.json(importedBikes.map((b) => {
+        try { return transformDbBikeToFrontend(b as any); } catch { return b as any; }
+      }));
+    }
+
     await ensureDatabaseInitialized();
 
     // Best-effort auth (do not block list rendering if cookie not yet hydrated)
