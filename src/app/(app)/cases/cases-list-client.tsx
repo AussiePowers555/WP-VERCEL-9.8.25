@@ -106,7 +106,7 @@ export default function CasesListClient({
 
   const handleAddCase = async (data: Omit<CaseFormValues, 'caseNumber'> & { workspaceId?: string }) => {
     try {
-      const newCaseData = {
+      const newCaseData: any = {
         ...data,
         caseNumber: `CASE-${Date.now().toString().slice(-6)}`,
         status: 'New Matter' as const,
@@ -117,6 +117,20 @@ export default function CasesListClient({
         paid: 0,
         workspaceId: data.workspaceId || workspaceIdCtx,
       };
+      
+      // If workspace user, automatically assign the case to their contact
+      if (currentUser?.role === 'workspace_user' && currentUser.contactId) {
+        // Determine if the user's contact is a lawyer or rental company
+        const userContact = initialContacts.find(c => c.id === currentUser.contactId);
+        if (userContact) {
+          if (userContact.type === 'Lawyer') {
+            newCaseData.assigned_lawyer_id = currentUser.contactId;
+          } else if (userContact.type === 'Rental Company') {
+            newCaseData.assigned_rental_company_id = currentUser.contactId;
+          }
+        }
+      }
+      
       await createCase(newCaseData);
       
       // Trigger on-demand revalidation
