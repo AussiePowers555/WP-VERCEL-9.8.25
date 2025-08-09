@@ -9,7 +9,6 @@ import { exportFilteredInteractions } from '@/lib/export-utils';
 import { InteractionCardEnhanced } from '@/components/interactions/interaction-card-enhanced';
 import { InteractionFiltersPanelEnhanced } from '@/components/interactions/interaction-filters-enhanced';
 import { InteractionCreateEnhanced } from '@/components/interactions/interaction-create-enhanced';
-import { FleetStatusWidget } from '@/components/interactions/fleet-status-widget';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -269,58 +268,52 @@ export default function InteractionsPage() {
         </div>
       </div>
       
-      {/* Stats Bar and Fleet Status */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Interaction Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-2 gap-4">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Total Interactions</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{totalCount}</div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Today\'s Interactions</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {interactions.filter(i => {
-                  const today = new Date().toDateString();
-                  return new Date(i.timestamp).toDateString() === today;
-                }).length}
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Pending Follow-ups</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-orange-600">
-                {interactions.filter(i => i.status === 'follow_up_required').length}
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">High Priority</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-red-600">
-                {interactions.filter(i => i.priority === 'urgent' || i.priority === 'high').length}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+      {/* Stats Bar */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Total Interactions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{totalCount}</div>
+          </CardContent>
+        </Card>
         
-        {/* Fleet Status Widget */}
-        <FleetStatusWidget workspaceId={filterWorkspaceId} />
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Today\'s Interactions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {interactions.filter(i => {
+                const today = new Date().toDateString();
+                return new Date(i.timestamp).toDateString() === today;
+              }).length}
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">Pending Follow-ups</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-orange-600">
+              {interactions.filter(i => i.status === 'follow_up_required').length}
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium">High Priority</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-red-600">
+              {interactions.filter(i => i.priority === 'urgent' || i.priority === 'high').length}
+            </div>
+          </CardContent>
+        </Card>
       </div>
       
       {/* Filters Panel */}
