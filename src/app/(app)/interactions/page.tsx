@@ -60,8 +60,19 @@ export default function InteractionsPage() {
   // Real-time updates flag
   const [autoRefresh, setAutoRefresh] = useState(true);
   
-  // Get workspace ID
-  const workspaceId = workspace.id && workspace.id !== 'MAIN' ? workspace.id : user?.workspaceId;
+  // Get workspace ID based on user role and context
+  // Admin users can see all interactions in MAIN workspace or filter by selected workspace
+  // Non-admin users can only see interactions for their assigned workspace
+  const isAdmin = workspace.role === 'admin' || user?.role === 'admin' || user?.role === 'developer';
+  const currentWorkspaceId = workspace.id || user?.workspaceId || 'MAIN';
+  
+  // For filtering:
+  // - Admin in MAIN workspace: undefined (show all)
+  // - Admin in specific workspace: that workspace ID
+  // - Non-admin: always their assigned workspace ID
+  const filterWorkspaceId = isAdmin && currentWorkspaceId === 'MAIN' 
+    ? undefined 
+    : (user?.workspaceId || currentWorkspaceId);
   
   // Fetch interactions
   const fetchInteractions = useCallback(async (pageNum: number = 1, reset: boolean = true) => {
@@ -73,7 +84,7 @@ export default function InteractionsPage() {
         setRefreshing(true);
       }
 
-      const result = await getInteractions(pageNum, 20, filters, sort, workspaceId);
+      const result = await getInteractions(pageNum, 20, filters, sort, filterWorkspaceId);
       
       if (result.success && result.data) {
         if (reset) {
@@ -96,7 +107,7 @@ export default function InteractionsPage() {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [filters, sort, workspaceId]);
+  }, [filters, sort, filterWorkspaceId]);
   
   // Update filter options from interactions
   const updateFilterOptions = (newInteractions: InteractionFeedView[]) => {
@@ -308,7 +319,7 @@ export default function InteractionsPage() {
         </div>
         
         {/* Fleet Status Widget */}
-        <FleetStatusWidget workspaceId={workspaceId} />
+        <FleetStatusWidget workspaceId={filterWorkspaceId} />
       </div>
       
       {/* Filters Panel */}
@@ -421,7 +432,7 @@ export default function InteractionsPage() {
       {/* Create Interaction Dialog */}
       {showCreateDialog && (
         <InteractionCreateForm
-          workspaceId={workspaceId}
+          workspaceId={currentWorkspaceId}
           onSuccess={handleInteractionCreated}
           onCancel={() => setShowCreateDialog(false)}
         />
