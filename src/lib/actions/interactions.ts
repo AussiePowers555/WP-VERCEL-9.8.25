@@ -185,7 +185,7 @@ export async function getInteractions(
 // Create new interaction
 export async function createInteraction(
   data: CreateInteractionData,
-  userId: number,
+  userId: string,
   workspaceId: string
 ): Promise<{ success: boolean; data?: Interaction; error?: string }> {
   try {
@@ -259,7 +259,7 @@ export async function createInteraction(
 // Update interaction
 export async function updateInteraction(
   data: UpdateInteractionData,
-  userId: number
+  userId: string
 ): Promise<{ success: boolean; data?: Interaction; error?: string }> {
   try {
     const updateFields: string[] = [];

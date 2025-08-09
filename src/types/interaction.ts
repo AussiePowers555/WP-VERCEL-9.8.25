@@ -35,8 +35,8 @@ export interface Interaction {
   attachments: InteractionAttachment[];
   
   // Tracking
-  createdBy: number;
-  updatedBy?: number;
+  createdBy: string;
+  updatedBy?: string;
   createdAt: string;
   updatedAt: string;
   workspaceId: string;

@@ -167,7 +167,7 @@ export function InteractionCreateForm({
           status: data.status,
           tags: data.tags,
         },
-        user.id,
+        user.id.toString(),
         workspaceId || user.workspaceId!
       );
 

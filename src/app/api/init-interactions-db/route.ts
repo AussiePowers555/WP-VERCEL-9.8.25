@@ -24,8 +24,8 @@ export async function GET(request: NextRequest) {
           status VARCHAR(50) NOT NULL DEFAULT 'completed' CHECK (status IN ('pending', 'in_progress', 'completed', 'follow_up_required')),
           tags TEXT[] DEFAULT ARRAY[]::TEXT[],
           attachments JSONB DEFAULT '[]'::jsonb,
-          created_by INTEGER NOT NULL,
-          updated_by INTEGER,
+          created_by UUID NOT NULL,
+          updated_by UUID,
           created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
           updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
           workspace_id UUID NOT NULL
