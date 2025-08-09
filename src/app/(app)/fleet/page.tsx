@@ -115,16 +115,20 @@ export default function FleetPage() {
     return contact?.name || '';
   };
 
-  const handleAssignBikeToCase = async (bikeId: string, caseNumber: string, startDate: string) => {
+  const handleAssignBikeToCase = async (bikeId: string, caseId: string, startDate: string) => {
     const today = new Date().toISOString().split('T')[0];
     const assignmentStartDate = startDate || today;
+    
+    // Find the selected case to get its case number for display purposes
+    const selectedCase = cases.find(c => c.id.toString() === caseId);
+    const caseNumber = selectedCase?.caseNumber || caseId;
     
     try {
       await updateBike(bikeId, {
         status: 'assigned',
         assignment: caseNumber,
         location: 'On-road',
-        assignedCaseId: caseNumber,
+        assignedCaseId: caseId, // Use actual case database ID
         assignmentStartDate,
         // end date intentionally omitted; bike returns to pool to end assignment
       });
@@ -135,7 +139,7 @@ export default function FleetPage() {
         title: "Bike Assigned",
         description: `Bike ${bikeId} has been assigned to case ${caseNumber}.`,
       });
-      router.push(`/cases/${caseNumber}`);
+      router.push(`/cases/${caseId}`); // Navigate using case database ID
     } catch (error) {
       toast({
         variant: "destructive",
@@ -436,7 +440,7 @@ export default function FleetPage() {
                 </DialogHeader>
                 <AssignCaseForm 
                     bike={selectedBike}
-                    cases={cases.filter(c => !(bikes as Bike[]).some(b => b.assignment === c.caseNumber))}
+                    cases={cases.filter(c => !(bikes as Bike[]).some(b => b.assignedCaseId === c.id.toString()))}
                     onAssign={handleAssignBikeToCase}
                     setDialogOpen={setAssignCaseDialogOpen}
                 />

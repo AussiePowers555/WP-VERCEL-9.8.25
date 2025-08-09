@@ -29,7 +29,7 @@ import type { BikeFrontend as Bike, CaseFrontend as Case } from "@/lib/database-
 
 
 const formSchema = z.object({
-  caseNumber: z.string().min(1, "Please select a case."),
+  caseId: z.string().min(1, "Please select a case."),
   startDate: z.string().min(1, "Please select a start date."),
 })
 
@@ -38,7 +38,7 @@ type FormValues = z.infer<typeof formSchema>
 interface AssignCaseFormProps {
     bike: Bike;
     cases: Case[];
-    onAssign: (bikeId: string, caseNumber: string, startDate: string) => void;
+    onAssign: (bikeId: string, caseId: string, startDate: string) => void;
     setDialogOpen: (open: boolean) => void;
 }
 
@@ -53,7 +53,7 @@ export function AssignCaseForm({ bike, cases, onAssign, setDialogOpen }: AssignC
     setIsLoading(true);
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
-    onAssign(bike.id, values.caseNumber, values.startDate);
+    onAssign(bike.id, values.caseId, values.startDate);
     setIsLoading(false);
     setDialogOpen(false);
   }
@@ -63,7 +63,7 @@ export function AssignCaseForm({ bike, cases, onAssign, setDialogOpen }: AssignC
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
-          name="caseNumber"
+          name="caseId"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Select Case</FormLabel>
@@ -73,7 +73,7 @@ export function AssignCaseForm({ bike, cases, onAssign, setDialogOpen }: AssignC
                 </FormControl>
                 <SelectContent>
                   {cases.map(c => (
-                    <SelectItem key={c.caseNumber} value={c.caseNumber}>
+                    <SelectItem key={c.id} value={c.id.toString()}>
                         {c.caseNumber} - {c.clientName}
                     </SelectItem>
                   ))}

@@ -30,7 +30,7 @@ export default function CasePage() {
   const { toast } = useToast();
   const { user } = useAuth();
 
-  const [bikes] = useLocalStorage<BikeFrontend[]>("bikes", []);
+  const [bikes, setBikes] = useLocalStorage<BikeFrontend[]>("bikes", []);
   const [contacts, setContacts] = useLocalStorage<Contact[]>("contacts", []);
 
   const [caseData, setCaseData] = useState<Case | null>(null);
@@ -65,9 +65,20 @@ export default function CasePage() {
         const currentCase: Case = await caseResponse.json();
         setCaseData(currentCase);
 
-        // Find assigned bike by case ID
-        if (bikes.length > 0) {
-          const bike = bikes.find(b => b.assignedCaseId === currentCase.id);
+        // Fetch fresh bikes data to get latest assignments
+        const bikesResponse = await cookieForwardFetch('/api/bikes', {
+          cache: 'no-store',
+        });
+        if (bikesResponse.ok) {
+          const freshBikes = await bikesResponse.json();
+          setBikes(freshBikes);
+          
+          // Find assigned bike by case ID using fresh data
+          const bike = freshBikes.find((b: BikeFrontend) => b.assignedCaseId === currentCase.id.toString());
+          setAssignedBike(bike || null);
+        } else {
+          // Fallback to local storage bikes if API call fails
+          const bike = bikes.find(b => b.assignedCaseId === currentCase.id.toString());
           setAssignedBike(bike || null);
         }
       } catch (err) {
@@ -85,7 +96,7 @@ export default function CasePage() {
       setLoading(false);
       setError('Please log in to view case details');
     }
-  }, [caseId, bikes, user]);
+  }, [caseId, user]); // Remove bikes dependency to prevent infinite loops
 
   const handleCaseUpdate = async (updatedData: Partial<Case>) => {
     if (!caseData) return;
