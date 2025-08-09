@@ -104,12 +104,8 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Transform bikes to frontend format (idempotent for already-frontend shaped items)
-    const transformedBikes = (bikes as any[]).map((b) => {
-      try { return transformDbBikeToFrontend(b); } catch { return b; }
-    });
-
-    return NextResponse.json(transformedBikes);
+    // The bikes are already transformed by SchemaTransformers.bikeDbToFrontend in DatabaseService
+    return NextResponse.json(bikes);
   } catch (error) {
     console.error('Error fetching bikes (outer):', error);
     // Never block the UI — return empty list
@@ -143,10 +139,8 @@ export async function POST(request: NextRequest) {
     
     const newBike = await (DatabaseService as any).createBike?.(dbBikeData);
     
-    // Transform back to frontend format
-    const transformedBike = transformDbBikeToFrontend(newBike);
-    
-    return NextResponse.json(transformedBike, { status: 201 });
+    // The bike data is already transformed by SchemaTransformers.bikeDbToFrontend in DatabaseService
+    return NextResponse.json(newBike, { status: 201 });
   } catch (error) {
     console.error('Error creating bike:', error);
     return NextResponse.json({ error: 'Failed to create bike' }, { status: 500 });

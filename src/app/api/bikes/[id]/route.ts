@@ -89,10 +89,9 @@ export async function GET(
       return NextResponse.json({ error: 'Bike not found' }, { status: 404 });
     }
     
-    console.log('Database bike data:', bike);
-    const transformedBike = transformDbBikeToFrontend(bike);
-    console.log('Transformed bike data:', transformedBike);
-    return NextResponse.json(transformedBike);
+    // The bike data is already transformed by SchemaTransformers.bikeDbToFrontend in DatabaseService
+    console.log('Database bike data (already transformed):', bike);
+    return NextResponse.json(bike);
   } catch (error) {
     console.error('Error fetching bike:', error);
     return NextResponse.json({ error: 'Failed to fetch bike' }, { status: 500 });
@@ -125,8 +124,8 @@ export async function PUT(
       return NextResponse.json({ error: 'Bike not found after update' }, { status: 404 });
     }
     
-    const transformedBike = transformDbBikeToFrontend(updatedBike);
-    return NextResponse.json(transformedBike);
+    // The bike data is already transformed by SchemaTransformers.bikeDbToFrontend in DatabaseService
+    return NextResponse.json(updatedBike);
   } catch (error) {
     console.error('Error updating bike:', error);
     return NextResponse.json({ error: 'Failed to update bike' }, { status: 500 });
