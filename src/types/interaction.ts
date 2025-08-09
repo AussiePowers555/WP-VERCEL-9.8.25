@@ -39,7 +39,7 @@ export interface Interaction {
   updatedBy?: number;
   createdAt: string;
   updatedAt: string;
-  workspaceId: number;
+  workspaceId: string;
 }
 
 export interface InteractionFeedView extends Interaction {

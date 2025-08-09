@@ -13,10 +13,20 @@ export default function InteractionsPage() {
     return null;
   }
 
-  // Convert workspace ID - use user's workspace if in main workspace
-  const workspaceId = workspace.id && workspace.id !== 'MAIN' 
-    ? parseInt(workspace.id) 
-    : user.workspaceId;
+  // Handle workspace ID - use workspace context if available, otherwise user's workspace
+  let workspaceId: string | undefined;
+  
+  if (workspace.id && workspace.id !== 'MAIN') {
+    workspaceId = workspace.id;
+  } else {
+    workspaceId = user.workspaceId;
+  }
+
+  console.log('[DEBUG] Interactions Page:', { 
+    workspaceId: workspace.id, 
+    userWorkspaceId: user.workspaceId, 
+    finalWorkspaceId: workspaceId 
+  });
 
   return (
     <div className="container mx-auto px-4 py-6">

@@ -69,7 +69,7 @@ type InteractionFormData = z.infer<typeof interactionSchema>;
 interface InteractionCreateFormProps {
   caseId?: number;
   caseNumber?: string;
-  workspaceId?: number;
+  workspaceId?: string;
   onSuccess?: (interaction: InteractionFeedView) => void;
   onCancel?: () => void;
   open?: boolean;

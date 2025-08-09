@@ -32,9 +32,11 @@ export async function getInteractions(
   limit: number = 20,
   filters: InteractionFilters = {},
   sort: InteractionSortOptions = { field: 'timestamp', direction: 'desc' },
-  workspaceId?: number
+  workspaceId?: string
 ): Promise<{ success: boolean; data?: PaginatedInteractions; error?: string }> {
   try {
+    console.log('[DEBUG] getInteractions called with:', { page, limit, filters, sort, workspaceId, workspaceIdType: typeof workspaceId });
+    
     const offset = (page - 1) * limit;
     
     // Build WHERE clauses
@@ -135,9 +137,13 @@ export async function getInteractions(
     
     queryParams.push(limit + 1, offset); // Get one extra to check if there are more
     
+    console.log('[DEBUG] Executing query:', query);
+    console.log('[DEBUG] Query params:', queryParams);
+    
     const result = await executeQuery(query, queryParams);
     
     if (!result.success) {
+      console.error('[DEBUG] Query failed:', result.error);
       return { success: false, error: result.error };
     }
     
@@ -180,7 +186,7 @@ export async function getInteractions(
 export async function createInteraction(
   data: CreateInteractionData,
   userId: number,
-  workspaceId: number
+  workspaceId: string
 ): Promise<{ success: boolean; data?: Interaction; error?: string }> {
   try {
     const query = `
@@ -455,7 +461,7 @@ export async function getInteractionById(
 // Get recent interactions for dashboard
 export async function getRecentInteractions(
   limit: number = 5,
-  workspaceId?: number
+  workspaceId?: string
 ): Promise<{ success: boolean; data?: InteractionFeedView[]; error?: string }> {
   try {
     const whereClause = workspaceId ? 'WHERE i.workspace_id = $1' : '';

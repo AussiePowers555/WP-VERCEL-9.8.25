@@ -24,7 +24,7 @@ import {
 import { cn } from '@/lib/utils';
 
 interface InteractionFeedProps {
-  workspaceId?: number;
+  workspaceId?: string;
   caseId?: number;
   initialFilters?: InteractionFilters;
   compact?: boolean;

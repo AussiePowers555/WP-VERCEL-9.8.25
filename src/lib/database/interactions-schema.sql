@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS interactions (
     updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
     
     -- Workspace isolation
-    workspace_id INTEGER REFERENCES workspaces(id) ON DELETE CASCADE
+    workspace_id UUID REFERENCES workspaces(id) ON DELETE CASCADE
 );
 
 -- Performance indexes for fast queries

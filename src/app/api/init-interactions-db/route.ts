@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
           updated_by INTEGER,
           created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
           updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-          workspace_id INTEGER NOT NULL
+          workspace_id UUID NOT NULL
       )`;
     
     await sql.query(createTableQuery);
