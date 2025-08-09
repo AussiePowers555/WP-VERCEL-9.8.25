@@ -75,79 +75,82 @@ export function UserHeader() {
   };
 
   return (
-    <header className="flex h-16 items-center justify-between border-b bg-background/80 backdrop-blur-sm px-4 md:px-6 sticky top-0 z-30">
-      <div className="flex items-center gap-4">
-        <SidebarTrigger className="md:hidden" />
-        <WorkspaceName />
-        {isAdmin && name !== 'Main Workspace' && (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-8 px-3 text-xs font-medium"
-                  onClick={handleBackToMain}
-                  aria-label="Return to main workspace (Alt+M)"
-                >
-                  Back to Main
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom">
-                <p className="text-xs">Return to main workspace</p>
-                <p className="text-xs text-muted-foreground">Alt+M</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        )}
-      </div>
-      
-      <div className="flex items-center gap-4">
-        {isAdmin && (
-          <Badge variant="outline" className="hidden sm:inline-flex">
-            Administrator
-          </Badge>
-        )}
-        
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-              <Avatar className="h-9 w-9">
-                <AvatarImage src="https://placehold.co/100x100" alt={user?.name} />
-                <AvatarFallback>
-                  {user?.name ? getInitials(user.name) : "U"}
-                </AvatarFallback>
-              </Avatar>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>
-              <div>
-                <p className="font-medium">{user?.name || "User"}</p>
-                <p className="text-xs text-muted-foreground">{user?.email}</p>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {isAdmin && (
-              <>
-                <DropdownMenuItem onClick={() => router.push("/workspaces")}>
-                  Manage Workspaces
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push("/contacts")}>
-                  Manage Contacts
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-              </>
+    <div className="border-b bg-background/80 backdrop-blur-sm">
+      <div className="container mx-auto px-4 py-3 md:px-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <WorkspaceName />
+            {isAdmin && name !== 'Main Workspace' && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-8 px-3 text-xs font-medium"
+                      onClick={handleBackToMain}
+                      aria-label="Return to main workspace (Alt+M)"
+                    >
+                      Back to Main
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom">
+                    <p className="text-xs">Return to main workspace</p>
+                    <p className="text-xs text-muted-foreground">Alt+M</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             )}
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Support</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout}>
-              Logout
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </div>
+          
+          <div className="flex items-center gap-4">
+            {isAdmin && (
+              <Badge variant="outline" className="hidden sm:inline-flex">
+                Administrator
+              </Badge>
+            )}
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Avatar className="h-9 w-9">
+                    <AvatarImage src="https://placehold.co/100x100" alt={user?.name} />
+                    <AvatarFallback>
+                      {user?.name ? getInitials(user.name) : "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>
+                  <div>
+                    <p className="font-medium">{user?.name || "User"}</p>
+                    <p className="text-xs text-muted-foreground">{user?.email}</p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {isAdmin && (
+                  <>
+                    <DropdownMenuItem onClick={() => router.push("/workspaces")}>
+                      Manage Workspaces
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.push("/contacts")}>
+                      Manage Contacts
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                  </>
+                )}
+                <DropdownMenuItem>Settings</DropdownMenuItem>
+                <DropdownMenuItem>Support</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout}>
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
       </div>
-    </header>
+    </div>
   );
 }
