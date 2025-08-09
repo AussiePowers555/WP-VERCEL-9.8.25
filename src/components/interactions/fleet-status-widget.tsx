@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getFleetStatus, type FleetStatus } from '@/lib/actions/interactions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -16,6 +15,32 @@ import {
   Clock
 } from 'lucide-react';
 
+interface FleetStatus {
+  totalBikes: number;
+  availableBikes: number;
+  assignedBikes: number;
+  maintenanceBikes: number;
+  retiredBikes: number;
+  utilizationRate: number;
+  recentAssignments: {
+    bikeId: string;
+    bikeName: string;
+    caseNumber: string;
+    assignmentDate: Date;
+    expectedReturn: Date;
+    daysRemaining: number;
+  }[];
+  bikesDueToday: number;
+  bikesDueTomorrow: number;
+  averageRentalDuration: number;
+  statusDistribution: {
+    available: number;
+    assigned: number;
+    maintenance: number;
+    retired: number;
+  };
+}
+
 export function FleetStatusWidget({ workspaceId }: { workspaceId?: string }) {
   const [fleetStatus, setFleetStatus] = useState<FleetStatus | null>(null);
   const [loading, setLoading] = useState(true);
@@ -25,7 +50,12 @@ export function FleetStatusWidget({ workspaceId }: { workspaceId?: string }) {
     async function fetchFleetStatus() {
       try {
         setLoading(true);
-        const result = await getFleetStatus(workspaceId);
+        const url = workspaceId 
+          ? `/api/fleet-status?workspaceId=${workspaceId}`
+          : '/api/fleet-status';
+        const response = await fetch(url);
+        const result = await response.json();
+        
         if (result.success && result.data) {
           setFleetStatus(result.data);
         } else {
