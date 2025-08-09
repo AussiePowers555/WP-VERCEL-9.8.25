@@ -149,11 +149,10 @@ export async function getInteractions(
         c.client_insurance_company as "insuranceCompany",
         c.lawyer as "lawyerAssigned",
         c.rental_company as "rentalCompany",
-        u.name as "createdByName",
-        u.email as "createdByEmail"
+        i.created_by as "createdByName",
+        i.created_by as "createdByEmail"
       FROM interactions i
       LEFT JOIN cases c ON i.case_id = c.id
-      LEFT JOIN users u ON i.created_by = u.id
       ${whereClause}
       ${orderBy}
       LIMIT $${paramIndex++} OFFSET $${paramIndex++}
@@ -456,11 +455,10 @@ export async function getInteractionById(
         c.client_insurance_company as "insuranceCompany",
         c.lawyer as "lawyerAssigned",
         c.rental_company as "rentalCompany",
-        u.name as "createdByName",
-        u.email as "createdByEmail"
+        i.created_by as "createdByName",
+        i.created_by as "createdByEmail"
       FROM interactions i
       LEFT JOIN cases c ON i.case_id = c.id
-      LEFT JOIN users u ON i.created_by = u.id
       WHERE i.id = $1
     `;
     
@@ -509,10 +507,9 @@ export async function getRecentInteractions(
         i.priority,
         i.status,
         c.client_name as "caseHirerName",
-        u.name as "createdByName"
+        i.created_by as "createdByName"
       FROM interactions i
       LEFT JOIN cases c ON i.case_id = c.id
-      LEFT JOIN users u ON i.created_by = u.id
       ${whereClause}
       ORDER BY i.timestamp DESC
       LIMIT ${limitParamIndex}
