@@ -73,6 +73,16 @@ export async function GET(
   try {
     await ensureDatabaseInitialized();
     const { id } = await context.params;
+    
+    // Check if the ID is in legacy format (e.g., M1001) 
+    // These IDs are no longer valid after migration to UUID-based system
+    if (id && !id.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
+      console.warn(`Legacy bike ID format detected: ${id}. These IDs are no longer valid.`);
+      return NextResponse.json({ 
+        error: 'Invalid bike ID format. Legacy IDs (e.g., M1001) are no longer supported. Please use UUID format.' 
+      }, { status: 400 });
+    }
+    
     const bike = await DatabaseService.getBikeById(id);
     
     if (!bike) {
@@ -94,6 +104,15 @@ export async function PUT(
   try {
     await ensureDatabaseInitialized();
     const { id } = await context.params;
+    
+    // Check if the ID is in legacy format
+    if (id && !id.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
+      console.warn(`Legacy bike ID format detected: ${id}. These IDs are no longer valid.`);
+      return NextResponse.json({ 
+        error: 'Invalid bike ID format. Legacy IDs (e.g., M1001) are no longer supported. Please use UUID format.' 
+      }, { status: 400 });
+    }
+    
     const updates = await request.json();
 
     const dbUpdates = transformFrontendBikeToDb(updates);
@@ -119,6 +138,15 @@ export async function DELETE(
   try {
     await ensureDatabaseInitialized();
     const { id } = await context.params;
+    
+    // Check if the ID is in legacy format
+    if (id && !id.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
+      console.warn(`Legacy bike ID format detected: ${id}. These IDs are no longer valid.`);
+      return NextResponse.json({ 
+        error: 'Invalid bike ID format. Legacy IDs (e.g., M1001) are no longer supported. Please use UUID format.' 
+      }, { status: 400 });
+    }
+    
     await DatabaseService.deleteBike(id);
     
     return NextResponse.json({ message: 'Bike deleted successfully' });

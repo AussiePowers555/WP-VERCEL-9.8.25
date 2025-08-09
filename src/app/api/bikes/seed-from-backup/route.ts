@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
 import { DatabaseService, ensureDatabaseInitialized } from '@/lib/database';
+import { v4 as uuidv4 } from 'uuid';
 
 export async function POST(_request: NextRequest) {
   try {
@@ -29,12 +30,13 @@ export async function POST(_request: NextRequest) {
 
     // Normalize to DB shape expected by bulkInsertBikes
     const normalized = bikes.map((b: any) => ({
-      id: b.id || undefined,
+      id: b.id || uuidv4(), // Generate UUID if missing
       make: b.make || b.brand || 'Unknown',
       model: b.model || 'Unknown',
       registration: b.registration || b.rego || '',
       registrationExpires: b.registration_expires || b.registrationExpires || null,
       serviceCenter: b.service_center || b.serviceCenter || null,
+      serviceCenterContactId: null, // Add missing field
       deliveryStreet: b.delivery_street || b.deliveryStreet || null,
       deliverySuburb: b.delivery_suburb || b.deliverySuburb || null,
       deliveryState: b.delivery_state || b.deliveryState || null,
@@ -44,9 +46,14 @@ export async function POST(_request: NextRequest) {
       status: b.status || 'Available',
       location: b.location || '',
       dailyRate: b.daily_rate || b.dailyRate || 0,
+      dailyRateA: b.daily_rate_a || b.dailyRateA || 85, // Add missing field
+      dailyRateB: b.daily_rate_b || b.dailyRateB || 95, // Add missing field
       imageUrl: b.image_url || b.imageUrl || null,
       imageHint: b.image_hint || b.imageHint || null,
       assignment: b.assignment || null,
+      assignedCaseId: b.assigned_case_id || b.assignedCaseId || null, // Add missing field
+      assignmentStartDate: b.assignment_start_date || b.assignmentStartDate || null, // Add missing field
+      assignmentEndDate: b.assignment_end_date || b.assignmentEndDate || null, // Add missing field
     }));
 
     await (DatabaseService as any).bulkInsertBikes(normalized);
