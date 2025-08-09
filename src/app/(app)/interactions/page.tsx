@@ -8,7 +8,7 @@ import { getInteractions } from '@/lib/actions/interactions';
 import { exportFilteredInteractions } from '@/lib/export-utils';
 import { InteractionCardEnhanced } from '@/components/interactions/interaction-card-enhanced';
 import { InteractionFiltersPanelEnhanced } from '@/components/interactions/interaction-filters-enhanced';
-import { InteractionCreateForm } from '@/components/interactions/interaction-create-form';
+import { InteractionCreateEnhanced } from '@/components/interactions/interaction-create-enhanced';
 import { FleetStatusWidget } from '@/components/interactions/fleet-status-widget';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -60,19 +60,20 @@ export default function InteractionsPage() {
   // Real-time updates flag
   const [autoRefresh, setAutoRefresh] = useState(true);
   
-  // Get workspace ID based on user role and context
-  // Admin users can see all interactions in MAIN workspace or filter by selected workspace
-  // Non-admin users can only see interactions for their assigned workspace
+  // Get workspace ID and contact ID based on user role
   const isAdmin = workspace.role === 'admin' || user?.role === 'admin' || user?.role === 'developer';
+  const isWorkspaceUser = user?.role === 'workspace_user';
   const currentWorkspaceId = workspace.id || user?.workspaceId || 'MAIN';
   
-  // For filtering:
+  // For filtering (Twitter-like feed logic):
+  // - Workspace users: filter by their contactId (see interactions for cases they're assigned to)
   // - Admin in MAIN workspace: undefined (show all)
   // - Admin in specific workspace: that workspace ID
-  // - Non-admin: always their assigned workspace ID
   const filterWorkspaceId = isAdmin && currentWorkspaceId === 'MAIN' 
     ? undefined 
-    : (user?.workspaceId || currentWorkspaceId);
+    : (isWorkspaceUser ? undefined : currentWorkspaceId);
+  
+  const filterContactId = isWorkspaceUser ? user?.contactId : undefined;
   
   // Fetch interactions
   const fetchInteractions = useCallback(async (pageNum: number = 1, reset: boolean = true) => {
@@ -84,7 +85,7 @@ export default function InteractionsPage() {
         setRefreshing(true);
       }
 
-      const result = await getInteractions(pageNum, 20, filters, sort, filterWorkspaceId);
+      const result = await getInteractions(pageNum, 20, filters, sort, filterWorkspaceId, filterContactId);
       
       if (result.success && result.data) {
         if (reset) {
@@ -107,7 +108,7 @@ export default function InteractionsPage() {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [filters, sort, filterWorkspaceId]);
+  }, [filters, sort, filterWorkspaceId, filterContactId]);
   
   // Update filter options from interactions
   const updateFilterOptions = (newInteractions: InteractionFeedView[]) => {
@@ -431,10 +432,13 @@ export default function InteractionsPage() {
       
       {/* Create Interaction Dialog */}
       {showCreateDialog && (
-        <InteractionCreateForm
+        <InteractionCreateEnhanced
           workspaceId={currentWorkspaceId}
+          contactId={filterContactId}
+          isWorkspaceUser={isWorkspaceUser}
           onSuccess={handleInteractionCreated}
           onCancel={() => setShowCreateDialog(false)}
+          open={showCreateDialog}
         />
       )}
     </div>

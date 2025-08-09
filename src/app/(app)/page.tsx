@@ -18,6 +18,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { ChartContainer, ChartTooltip, ChartTooltipContent, BarChart, Bar, XAxis, YAxis } from "@/components/ui/chart"
 import DashboardStatsServer, { DashboardStatsSkeleton } from './dashboard-stats-server';
+import DashboardClient from './dashboard-client';
 
 // Force dynamic rendering to avoid database connection during build
 export const dynamic = 'force-dynamic';
@@ -184,22 +185,24 @@ function FleetChartSkeleton() {
 // Main dashboard page with ISR and streaming SSR
 export default function DashboardPage() {
   return (
-    <div className="flex flex-col gap-6">
-      {/* Dashboard stats with streaming */}
-      <Suspense fallback={<DashboardStatsSkeleton />}>
-        <DashboardStatsServer />
-      </Suspense>
+    <DashboardClient>
+      <div className="flex flex-col gap-6">
+        {/* Dashboard stats with streaming */}
+        <Suspense fallback={<DashboardStatsSkeleton />}>
+          <DashboardStatsServer />
+        </Suspense>
 
-      {/* Recent cases and fleet chart with streaming */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
-        <Suspense fallback={<RecentCasesSkeleton />}>
-          <RecentCasesServer />
-        </Suspense>
-        
-        <Suspense fallback={<FleetChartSkeleton />}>
-          <FleetChartServer />
-        </Suspense>
+        {/* Recent cases and fleet chart with streaming */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
+          <Suspense fallback={<RecentCasesSkeleton />}>
+            <RecentCasesServer />
+          </Suspense>
+          
+          <Suspense fallback={<FleetChartSkeleton />}>
+            <FleetChartServer />
+          </Suspense>
+        </div>
       </div>
-    </div>
+    </DashboardClient>
   )
 }

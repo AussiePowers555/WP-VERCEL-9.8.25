@@ -80,8 +80,8 @@ export function Nav() {
                         .filter(item => {
                             // For workspace users, only show specific items
                             if (isWorkspaceUser) {
-                                // Workspace users can only see Case Management and Documents
-                                return ['Dashboard', 'Case Management', 'Documents', 'Interactions'].includes(item.label);
+                                // Workspace users can only see Interactions (their feed)
+                                return ['Interactions'].includes(item.label);
                             }
                             // For admins, show everything
                             return true;

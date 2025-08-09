@@ -32,10 +32,11 @@ export async function getInteractions(
   limit: number = 20,
   filters: InteractionFilters = {},
   sort: InteractionSortOptions = { field: 'timestamp', direction: 'desc' },
-  workspaceId?: string
+  workspaceId?: string,
+  contactId?: string  // For workspace users to see only their assigned cases' interactions
 ): Promise<{ success: boolean; data?: PaginatedInteractions; error?: string }> {
   try {
-    console.log('[DEBUG] getInteractions called with:', { page, limit, filters, sort, workspaceId, workspaceIdType: typeof workspaceId });
+    console.log('[DEBUG] getInteractions called with:', { page, limit, filters, sort, workspaceId, contactId });
     
     const offset = (page - 1) * limit;
     
@@ -44,8 +45,15 @@ export async function getInteractions(
     const queryParams: any[] = [];
     let paramIndex = 1;
     
-    if (workspaceId) {
-      whereConditions.push(`i.workspace_id = $${paramIndex++}`);
+    // Filter by contact assignment (for workspace users - like Twitter followers)
+    if (contactId) {
+      // Show interactions for cases where this contact is assigned as lawyer or rental company
+      whereConditions.push(`(c.assigned_lawyer_id = $${paramIndex} OR c.assigned_rental_company_id = $${paramIndex})`);
+      queryParams.push(contactId);
+      paramIndex++;
+    } else if (workspaceId) {
+      // For admins filtering by workspace
+      whereConditions.push(`c.workspace_id = $${paramIndex++}`);
       queryParams.push(workspaceId);
     }
     
