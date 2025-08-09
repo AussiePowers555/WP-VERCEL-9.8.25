@@ -56,11 +56,19 @@ const settingsNavItems = [
 export function Nav() {
     const [currentUser] = useSessionStorage<any>("currentUser", null);
     const { role } = useWorkspace();
-    // User is admin if their role from workspace context is 'admin'
-    // This is derived from their actual database role (admin/developer = admin, others = workspace)
-    const isAdmin = role === "admin";
-    const isWorkspaceUser = role === "workspace" || currentUser?.role === "workspace_user";
     const pathname = usePathname()
+    
+    // Check if user is a workspace user (not admin/developer)
+    const isWorkspaceUser = currentUser?.role === "workspace_user" || 
+                           currentUser?.role === "rental_company" ||
+                           currentUser?.role === "lawyer" ||
+                           (role === "workspace" && currentUser?.role !== "admin" && currentUser?.role !== "developer");
+    
+    console.log('[Nav Debug]', { 
+        userRole: currentUser?.role, 
+        workspaceRole: role, 
+        isWorkspaceUser 
+    });
 
     const rentalAgreementRegex = /^\/rental-agreement\/.*/;
     const isRentalAgreementPage = rentalAgreementRegex.test(pathname);
@@ -69,7 +77,7 @@ export function Nav() {
     return (
         <div className="flex h-full flex-col">
             <SidebarHeader>
-                <Link href="/" className="flex items-center gap-2">
+                <Link href={isWorkspaceUser ? "/interactions" : "/"} className="flex items-center gap-2">
                     <Bike className="h-6 w-6 text-primary" />
                     <span className="text-lg font-semibold">PBikeRescue</span>
                 </Link>
