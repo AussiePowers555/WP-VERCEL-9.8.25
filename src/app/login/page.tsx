@@ -102,10 +102,6 @@ export default function LoginPage() {
     }
   };
 
-  const autoFillDev1 = () => {
-    if (emailRef.current) emailRef.current.value = "whitepointer2016@gmail.com";
-    if (passwordRef.current) passwordRef.current.value = "Tr@ders84";
-  };
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "#f9fafb", padding: "20px" }}>
@@ -187,29 +183,6 @@ export default function LoginPage() {
           </div>
         )}
 
-        <div style={{ paddingTop: "20px", borderTop: "1px solid #e5e7eb" }}>
-          <p style={{ fontSize: "14px", fontWeight: "500", marginBottom: "12px" }}>Test Account:</p>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "12px", color: "#666" }}>
-            <div>
-              <p><strong>Email:</strong> whitepointer2016@gmail.com</p>
-              <p><strong>Password:</strong> Tr@ders84</p>
-            </div>
-            <button
-              type="button"
-              onClick={autoFillDev1}
-              style={{
-                padding: "6px 12px",
-                border: "1px solid #ddd",
-                backgroundColor: "white",
-                borderRadius: "4px",
-                fontSize: "12px",
-                cursor: "pointer"
-              }}
-            >
-              Auto-fill
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );
