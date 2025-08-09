@@ -141,14 +141,14 @@ export function InteractionFiltersPanelEnhanced({
               Case Number
             </Label>
             <Select
-              value={localFilters.caseNumber || ''}
-              onValueChange={(value) => handleFilterChange('caseNumber', value || undefined)}
+              value={localFilters.caseNumber || 'all'}
+              onValueChange={(value) => handleFilterChange('caseNumber', value === 'all' ? undefined : value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="All cases" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All cases</SelectItem>
+                <SelectItem value="all">All cases</SelectItem>
                 {caseNumbers.map(caseNum => (
                   <SelectItem key={caseNum} value={caseNum}>
                     {caseNum}
@@ -165,14 +165,14 @@ export function InteractionFiltersPanelEnhanced({
               Insurance Company
             </Label>
             <Select
-              value={localFilters.insuranceCompany || ''}
-              onValueChange={(value) => handleFilterChange('insuranceCompany', value || undefined)}
+              value={localFilters.insuranceCompany || 'all'}
+              onValueChange={(value) => handleFilterChange('insuranceCompany', value === 'all' ? undefined : value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="All insurance" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All insurance</SelectItem>
+                <SelectItem value="all">All insurance</SelectItem>
                 {insuranceCompanies.map(company => (
                   <SelectItem key={company} value={company}>
                     {company}
@@ -189,14 +189,14 @@ export function InteractionFiltersPanelEnhanced({
               Lawyer Assigned
             </Label>
             <Select
-              value={localFilters.lawyerAssigned || ''}
-              onValueChange={(value) => handleFilterChange('lawyerAssigned', value || undefined)}
+              value={localFilters.lawyerAssigned || 'all'}
+              onValueChange={(value) => handleFilterChange('lawyerAssigned', value === 'all' ? undefined : value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="All lawyers" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All lawyers</SelectItem>
+                <SelectItem value="all">All lawyers</SelectItem>
                 {lawyers.map(lawyer => (
                   <SelectItem key={lawyer} value={lawyer}>
                     {lawyer}
@@ -213,14 +213,14 @@ export function InteractionFiltersPanelEnhanced({
               Rental Company
             </Label>
             <Select
-              value={localFilters.rentalCompany || ''}
-              onValueChange={(value) => handleFilterChange('rentalCompany', value || undefined)}
+              value={localFilters.rentalCompany || 'all'}
+              onValueChange={(value) => handleFilterChange('rentalCompany', value === 'all' ? undefined : value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="All rental companies" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All rental companies</SelectItem>
+                <SelectItem value="all">All rental companies</SelectItem>
                 {rentalCompanies.map(company => (
                   <SelectItem key={company} value={company}>
                     {company}
@@ -234,14 +234,14 @@ export function InteractionFiltersPanelEnhanced({
           <div className="space-y-2">
             <Label>Interaction Type</Label>
             <Select
-              value={localFilters.interactionType?.[0] || ''}
-              onValueChange={(value) => handleFilterChange('interactionType', value ? [value] : undefined)}
+              value={localFilters.interactionType?.[0] || 'all'}
+              onValueChange={(value) => handleFilterChange('interactionType', value === 'all' ? undefined : [value])}
             >
               <SelectTrigger>
                 <SelectValue placeholder="All types" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All types</SelectItem>
+                <SelectItem value="all">All types</SelectItem>
                 <SelectItem value="call">Phone Call</SelectItem>
                 <SelectItem value="email">Email</SelectItem>
                 <SelectItem value="meeting">Meeting</SelectItem>
@@ -256,14 +256,14 @@ export function InteractionFiltersPanelEnhanced({
           <div className="space-y-2">
             <Label>Priority</Label>
             <Select
-              value={localFilters.priority?.[0] || ''}
-              onValueChange={(value) => handleFilterChange('priority', value ? [value] : undefined)}
+              value={localFilters.priority?.[0] || 'all'}
+              onValueChange={(value) => handleFilterChange('priority', value === 'all' ? undefined : [value])}
             >
               <SelectTrigger>
                 <SelectValue placeholder="All priorities" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All priorities</SelectItem>
+                <SelectItem value="all">All priorities</SelectItem>
                 <SelectItem value="low">Low</SelectItem>
                 <SelectItem value="medium">Medium</SelectItem>
                 <SelectItem value="high">High</SelectItem>
@@ -276,14 +276,14 @@ export function InteractionFiltersPanelEnhanced({
           <div className="space-y-2">
             <Label>Status</Label>
             <Select
-              value={localFilters.status?.[0] || ''}
-              onValueChange={(value) => handleFilterChange('status', value ? [value] : undefined)}
+              value={localFilters.status?.[0] || 'all'}
+              onValueChange={(value) => handleFilterChange('status', value === 'all' ? undefined : [value])}
             >
               <SelectTrigger>
                 <SelectValue placeholder="All statuses" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All statuses</SelectItem>
+                <SelectItem value="all">All statuses</SelectItem>
                 <SelectItem value="pending">Pending</SelectItem>
                 <SelectItem value="in_progress">In Progress</SelectItem>
                 <SelectItem value="completed">Completed</SelectItem>

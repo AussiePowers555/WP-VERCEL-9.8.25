@@ -257,7 +257,7 @@ export function FleetStatusWidget({ workspaceId }: { workspaceId?: string }) {
                     <div className="text-sm font-medium">{assignment.bikeName}</div>
                     <div className="text-xs text-muted-foreground">Case: {assignment.caseNumber}</div>
                   </div>
-                  <Badge variant={assignment.daysRemaining <= 1 ? "destructive" : assignment.daysRemaining <= 3 ? "warning" : "default"}>
+                  <Badge variant={assignment.daysRemaining <= 1 ? "destructive" : assignment.daysRemaining <= 3 ? "secondary" : "default"}>
                     {assignment.daysRemaining === 0 ? 'Due Today' : 
                      assignment.daysRemaining === 1 ? '1 day left' : 
                      `${assignment.daysRemaining} days left`}
