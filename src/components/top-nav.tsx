@@ -123,26 +123,28 @@ export function TopNav() {
                             </Link>
                         ))}
 
-                        {/* More Menu Dropdown */}
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="sm" className="flex items-center space-x-1">
-                                    <LayoutGrid className="h-4 w-4" />
-                                    <span>More</span>
-                                    <ChevronDown className="h-3 w-3" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-48">
-                                {filterNavItems(secondaryNavItems).map((item) => (
-                                    <DropdownMenuItem key={item.href} asChild>
-                                        <Link href={item.href} className="flex items-center space-x-2">
-                                            <item.icon className="h-4 w-4" />
-                                            <span>{item.label}</span>
-                                        </Link>
-                                    </DropdownMenuItem>
-                                ))}
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                        {/* More Menu Dropdown - Only for admins */}
+                        {isAdmin && (
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="sm" className="flex items-center space-x-1">
+                                        <LayoutGrid className="h-4 w-4" />
+                                        <span>More</span>
+                                        <ChevronDown className="h-3 w-3" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="w-48">
+                                    {filterNavItems(secondaryNavItems).map((item) => (
+                                        <DropdownMenuItem key={item.href} asChild>
+                                            <Link href={item.href} className="flex items-center space-x-2">
+                                                <item.icon className="h-4 w-4" />
+                                                <span>{item.label}</span>
+                                            </Link>
+                                        </DropdownMenuItem>
+                                    ))}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        )}
 
                         {/* Admin Dropdown */}
                         {isAdmin && (
@@ -222,25 +224,27 @@ export function TopNav() {
                             ))}
                         </div>
 
-                        {/* Secondary Navigation */}
-                        <div className="space-y-1">
-                            <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                                Tools
-                            </h3>
-                            {filterNavItems(secondaryNavItems).map((item) => (
-                                <Link key={item.href} href={item.href}>
-                                    <Button
-                                        variant={isActive(item.href) ? "default" : "ghost"}
-                                        size="sm"
-                                        className="w-full justify-start space-x-2"
-                                        onClick={() => setMobileMenuOpen(false)}
-                                    >
-                                        <item.icon className="h-4 w-4" />
-                                        <span>{item.label}</span>
-                                    </Button>
-                                </Link>
-                            ))}
-                        </div>
+                        {/* Secondary Navigation - Only for admins */}
+                        {isAdmin && (
+                            <div className="space-y-1">
+                                <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                                    Tools
+                                </h3>
+                                {filterNavItems(secondaryNavItems).map((item) => (
+                                    <Link key={item.href} href={item.href}>
+                                        <Button
+                                            variant={isActive(item.href) ? "default" : "ghost"}
+                                            size="sm"
+                                            className="w-full justify-start space-x-2"
+                                            onClick={() => setMobileMenuOpen(false)}
+                                        >
+                                            <item.icon className="h-4 w-4" />
+                                            <span>{item.label}</span>
+                                        </Button>
+                                    </Link>
+                                ))}
+                            </div>
+                        )}
 
                         {/* Admin Navigation */}
                         {isAdmin && (
