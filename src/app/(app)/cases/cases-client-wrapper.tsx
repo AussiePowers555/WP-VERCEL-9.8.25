@@ -8,22 +8,21 @@ export default function CasesClientWrapper({ children }: { children: React.React
   const router = useRouter();
   const [currentUser] = useSessionStorage<any>("currentUser", null);
   
-  const isWorkspaceUser = currentUser?.role === "workspace_user" || 
-                         currentUser?.role === "rental_company" ||
-                         currentUser?.role === "lawyer";
+  // Only admins and developers can see cases
+  const isAdmin = currentUser?.role === 'admin' || currentUser?.role === 'developer';
   
   useEffect(() => {
-    // Redirect workspace users to interactions - they shouldn't see cases
-    if (isWorkspaceUser) {
+    // Redirect non-admins to interactions
+    if (!isAdmin && currentUser) {
       router.replace('/interactions');
     }
-  }, [isWorkspaceUser, router]);
+  }, [isAdmin, currentUser, router]);
   
-  // Show nothing while redirecting
-  if (isWorkspaceUser) {
+  // Show nothing while checking or redirecting
+  if (!currentUser || !isAdmin) {
     return null;
   }
   
-  // Show cases for admins
+  // Show cases only for admins
   return <>{children}</>;
 }

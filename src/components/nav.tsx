@@ -34,14 +34,14 @@ import {
 } from "lucide-react"
 
 const mainNavItems = [
-    { href: "/", label: "Dashboard", icon: Home, adminOnly: false },
+    { href: "/", label: "Dashboard", icon: Home, adminOnly: true },
     { href: "/workspaces", label: "Workspaces", icon: LayoutGrid, adminOnly: true },
-    { href: "/cases", label: "Case Management", icon: Briefcase, adminOnly: false },
+    { href: "/cases", label: "Case Management", icon: Briefcase, adminOnly: true },
     { href: "/fleet", label: "Fleet Tracking", icon: Bike, adminOnly: true },
     { href: "/financials", label: "Financials", icon: Banknote, adminOnly: true },
     { href: "/commitments", label: "Commitments", icon: ClipboardCheck, adminOnly: true },
     { href: "/contacts", label: "Contacts", icon: Contact, adminOnly: true },
-    { href: "/documents", label: "Documents", icon: FileText, adminOnly: false },
+    { href: "/documents", label: "Documents", icon: FileText, adminOnly: true },
     { href: "/interactions", label: "Interactions", icon: MessageSquare, adminOnly: false },
     { href: "/ai-email", label: "AI Email", icon: Mail, adminOnly: true },
 ]
@@ -58,16 +58,13 @@ export function Nav() {
     const { role } = useWorkspace();
     const pathname = usePathname()
     
-    // Check if user is a workspace user (not admin/developer)
-    const isWorkspaceUser = currentUser?.role === "workspace_user" || 
-                           currentUser?.role === "rental_company" ||
-                           currentUser?.role === "lawyer" ||
-                           (role === "workspace" && currentUser?.role !== "admin" && currentUser?.role !== "developer");
+    // Strictly check if user is admin or developer
+    const isAdmin = currentUser?.role === "admin" || currentUser?.role === "developer";
     
     console.log('[Nav Debug]', { 
         userRole: currentUser?.role, 
-        workspaceRole: role, 
-        isWorkspaceUser 
+        isAdmin,
+        showingOnlyInteractions: !isAdmin
     });
 
     const rentalAgreementRegex = /^\/rental-agreement\/.*/;
@@ -77,7 +74,7 @@ export function Nav() {
     return (
         <div className="flex h-full flex-col">
             <SidebarHeader>
-                <Link href={isWorkspaceUser ? "/interactions" : "/"} className="flex items-center gap-2">
+                <Link href={!isAdmin ? "/interactions" : "/"} className="flex items-center gap-2">
                     <Bike className="h-6 w-6 text-primary" />
                     <span className="text-lg font-semibold">PBikeRescue</span>
                 </Link>
@@ -86,12 +83,15 @@ export function Nav() {
                 <SidebarMenu>
                     {mainNavItems
                         .filter(item => {
-                            // For workspace users, only show specific items
-                            if (isWorkspaceUser) {
-                                // Workspace users can only see Interactions (their feed)
-                                return ['Interactions'].includes(item.label);
+                            // Only show admin items to admins
+                            if (item.adminOnly && !isAdmin) {
+                                return false;
                             }
-                            // For admins, show everything
+                            // For non-admins, ONLY show Interactions
+                            if (!isAdmin) {
+                                return item.label === 'Interactions';
+                            }
+                            // Admins see everything
                             return true;
                         })
                         .map((item) => (
@@ -115,11 +115,15 @@ export function Nav() {
                     <SidebarMenu>
                         {settingsNavItems
                             .filter(item => {
-                                // For workspace users, only show basic settings
-                                if (isWorkspaceUser) {
+                                // Only admins see admin settings
+                                if (item.adminOnly && !isAdmin) {
+                                    return false;
+                                }
+                                // Non-admins only see basic Settings
+                                if (!isAdmin) {
                                     return item.label === 'Settings';
                                 }
-                                // For admins, show everything
+                                // Admins see everything
                                 return true;
                             })
                             .map((item) => (

@@ -3,27 +3,26 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSessionStorage } from '@/hooks/use-session-storage';
-import { useWorkspace } from '@/contexts/WorkspaceContext';
 
 export default function DashboardClient({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [currentUser] = useSessionStorage<any>("currentUser", null);
-  const { role } = useWorkspace();
   
-  const isWorkspaceUser = role === 'workspace' || currentUser?.role === 'workspace_user';
+  // Only admins and developers can see dashboard
+  const isAdmin = currentUser?.role === 'admin' || currentUser?.role === 'developer';
   
   useEffect(() => {
-    // Redirect workspace users to interactions (their feed)
-    if (isWorkspaceUser) {
+    // Redirect non-admins to interactions
+    if (!isAdmin && currentUser) {
       router.replace('/interactions');
     }
-  }, [isWorkspaceUser, router]);
+  }, [isAdmin, currentUser, router]);
   
-  // Show nothing while redirecting
-  if (isWorkspaceUser) {
+  // Show nothing while checking or redirecting
+  if (!currentUser || !isAdmin) {
     return null;
   }
   
-  // Show dashboard for admins
+  // Show dashboard only for admins
   return <>{children}</>;
 }
