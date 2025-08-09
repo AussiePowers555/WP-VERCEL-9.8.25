@@ -26,9 +26,9 @@ function transformDbBikeToFrontend(dbBike: any): Bike {
     imageUrl: dbBike.image_url || 'https://placehold.co/300x200.png',
     imageHint: dbBike.image_hint || 'motorcycle sport',
     assignment: dbBike.assignment || '-',
-    assignedCaseId: dbBike.assigned_case_id,
-    assignmentStartDate: dbBike.assignment_start_date,
-    assignmentEndDate: dbBike.assignment_end_date
+    assignedCaseId: dbBike.assigned_case_id || null, // Ensure it's null instead of undefined
+    assignmentStartDate: dbBike.assignment_start_date || null,
+    assignmentEndDate: dbBike.assignment_end_date || null
   };
 }
 
@@ -89,7 +89,9 @@ export async function GET(
       return NextResponse.json({ error: 'Bike not found' }, { status: 404 });
     }
     
+    console.log('Database bike data:', bike);
     const transformedBike = transformDbBikeToFrontend(bike);
+    console.log('Transformed bike data:', transformedBike);
     return NextResponse.json(transformedBike);
   } catch (error) {
     console.error('Error fetching bike:', error);

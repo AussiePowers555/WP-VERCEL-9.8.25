@@ -120,7 +120,7 @@ export default function FleetPage() {
     const assignmentStartDate = startDate || today;
     
     // Find the selected case to get its case number for display purposes
-    const selectedCase = cases.find(c => c.id.toString() === caseId);
+    const selectedCase = cases.find(c => c.id === caseId);
     const caseNumber = selectedCase?.caseNumber || caseId;
     
     try {
@@ -155,9 +155,9 @@ export default function FleetPage() {
         status: 'available',
         assignment: '-',
         location: 'Main Warehouse',
-        assignedCaseId: '',
-        assignmentStartDate: '',
-        assignmentEndDate: ''
+        assignedCaseId: null,
+        assignmentStartDate: null,
+        assignmentEndDate: null
       });
       
       await refetchBikes();

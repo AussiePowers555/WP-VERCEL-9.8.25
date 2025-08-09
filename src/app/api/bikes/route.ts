@@ -28,9 +28,9 @@ function transformDbBikeToFrontend(dbBike: any): Bike {
     imageUrl: dbBike.image_url || 'https://placehold.co/300x200.png',
     imageHint: dbBike.image_hint || 'motorcycle sport',
     assignment: dbBike.assignment || '-',
-    assignedCaseId: dbBike.assigned_case_id,
-    assignmentStartDate: dbBike.assignment_start_date,
-    assignmentEndDate: dbBike.assignment_end_date
+    assignedCaseId: dbBike.assigned_case_id || null, // Ensure it's null instead of undefined
+    assignmentStartDate: dbBike.assignment_start_date || null,
+    assignmentEndDate: dbBike.assignment_end_date || null
   };
 }
 

@@ -1529,11 +1529,13 @@ const PostgreSQLService = {
       }
       if (normalized.assignment_start_date !== undefined) {
         updateFields.push(`assignment_start_date = $${paramIndex++}`);
-        values.push(normalized.assignment_start_date);
+        // Convert empty string to null for date fields
+        values.push(normalized.assignment_start_date === '' ? null : normalized.assignment_start_date);
       }
       if (normalized.assignment_end_date !== undefined) {
         updateFields.push(`assignment_end_date = $${paramIndex++}`);
-        values.push(normalized.assignment_end_date);
+        // Convert empty string to null for date fields
+        values.push(normalized.assignment_end_date === '' ? null : normalized.assignment_end_date);
       }
       if (normalized.service_center_contact_id !== undefined) {
         updateFields.push(`service_center_contact_id = $${paramIndex++}`);

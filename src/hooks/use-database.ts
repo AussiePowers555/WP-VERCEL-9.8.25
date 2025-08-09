@@ -169,9 +169,13 @@ export function useDatabase<T>(endpoint: string, initialData: T[] = []) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       
+      // Use the server response to update the local state
+      const updatedItem = await response.json();
       setData(prev => prev.map(item =>
-        (item as any).id === id ? { ...item, ...updates } : item
+        (item as any).id === id ? updatedItem : item
       ));
+      
+      return updatedItem;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update item');
       throw err;

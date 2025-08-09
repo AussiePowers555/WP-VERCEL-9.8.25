@@ -74,11 +74,11 @@ export default function CasePage() {
           setBikes(freshBikes);
           
           // Find assigned bike by case ID using fresh data
-          const bike = freshBikes.find((b: BikeFrontend) => b.assignedCaseId === currentCase.id.toString());
+          const bike = freshBikes.find((b: BikeFrontend) => b.assignedCaseId === currentCase.id);
           setAssignedBike(bike || null);
         } else {
           // Fallback to local storage bikes if API call fails
-          const bike = bikes.find(b => b.assignedCaseId === currentCase.id.toString());
+          const bike = bikes.find(b => b.assignedCaseId === currentCase.id);
           setAssignedBike(bike || null);
         }
       } catch (err) {
