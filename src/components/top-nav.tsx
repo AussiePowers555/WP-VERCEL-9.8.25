@@ -23,10 +23,6 @@ import {
   Shield,
   Users,
   Settings,
-  FileText,
-  Contact,
-  Mail,
-  Banknote,
   Gem,
 } from "lucide-react";
 
@@ -38,12 +34,6 @@ const mainNavItems = [
   { href: "/commitments", label: "Commitments", icon: ClipboardCheck, primary: true, adminOnly: true },
 ];
 
-const secondaryNavItems = [
-  { href: "/contacts", label: "Contacts", icon: Contact, adminOnly: true },
-  { href: "/documents", label: "Documents", icon: FileText },
-  { href: "/financials", label: "Financials", icon: Banknote, adminOnly: true },
-  { href: "/ai-email", label: "AI Email", icon: Mail, adminOnly: true },
-];
 
 const adminNavItems = [
   { href: "/admin", label: "Admin Dashboard", icon: Shield },
@@ -113,33 +103,6 @@ export function TopNav() {
             );
           })}
 
-          {/* Secondary Menu Dropdown */}
-          {isAdmin && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  className="px-3 py-2 h-10 text-navy-600 hover:text-navy-800 hover:bg-navy-50 rounded-lg border border-transparent hover:border-navy-200"
-                >
-                  <span className="hidden sm:inline mr-1">More</span>
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                {filterNavItems(secondaryNavItems).map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <DropdownMenuItem key={item.href} asChild>
-                      <Link href={item.href} className="flex items-center gap-2">
-                        <Icon className="h-4 w-4" />
-                        {item.label}
-                      </Link>
-                    </DropdownMenuItem>
-                  );
-                })}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
 
           {/* Admin Menu Dropdown */}
           {isAdmin && (
