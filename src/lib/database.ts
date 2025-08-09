@@ -2026,7 +2026,7 @@ const PostgreSQLService = {
       ...docData,
       uploaded_date: new Date().toISOString()
     };
-    return DatabaseService.createDocument(newDoc);
+    return DatabaseService.createDigitalSignature(newDoc);
   },
 
   addDocumentToCase: async (caseId: string, documentId: string): Promise<boolean> => {

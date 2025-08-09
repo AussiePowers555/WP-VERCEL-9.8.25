@@ -284,7 +284,9 @@ export async function generateSignedPDFBlob(
   };
 
   // Ensure BlobPart is a Uint8Array in browser for type compatibility
-  const blobPart: BlobPart = typeof window === 'undefined' ? (encryptedData as Buffer) : new Uint8Array(encryptedData as Uint8Array);
+  const blobPart: BlobPart = typeof window === 'undefined' 
+    ? new Uint8Array(encryptedData as Buffer) 
+    : new Uint8Array(encryptedData as Uint8Array);
   return {
     blob: new Blob([blobPart], { type: 'application/pdf' }),
     metadata

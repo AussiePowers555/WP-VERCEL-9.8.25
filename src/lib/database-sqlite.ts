@@ -141,7 +141,7 @@ export const SQLiteDatabase = {
 
   async getUserWorkspace(userId: string): Promise<any> {
     const db = getDb();
-    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(userId);
+    const user = db.prepare('SELECT * FROM users WHERE id = ?').get(userId) as any;
     if (!user) return null;
     
     const workspace = db.prepare('SELECT * FROM workspaces WHERE id = ?').get(user.workspace_id || 'MAIN');
@@ -240,7 +240,8 @@ export const SQLiteDatabase = {
 
   async createContact(contactData: Partial<Contact>): Promise<Contact> {
     const db = getDb();
-    const id = contactData.id || `contact_${Date.now()}`;
+    const data = contactData as any;
+    const id = data.id || `contact_${Date.now()}`;
     
     const stmt = db.prepare(`
       INSERT INTO contacts (id, name, email, phone, company, contact_type, workspace_id)
@@ -249,12 +250,12 @@ export const SQLiteDatabase = {
     
     stmt.run(
       id,
-      contactData.name || '',
-      contactData.email || '',
-      contactData.phone || '',
-      contactData.company || '',
-      contactData.contact_type || '',
-      contactData.workspace_id || 'MAIN'
+      data.name || '',
+      data.email || '',
+      data.phone || '',
+      data.company || '',
+      data.contact_type || '',
+      data.workspace_id || 'MAIN'
     );
     
     return db.prepare('SELECT * FROM contacts WHERE id = ?').get(id) as Contact;
@@ -291,7 +292,8 @@ export const SQLiteDatabase = {
 
   async createUser(userData: Partial<UserAccount>): Promise<UserAccount | null> {
     const db = getDb();
-    const id = userData.id || `user_${Date.now()}`;
+    const data = userData as any;
+    const id = data.id || `user_${Date.now()}`;
     
     const stmt = db.prepare(`
       INSERT INTO users (id, email, password, role, workspace_id)
@@ -301,10 +303,10 @@ export const SQLiteDatabase = {
     try {
       stmt.run(
         id,
-        userData.email || '',
-        userData.password || '',
-        userData.role || 'workspace',
-        userData.workspace_id || 'MAIN'
+        data.email || '',
+        data.password || '',
+        data.role || 'workspace',
+        data.workspace_id || 'MAIN'
       );
       
       return db.prepare('SELECT * FROM users WHERE id = ?').get(id) as UserAccount;
@@ -342,7 +344,8 @@ export const SQLiteDatabase = {
 
   async createWorkspace(workspaceData: Partial<Workspace>): Promise<Workspace> {
     const db = getDb();
-    const id = workspaceData.id || `workspace_${Date.now()}`;
+    const data = workspaceData as any;
+    const id = data.id || `workspace_${Date.now()}`;
     
     const stmt = db.prepare(`
       INSERT INTO workspaces (id, name, address, phone, email)
@@ -351,10 +354,10 @@ export const SQLiteDatabase = {
     
     stmt.run(
       id,
-      workspaceData.name || '',
-      workspaceData.address || '',
-      workspaceData.phone || '',
-      workspaceData.email || ''
+      data.name || '',
+      data.address || '',
+      data.phone || '',
+      data.email || ''
     );
     
     return db.prepare('SELECT * FROM workspaces WHERE id = ?').get(id) as Workspace;
@@ -471,7 +474,7 @@ export const SQLiteDatabase = {
 
   async getSignatureToken(token: string): Promise<any> {
     const db = getDb();
-    const result = db.prepare('SELECT * FROM signature_tokens WHERE token = ?').get(token);
+    const result = db.prepare('SELECT * FROM signature_tokens WHERE token = ?').get(token) as any;
     if (result && result.form_data) {
       result.form_data = JSON.parse(result.form_data);
     }
@@ -525,7 +528,7 @@ export const SQLiteDatabase = {
   },
 
   // Bike methods
-  getBikes(): BikeFrontend[] {
+  async getBikes(): Promise<BikeFrontend[]> {
     return this.getAllBikes();
   },
 

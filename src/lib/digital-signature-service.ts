@@ -104,23 +104,24 @@ export class DigitalSignatureService {
       // Create document record
       const signedDoc: SignedDocument = {
         id: docId,
-        caseId,
-        documentType: documentType as any,
-        fileName: `${documentType}-${new Date().toISOString().split('T')[0]}.pdf`,
-        filePath: docPath,
-        fileSize: pdfBytes.length,
-        sha256Hash: this.generateHash(Buffer.from(pdfBytes)),
-        signedAt: new Date().toISOString(),
-        signedBy: signerName,
-        signatureData: signatureData.base64,
-        ipAddress,
-        userAgent,
-        encryptionKeyId: 'key-' + uuidv4(),
-        versions: []
+        case_id: caseId,
+        document_type: documentType as any,
+        file_name: `${documentType}-${new Date().toISOString().split('T')[0]}.pdf`,
+        file_path: docPath,
+        file_size: pdfBytes.length,
+        sha256_hash: this.generateHash(Buffer.from(pdfBytes)),
+        signed_at: new Date(),
+        signed_by: signerName,
+        signature_data: signatureData.base64,
+        ip_address: ipAddress || '',
+        user_agent: userAgent || '',
+        encryption_key_id: 'key-' + uuidv4(),
+        created_at: new Date(),
+        updated_at: new Date()
       };
       
       // Save to database
-      DatabaseService.createDocument(signedDoc);
+      DatabaseService.createDigitalSignature(signedDoc);
       
       return signedDoc;
       

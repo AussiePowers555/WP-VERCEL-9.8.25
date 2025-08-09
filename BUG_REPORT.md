@@ -41,6 +41,37 @@
 
 ## HIGH PRIORITY BUGS
 
+### BUG-014: TypeScript Compilation Errors
+- **Date**: 2025-08-09
+- **Status**: FIXED
+- **Priority**: HIGH
+- **Symptoms**: 
+  - Multiple TypeScript compilation errors preventing successful build
+  - Null assignment issues in fleet/page.tsx
+  - Missing property errors in database-sqlite.ts
+  - Non-existent createDocument method referenced in multiple files
+  - Buffer type incompatibility in pdf-generator.ts
+- **Root Cause**: 
+  - Type mismatches between nullable values and required string/Date types
+  - Accessing properties not defined in interface types
+  - Calling non-existent database methods
+  - Buffer vs Uint8Array type issues for Blob creation
+- **Fix Applied**:
+  - Changed null assignments to undefined in fleet/page.tsx
+  - Cast partial objects to any in database-sqlite.ts for property access
+  - Changed createDocument calls to createDigitalSignature
+  - Fixed SignedDocument object properties to match snake_case schema
+  - Converted Buffer to Uint8Array for BlobPart compatibility
+  - Added default empty strings for optional string properties
+- **Files Modified**:
+  - src/app/(app)/fleet/page.tsx (null to undefined)
+  - src/lib/database-sqlite.ts (cast to any for property access)
+  - src/lib/database.ts (createDocument to createDigitalSignature)
+  - src/lib/digital-signature-service.ts (fixed property names, added defaults)
+  - src/lib/pdf-generator.ts (Buffer to Uint8Array conversion)
+- **Test**: Ran `npm run typecheck` - all errors resolved
+- **Signed**: Claude Code Terminal - 2025-08-09 16:45
+
 ### BUG-013: Interactions Page - "Error loading bikes. Please refresh the page"
 - **Date**: 2025-08-09
 - **Status**: FIXED

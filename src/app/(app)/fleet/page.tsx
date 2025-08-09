@@ -155,9 +155,9 @@ export default function FleetPage() {
         status: 'available',
         assignment: '-',
         location: 'Main Warehouse',
-        assignedCaseId: null,
-        assignmentStartDate: null,
-        assignmentEndDate: null
+        assignedCaseId: undefined,
+        assignmentStartDate: undefined,
+        assignmentEndDate: undefined
       });
       
       await refetchBikes();

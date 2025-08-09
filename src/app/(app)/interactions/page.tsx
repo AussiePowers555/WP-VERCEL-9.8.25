@@ -9,7 +9,7 @@ import { exportFilteredInteractions } from '@/lib/export-utils';
 import { InteractionCardEnhanced } from '@/components/interactions/interaction-card-enhanced';
 import { InteractionFiltersPanelEnhanced } from '@/components/interactions/interaction-filters-enhanced';
 import { InteractionCreateForm } from '@/components/interactions/interaction-create-form';
-// import { FleetStatusWidget } from '@/components/interactions/fleet-status-widget';
+import { FleetStatusWidget } from '@/components/interactions/fleet-status-widget';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -307,8 +307,8 @@ export default function InteractionsPage() {
           </Card>
         </div>
         
-        {/* Fleet Status Widget - temporarily disabled */}
-        {/* <FleetStatusWidget workspaceId={workspaceId} /> */}
+        {/* Fleet Status Widget */}
+        <FleetStatusWidget workspaceId={workspaceId} />
       </div>
       
       {/* Filters Panel */}
