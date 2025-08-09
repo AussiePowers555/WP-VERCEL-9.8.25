@@ -54,6 +54,11 @@ export async function getInteractions(
       queryParams.push(`%${filters.caseNumber}%`);
     }
     
+    if (filters.caseId) {
+      whereConditions.push(`i.case_id = $${paramIndex++}`);
+      queryParams.push(filters.caseId);
+    }
+    
     if (filters.interactionType && filters.interactionType.length > 0) {
       whereConditions.push(`i.interaction_type = ANY($${paramIndex++})`);
       queryParams.push(filters.interactionType);
@@ -92,6 +97,22 @@ export async function getInteractions(
       queryParams.push(filters.tags);
     }
     
+    // Add case-related filters
+    if (filters.insuranceCompany) {
+      whereConditions.push(`c.client_insurance_company ILIKE $${paramIndex++}`);
+      queryParams.push(`%${filters.insuranceCompany}%`);
+    }
+    
+    if (filters.lawyerAssigned) {
+      whereConditions.push(`c.lawyer ILIKE $${paramIndex++}`);
+      queryParams.push(`%${filters.lawyerAssigned}%`);
+    }
+    
+    if (filters.rentalCompany) {
+      whereConditions.push(`c.rental_company ILIKE $${paramIndex++}`);
+      queryParams.push(`%${filters.rentalCompany}%`);
+    }
+    
     const whereClause = whereConditions.length > 0 ? 'WHERE ' + whereConditions.join(' AND ') : '';
     
     // Build ORDER BY clause
@@ -122,9 +143,12 @@ export async function getInteractions(
         i.created_at as "createdAt",
         i.updated_at as "updatedAt",
         i.workspace_id as "workspaceId",
-        c.hirer_name as "caseHirerName",
-        c.incident_date as "incidentDate",
+        c.client_name as "caseHirerName",
+        c.accident_date as "incidentDate",
         c.status as "caseStatus",
+        c.client_insurance_company as "insuranceCompany",
+        c.lawyer as "lawyerAssigned",
+        c.rental_company as "rentalCompany",
         u.name as "createdByName",
         u.email as "createdByEmail"
       FROM interactions i
@@ -426,9 +450,12 @@ export async function getInteractionById(
         i.created_at as "createdAt",
         i.updated_at as "updatedAt",
         i.workspace_id as "workspaceId",
-        c.hirer_name as "caseHirerName",
-        c.incident_date as "incidentDate",
+        c.client_name as "caseHirerName",
+        c.accident_date as "incidentDate",
         c.status as "caseStatus",
+        c.client_insurance_company as "insuranceCompany",
+        c.lawyer as "lawyerAssigned",
+        c.rental_company as "rentalCompany",
         u.name as "createdByName",
         u.email as "createdByEmail"
       FROM interactions i
@@ -481,7 +508,7 @@ export async function getRecentInteractions(
         i.outcome,
         i.priority,
         i.status,
-        c.hirer_name as "caseHirerName",
+        c.client_name as "caseHirerName",
         u.name as "createdByName"
       FROM interactions i
       LEFT JOIN cases c ON i.case_id = c.id
@@ -502,6 +529,171 @@ export async function getRecentInteractions(
     return { 
       success: false, 
       error: error instanceof Error ? error.message : 'Failed to fetch recent interactions' 
+    };
+  }
+}
+
+// Fleet Status types and functions
+export interface FleetStatus {
+  totalBikes: number;
+  availableBikes: number;
+  assignedBikes: number;
+  maintenanceBikes: number;
+  retiredBikes: number;
+  utilizationRate: number;
+  recentAssignments: {
+    bikeId: string;
+    bikeName: string;
+    caseNumber: string;
+    assignmentDate: Date;
+    expectedReturn: Date;
+    daysRemaining: number;
+  }[];
+  bikesDueToday: number;
+  bikesDueTomorrow: number;
+  averageRentalDuration: number;
+  statusDistribution: {
+    available: number;
+    assigned: number;
+    maintenance: number;
+    retired: number;
+  };
+}
+
+export async function getFleetStatus(workspaceId?: string): Promise<{ success: boolean; data?: FleetStatus; error?: string }> {
+  try {
+    // Query to get all bikes with their assignment details
+    const bikesQuery = `
+      SELECT 
+        b.id,
+        b.make,
+        b.model,
+        b.status,
+        b.assignment,
+        b.assigned_case_id as "assignedCaseId",
+        b.assignment_start_date as "assignmentStartDate",
+        b.assignment_end_date as "assignmentEndDate"
+      FROM bikes b
+      ${workspaceId ? 'WHERE b.workspace_id = $1' : ''}
+      ORDER BY b.assignment_start_date DESC NULLS LAST
+    `;
+    
+    const bikesResult = await executeQuery(bikesQuery, workspaceId ? [workspaceId] : []);
+    
+    if (!bikesResult.success) {
+      return { success: false, error: bikesResult.error };
+    }
+    
+    const bikes = bikesResult.data?.rows || [];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    // Count bikes by status
+    const statusCounts = bikes.reduce((acc: Record<string, number>, bike: any) => {
+      acc[bike.status] = (acc[bike.status] || 0) + 1;
+      return acc;
+    }, {});
+    
+    // Get assigned bikes with case details
+    const assignedBikes = bikes.filter((bike: any) => bike.status === 'assigned' && bike.assignedCaseId);
+    
+    // Calculate recent assignments (last 5)
+    const recentAssignments = assignedBikes
+      .filter((bike: any) => bike.assignmentStartDate)
+      .slice(0, 5)
+      .map((bike: any) => {
+        const startDate = new Date(bike.assignmentStartDate);
+        const endDate = bike.assignmentEndDate ? new Date(bike.assignmentEndDate) : new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+        const daysRemaining = Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+        
+        return {
+          bikeId: bike.id,
+          bikeName: `${bike.make} ${bike.model}`,
+          caseNumber: bike.assignedCaseId || 'N/A',
+          assignmentDate: startDate,
+          expectedReturn: endDate,
+          daysRemaining: Math.max(0, daysRemaining)
+        };
+      });
+    
+    // Count bikes due today and tomorrow
+    const bikesDueToday = assignedBikes.filter((bike: any) => {
+      if (!bike.assignmentEndDate) return false;
+      const endDate = new Date(bike.assignmentEndDate);
+      endDate.setHours(0, 0, 0, 0);
+      return endDate.getTime() === today.getTime();
+    }).length;
+    
+    const bikesDueTomorrow = assignedBikes.filter((bike: any) => {
+      if (!bike.assignmentEndDate) return false;
+      const endDate = new Date(bike.assignmentEndDate);
+      endDate.setHours(0, 0, 0, 0);
+      return endDate.getTime() === tomorrow.getTime();
+    }).length;
+    
+    // Calculate average rental duration from completed rentals
+    const completedRentalsQuery = `
+      SELECT 
+        b.assignment_start_date as "assignmentStartDate",
+        b.assignment_end_date as "assignmentEndDate"
+      FROM bikes b
+      WHERE b.assignment_start_date IS NOT NULL 
+        AND b.assignment_end_date IS NOT NULL 
+        AND b.status = 'available'
+        ${workspaceId ? 'AND b.workspace_id = $1' : ''}
+    `;
+    
+    const completedRentalsResult = await executeQuery(completedRentalsQuery, workspaceId ? [workspaceId] : []);
+    const completedRentals = completedRentalsResult.data?.rows || [];
+    
+    let averageRentalDuration = 7; // Default to 7 days
+    if (completedRentals.length > 0) {
+      const totalDuration = completedRentals.reduce((sum: number, rental: any) => {
+        const start = new Date(rental.assignmentStartDate).getTime();
+        const end = new Date(rental.assignmentEndDate).getTime();
+        return sum + (end - start) / (1000 * 60 * 60 * 24);
+      }, 0);
+      averageRentalDuration = Math.round(totalDuration / completedRentals.length);
+    }
+    
+    const totalBikes = bikes.length;
+    const availableBikes = statusCounts['available'] || 0;
+    const assignedBikesCount = statusCounts['assigned'] || 0;
+    const maintenanceBikes = statusCounts['maintenance'] || 0;
+    const retiredBikes = statusCounts['retired'] || 0;
+    
+    // Calculate utilization rate (assigned / (total - retired))
+    const activeBikes = totalBikes - retiredBikes;
+    const utilizationRate = activeBikes > 0 ? (assignedBikesCount / activeBikes) * 100 : 0;
+    
+    return {
+      success: true,
+      data: {
+        totalBikes,
+        availableBikes,
+        assignedBikes: assignedBikesCount,
+        maintenanceBikes,
+        retiredBikes,
+        utilizationRate: Math.round(utilizationRate),
+        recentAssignments,
+        bikesDueToday,
+        bikesDueTomorrow,
+        averageRentalDuration,
+        statusDistribution: {
+          available: availableBikes,
+          assigned: assignedBikesCount,
+          maintenance: maintenanceBikes,
+          retired: retiredBikes
+        }
+      }
+    };
+  } catch (error) {
+    console.error('Error fetching fleet status:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Failed to fetch fleet status' 
     };
   }
 }

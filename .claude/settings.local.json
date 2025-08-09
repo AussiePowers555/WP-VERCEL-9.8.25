@@ -4,7 +4,10 @@
       "Bash(npm run dev:*)",
       "Bash(node:*)",
       "Bash(curl:*)",
-      "Bash(vercel env:*)"
+      "Bash(vercel env:*)",
+      "Bash(robocopy:*)",
+      "Bash(powershell:*)",
+      "Bash(npm install:*)"
     ],
     "deny": []
   }

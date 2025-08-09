@@ -41,6 +41,48 @@
 
 ## HIGH PRIORITY BUGS
 
+### BUG-013: Interactions Page - "Error loading bikes. Please refresh the page"
+- **Date**: 2025-08-09
+- **Status**: FIXED
+- **Priority**: HIGH
+- **Symptoms**: 
+  - Interactions page showing "Error loading bikes" error message
+  - Page not displaying any interactions despite data existing
+  - Filters and export functionality not working
+- **Root Cause**: 
+  - Interactions table schema mismatch with cases table (UUID vs integer for case_id)
+  - Missing enhanced UI components for filtering and exporting
+  - Column name mismatches in SQL queries (hirer_name vs client_name, etc.)
+- **Fix Applied**:
+  - Created comprehensive new interactions page with enhanced features
+  - Fixed database schema to use UUID for case_id matching cases table
+  - Added insurance company, lawyer, and rental company filters
+  - Implemented Excel export functionality
+  - Added click-to-navigate to case view
+  - Implemented real-time updates with 15-second auto-refresh
+  - Created enhanced interaction cards with structured display
+  - Added sorting by last modified timestamp
+  - Fixed all column name references to match actual database schema
+- **Files Modified**:
+  - src/app/(app)/interactions/page.tsx (complete rewrite)
+  - src/components/interactions/interaction-card-enhanced.tsx (new)
+  - src/components/interactions/interaction-filters-enhanced.tsx (new)
+  - src/lib/export-utils.ts (new)
+  - src/lib/actions/interactions.ts (fixed column names)
+  - src/types/interaction.ts (added filter fields)
+- **Features Added**:
+  - Real-time feed with auto-refresh (Live/Pause toggle)
+  - Filter by: Insurance Company, Lawyer, Rental Company, Case Number
+  - Sort by last modified timestamp
+  - Export to Excel with filtered data
+  - Click any interaction to navigate to case view
+  - Statistics dashboard (Total, Today's, Pending, High Priority)
+  - Structured display: Situation, Action Taken, Outcome
+- **Test Data**: Seeded 10 sample interactions across different cases
+- **Signed**: Claude Code Terminal - 2025-08-09 15:16
+
+## HIGH PRIORITY BUGS
+
 ### BUG-012: Fleet - "Failed to assign bike to case" when assigning
 - Date: 2025-08-09
 - Status: FIXED (awaiting user verification)

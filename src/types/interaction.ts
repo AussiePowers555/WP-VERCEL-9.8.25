@@ -47,6 +47,9 @@ export interface InteractionFeedView extends Interaction {
   caseHirerName?: string;
   incidentDate?: string;
   caseStatus?: string;
+  insuranceCompany?: string;
+  lawyerAssigned?: string;
+  rentalCompany?: string;
   
   // User details
   createdByName?: string;
@@ -74,6 +77,7 @@ export interface UpdateInteractionData extends Partial<CreateInteractionData> {
 
 export interface InteractionFilters {
   caseNumber?: string;
+  caseId?: string;
   interactionType?: InteractionType[];
   priority?: InteractionPriority[];
   status?: InteractionStatus[];
@@ -81,6 +85,9 @@ export interface InteractionFilters {
   dateTo?: string;
   searchQuery?: string;
   tags?: string[];
+  insuranceCompany?: string;
+  lawyerAssigned?: string;
+  rentalCompany?: string;
 }
 
 export interface InteractionSortOptions {
