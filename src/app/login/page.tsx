@@ -80,9 +80,10 @@ export default function LoginPage() {
           }
         }, 200);
       } else {
-        // Always redirect to next or dashboard (no first-login flow)
+        // Always redirect; non-admins land on Interactions by default
         const url = new URL(window.location.href);
-        const next = url.searchParams.get("next") || "/";
+        const defaultNext = (data.user.role === 'admin' || data.user.role === 'developer') ? "/" : "/interactions";
+        const next = url.searchParams.get("next") || defaultNext;
         setTimeout(() => {
           try {
             window.location.href = next;

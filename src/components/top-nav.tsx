@@ -37,17 +37,17 @@ import { cn } from "@/lib/utils"
 
 const primaryNavItems = [
     { href: "/workspaces", label: "Workspaces", icon: LayoutGrid, adminOnly: true },
-    { href: "/cases", label: "Case Management", icon: Briefcase, adminOnly: false },
+    { href: "/cases", label: "Case Management", icon: Briefcase, adminOnly: true },
     { href: "/interactions", label: "Interactions", icon: MessageSquare, adminOnly: false },
 ]
 
 const secondaryNavItems = [
-    { href: "/", label: "Dashboard", icon: Home, adminOnly: false },
+    { href: "/", label: "Dashboard", icon: Home, adminOnly: true },
     { href: "/fleet", label: "Fleet Tracking", icon: Bike, adminOnly: true },
     { href: "/financials", label: "Financials", icon: Banknote, adminOnly: true },
     { href: "/commitments", label: "Commitments", icon: ClipboardCheck, adminOnly: true },
     { href: "/contacts", label: "Contacts", icon: Contact, adminOnly: true },
-    { href: "/documents", label: "Documents", icon: FileText, adminOnly: false },
+    { href: "/documents", label: "Documents", icon: FileText, adminOnly: true },
     { href: "/ai-email", label: "AI Email", icon: Mail, adminOnly: true },
 ]
 
@@ -62,15 +62,21 @@ export function TopNav() {
     const { role } = useWorkspace();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     
-    const isAdmin = role === "admin";
-    const isWorkspaceUser = role === "workspace" || currentUser?.role === "workspace_user";
+    // Strict admin check - only admin and developer roles
+    const isAdmin = currentUser?.role === "admin" || currentUser?.role === "developer";
     const pathname = usePathname()
 
     const filterNavItems = (items: typeof primaryNavItems) => {
         return items.filter(item => {
-            if (isWorkspaceUser) {
-                return ['Dashboard', 'Case Management', 'Documents', 'Interactions'].includes(item.label);
+            // Non-admins can only see non-admin items
+            if (!isAdmin && item.adminOnly) {
+                return false;
             }
+            // For non-admins, ONLY show Interactions
+            if (!isAdmin) {
+                return item.label === 'Interactions';
+            }
+            // Admins see everything
             return true;
         });
     };
@@ -88,7 +94,7 @@ export function TopNav() {
                 <div className="flex h-16 items-center justify-between">
                     {/* Logo and Title */}
                     <div className="flex items-center space-x-4">
-                        <Link href="/" className="flex items-center space-x-3">
+                        <Link href={!isAdmin ? "/interactions" : "/"} className="flex items-center space-x-3">
                             <SharkIcon className="h-8 w-8 text-blue-600" size={32} />
                             <div className="hidden sm:block">
                                 <h1 className="text-xl font-bold text-foreground">White Pointer Recoveries</h1>
@@ -161,17 +167,19 @@ export function TopNav() {
                             </DropdownMenu>
                         )}
 
-                        {/* Settings */}
-                        <Link href="/settings">
-                            <Button
-                                variant={isActive('/settings') ? "default" : "ghost"}
-                                size="sm"
-                                className="flex items-center space-x-2"
-                            >
-                                <Settings className="h-4 w-4" />
-                                <span className="hidden lg:inline">Settings</span>
-                            </Button>
-                        </Link>
+                        {/* Settings - only visible for admins */}
+                        {isAdmin && (
+                            <Link href="/settings">
+                                <Button
+                                    variant={isActive('/settings') ? "default" : "ghost"}
+                                    size="sm"
+                                    className="flex items-center space-x-2"
+                                >
+                                    <Settings className="h-4 w-4" />
+                                    <span className="hidden lg:inline">Settings</span>
+                                </Button>
+                            </Link>
+                        )}
                     </div>
 
                     {/* Mobile menu button */}
@@ -256,20 +264,22 @@ export function TopNav() {
                             </div>
                         )}
 
-                        {/* Settings */}
-                        <div className="pt-2 border-t border-border/40">
-                            <Link href="/settings">
-                                <Button
-                                    variant={isActive('/settings') ? "default" : "ghost"}
-                                    size="sm"
-                                    className="w-full justify-start space-x-2"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                >
-                                    <Settings className="h-4 w-4" />
-                                    <span>Settings</span>
-                                </Button>
-                            </Link>
-                        </div>
+                        {/* Settings - only for admins */}
+                        {isAdmin && (
+                            <div className="pt-2 border-t border-border/40">
+                                <Link href="/settings">
+                                    <Button
+                                        variant={isActive('/settings') ? "default" : "ghost"}
+                                        size="sm"
+                                        className="w-full justify-start space-x-2"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                    >
+                                        <Settings className="h-4 w-4" />
+                                        <span>Settings</span>
+                                    </Button>
+                                </Link>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
