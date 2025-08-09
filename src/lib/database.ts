@@ -1471,66 +1471,93 @@ const PostgreSQLService = {
       const values: any[] = [];
       let paramIndex = 1;
 
-      // Only update fields that are provided
-      if (updates.make !== undefined) {
+      // Normalize keys to support both camelCase (frontend) and snake_case (DB)
+      const normalized: any = { ...updates };
+      if (updates.assignedCaseId !== undefined && updates.assigned_case_id === undefined) {
+        normalized.assigned_case_id = updates.assignedCaseId;
+      }
+      if (updates.assignmentStartDate !== undefined && updates.assignment_start_date === undefined) {
+        normalized.assignment_start_date = updates.assignmentStartDate;
+      }
+      if (updates.assignmentEndDate !== undefined && updates.assignment_end_date === undefined) {
+        normalized.assignment_end_date = updates.assignmentEndDate;
+      }
+      if (updates.serviceCenterContactId !== undefined && updates.service_center_contact_id === undefined) {
+        normalized.service_center_contact_id = updates.serviceCenterContactId;
+      }
+      if (updates.imageUrl !== undefined && updates.image_url === undefined) {
+        normalized.image_url = updates.imageUrl;
+      }
+      if (updates.dailyRate !== undefined && updates.daily_rate === undefined) {
+        normalized.daily_rate = updates.dailyRate;
+      }
+      if (updates.dailyRateA !== undefined && updates.daily_rate_a === undefined) {
+        normalized.daily_rate_a = updates.dailyRateA;
+      }
+      if (updates.dailyRateB !== undefined && updates.daily_rate_b === undefined) {
+        normalized.daily_rate_b = updates.dailyRateB;
+      }
+
+      // Only update fields that are provided (using normalized keys)
+      if (normalized.make !== undefined) {
         updateFields.push(`make = $${paramIndex++}`);
-        values.push(updates.make);
+        values.push(normalized.make);
       }
-      if (updates.model !== undefined) {
+      if (normalized.model !== undefined) {
         updateFields.push(`model = $${paramIndex++}`);
-        values.push(updates.model);
+        values.push(normalized.model);
       }
-      if (updates.registration !== undefined) {
+      if (normalized.registration !== undefined) {
         updateFields.push(`registration = $${paramIndex++}`);
-        values.push(updates.registration);
+        values.push(normalized.registration);
       }
-      if (updates.status !== undefined) {
+      if (normalized.status !== undefined) {
         updateFields.push(`status = $${paramIndex++}`);
-        values.push(updates.status);
+        values.push(normalized.status);
       }
-      if (updates.location !== undefined) {
+      if (normalized.location !== undefined) {
         updateFields.push(`location = $${paramIndex++}`);
-        values.push(updates.location);
+        values.push(normalized.location);
       }
-      if (updates.assignment !== undefined) {
+      if (normalized.assignment !== undefined) {
         updateFields.push(`assignment = $${paramIndex++}`);
-        values.push(updates.assignment);
+        values.push(normalized.assignment);
       }
-      if (updates.assigned_case_id !== undefined) {
+      if (normalized.assigned_case_id !== undefined) {
         updateFields.push(`assigned_case_id = $${paramIndex++}`);
-        values.push(updates.assigned_case_id);
+        values.push(normalized.assigned_case_id);
       }
-      if (updates.assignment_start_date !== undefined) {
+      if (normalized.assignment_start_date !== undefined) {
         updateFields.push(`assignment_start_date = $${paramIndex++}`);
-        values.push(updates.assignment_start_date);
+        values.push(normalized.assignment_start_date);
       }
-      if (updates.assignment_end_date !== undefined) {
+      if (normalized.assignment_end_date !== undefined) {
         updateFields.push(`assignment_end_date = $${paramIndex++}`);
-        values.push(updates.assignment_end_date);
+        values.push(normalized.assignment_end_date);
       }
-      if (updates.service_center_contact_id !== undefined) {
+      if (normalized.service_center_contact_id !== undefined) {
         updateFields.push(`service_center_contact_id = $${paramIndex++}`);
-        values.push(updates.service_center_contact_id);
+        values.push(normalized.service_center_contact_id);
       }
-      if (updates.image_url !== undefined) {
+      if (normalized.image_url !== undefined) {
         updateFields.push(`image_url = $${paramIndex++}`);
-        values.push(updates.image_url);
+        values.push(normalized.image_url);
       }
-      if (updates.daily_rate !== undefined) {
+      if (normalized.daily_rate !== undefined) {
         updateFields.push(`daily_rate = $${paramIndex++}`);
-        values.push(updates.daily_rate);
+        values.push(normalized.daily_rate);
       }
-      if (updates.daily_rate_a !== undefined) {
+      if (normalized.daily_rate_a !== undefined) {
         updateFields.push(`daily_rate_a = $${paramIndex++}`);
-        values.push(updates.daily_rate_a);
+        values.push(normalized.daily_rate_a);
       }
-      if (updates.daily_rate_b !== undefined) {
+      if (normalized.daily_rate_b !== undefined) {
         updateFields.push(`daily_rate_b = $${paramIndex++}`);
-        values.push(updates.daily_rate_b);
+        values.push(normalized.daily_rate_b);
       }
-      if (updates.service_notes !== undefined) {
+      if (normalized.service_notes !== undefined) {
         updateFields.push(`service_notes = $${paramIndex++}`);
-        values.push(updates.service_notes);
+        values.push(normalized.service_notes);
       }
 
       // Always update the timestamp

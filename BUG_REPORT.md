@@ -41,6 +41,22 @@
 
 ## HIGH PRIORITY BUGS
 
+### BUG-012: Fleet - "Failed to assign bike to case" when assigning
+- Date: 2025-08-09
+- Status: FIXED (awaiting user verification)
+- Symptoms: When selecting a bike and assigning it to a case, UI shows error "Failed to assign bike to case". Fleet list also sometimes shows empty with red error.
+- Root Cause: API update expected snake_case field names (`assigned_case_id`, `assignment_start_date`), but the client sent camelCase (`assignedCaseId`, `assignmentStartDate`). The DB layer (`updateBike`) only updated snake_case keys, so assignment fields were ignored and the PUT returned without persisting changes, surfacing as a failure in UI.
+- Fix:
+  - Normalized bike update payload server-side to accept both camelCase and snake_case in `DatabaseService.updateBike(...)` so client calls remain stable.
+  - Improved running rental total: `calculateBikeRates` now treats a missing `assignmentEndDate` as “today” to display a live running total (Rate A + Rate B) for active assignments.
+- Files Modified:
+  - `src/lib/database.ts` (normalize update keys; accept camelCase)
+  - `src/lib/bike-utils.ts` (running total without end date)
+- Verification:
+  - Assign a bike to a case from Fleet → success toast, bike shows status "assigned", assignment summary shows duration and running total.
+  - Return bike → fields cleared and status "available".
+- Signed: GPT5
+
 ### BUG-001: User Role Multi-tenancy Access Control Issue
 - **Date**: 2025-08-08
 - **Status**: FIXED

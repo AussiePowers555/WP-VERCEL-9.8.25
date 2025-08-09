@@ -297,9 +297,8 @@ export default function FleetPage() {
             {(bikes as Bike[]).map(bike => {
               const statusInfo = getBikeStatusInfo(bike);
               const assignmentSummary = getAssignmentSummary(bike);
-              const assignmentDuration = bike.assignmentStartDate && bike.assignmentEndDate
-                ? Math.ceil((new Date(bike.assignmentEndDate).getTime() - new Date(bike.assignmentStartDate).getTime()) / (1000 * 60 * 60 * 24))
-                : null;
+              const rateInfo = calculateBikeRates(bike);
+              const assignmentDuration = rateInfo?.days ?? null;
               
               return (
                 <Card key={bike.id}>
@@ -339,11 +338,17 @@ export default function FleetPage() {
                       <span>Rate B: {formatCurrency(bike.dailyRateB || 95)}</span>
                     </div>
                     
-                    {/* Assignment Duration */}
-                    {bike.status === 'assigned' && assignmentDuration && (
-                      <div className="flex items-center gap-2 text-sm text-blue-600">
-                        <Calendar className="h-4 w-4" />
-                        <span>{assignmentDuration} days</span>
+                    {/* Assignment Duration & Running Total */}
+                    {bike.status === 'assigned' && rateInfo && (
+                      <div className="mt-2 space-y-1">
+                        <div className="flex items-center gap-2 text-sm text-blue-600">
+                          <Calendar className="h-4 w-4" />
+                          <span>{rateInfo.days} days assigned</span>
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          <span>Running total: A {formatCurrency(rateInfo.rateATotal)} + B {formatCurrency(rateInfo.rateBTotal)} = </span>
+                          <span className="font-medium text-foreground">{formatCurrency(rateInfo.totalCost)}</span>
+                        </div>
                       </div>
                     )}
                     

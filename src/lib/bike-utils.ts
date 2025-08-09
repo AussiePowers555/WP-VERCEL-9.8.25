@@ -16,13 +16,21 @@ export interface BikeRateCalculation {
  * Calculate bike rental costs based on assignment period
  */
 export function calculateBikeRates(bike: Bike): BikeRateCalculation | null {
-  if (!bike.assignmentStartDate || !bike.assignmentEndDate) {
+  // Allow running totals when bike is currently assigned (no end date yet)
+  if (!bike.assignmentStartDate) {
     return null;
   }
 
   try {
-    const startDate = parseISO(typeof bike.assignmentStartDate === 'string' ? bike.assignmentStartDate : new Date(bike.assignmentStartDate).toISOString());
-    const endDate = parseISO(typeof bike.assignmentEndDate === 'string' ? bike.assignmentEndDate : new Date(bike.assignmentEndDate).toISOString());
+    const startDate = parseISO(
+      typeof bike.assignmentStartDate === 'string'
+        ? bike.assignmentStartDate
+        : new Date(bike.assignmentStartDate).toISOString()
+    );
+    const endIso = bike.assignmentEndDate
+      ? (typeof bike.assignmentEndDate === 'string' ? bike.assignmentEndDate : new Date(bike.assignmentEndDate).toISOString())
+      : new Date().toISOString();
+    const endDate = parseISO(endIso);
 
     if (!isValid(startDate) || !isValid(endDate)) {
       return null;
@@ -48,7 +56,7 @@ export function calculateBikeRates(bike: Bike): BikeRateCalculation | null {
       dailyRateA,
       dailyRateB,
       startDate: typeof bike.assignmentStartDate === 'string' ? bike.assignmentStartDate : new Date(bike.assignmentStartDate).toISOString(),
-      endDate: typeof bike.assignmentEndDate === 'string' ? bike.assignmentEndDate : new Date(bike.assignmentEndDate).toISOString()
+      endDate: endIso
     };
   } catch (error) {
     console.error('Error calculating bike rates:', error);
