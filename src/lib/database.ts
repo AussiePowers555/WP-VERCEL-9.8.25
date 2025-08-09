@@ -339,6 +339,7 @@ async function createTables() {
         registration VARCHAR(50),
         registration_expires DATE,
         service_center VARCHAR(255),
+        service_center_contact_id UUID,
         delivery_street VARCHAR(255),
         delivery_suburb VARCHAR(255),
         delivery_state VARCHAR(10),
@@ -348,9 +349,14 @@ async function createTables() {
         status VARCHAR(50) DEFAULT 'Available',
         location VARCHAR(255) DEFAULT 'Main Warehouse',
         daily_rate DECIMAL(10,2) DEFAULT 85.00,
+        daily_rate_a DECIMAL(10,2) DEFAULT 85.00,
+        daily_rate_b DECIMAL(10,2) DEFAULT 95.00,
         image_url TEXT,
         image_hint TEXT,
         assignment VARCHAR(255) DEFAULT '-',
+        assigned_case_id VARCHAR(255),
+        assignment_start_date DATE,
+        assignment_end_date DATE,
         workspace_id UUID,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -1341,6 +1347,7 @@ const PostgreSQLService = {
           registration,
           registration_expires,
           service_center,
+          service_center_contact_id,
           delivery_street,
           delivery_suburb,
           delivery_state,
@@ -1350,9 +1357,14 @@ const PostgreSQLService = {
           status,
           location,
           daily_rate,
+          daily_rate_a,
+          daily_rate_b,
           image_url,
           image_hint,
           assignment,
+          assigned_case_id,
+          assignment_start_date,
+          assignment_end_date,
           workspace_id,
           created_at,
           updated_at
@@ -1387,6 +1399,7 @@ const PostgreSQLService = {
           registration,
           registration_expires,
           service_center,
+          service_center_contact_id,
           delivery_street,
           delivery_suburb,
           delivery_state,
@@ -1396,9 +1409,14 @@ const PostgreSQLService = {
           status,
           location,
           daily_rate,
+          daily_rate_a,
+          daily_rate_b,
           image_url,
           image_hint,
           assignment,
+          assigned_case_id,
+          assignment_start_date,
+          assignment_end_date,
           workspace_id,
           created_at,
           updated_at
@@ -1421,17 +1439,21 @@ const PostgreSQLService = {
       const result = await client.query(`
         INSERT INTO bikes (
           make, model, registration, registration_expires, service_center,
-          delivery_street, delivery_suburb, delivery_state, delivery_postcode,
+          service_center_contact_id, delivery_street, delivery_suburb, delivery_state, delivery_postcode,
           last_service_date, service_notes, status, location, daily_rate,
-          image_url, image_hint, assignment, created_at
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
+          daily_rate_a, daily_rate_b, image_url, image_hint, assignment,
+          assigned_case_id, assignment_start_date, assignment_end_date, created_at
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)
         RETURNING *
       `, [
         bikeData.make, bikeData.model, bikeData.registration, bikeData.registrationExpires,
-        bikeData.serviceCenter, bikeData.deliveryStreet, bikeData.deliverySuburb,
+        bikeData.serviceCenter, bikeData.serviceCenterContactId || null, bikeData.deliveryStreet, bikeData.deliverySuburb,
         bikeData.deliveryState, bikeData.deliveryPostcode, bikeData.lastServiceDate,
         bikeData.serviceNotes, bikeData.status, bikeData.location, bikeData.dailyRate,
-        bikeData.imageUrl, bikeData.imageHint, bikeData.assignment, now
+        bikeData.dailyRateA || bikeData.dailyRate || 85, bikeData.dailyRateB || 95,
+        bikeData.imageUrl, bikeData.imageHint, bikeData.assignment,
+        bikeData.assignedCaseId || null, bikeData.assignmentStartDate || null, 
+        bikeData.assignmentEndDate || null, now
       ]);
       
       return SchemaTransformers.bikeDbToFrontend(result.rows[0]);
@@ -1445,16 +1467,80 @@ const PostgreSQLService = {
     const client = await pool!.connect();
     
     try {
-      await client.query(`
-        UPDATE bikes
-        SET make = $1, model = $2, registration = $3, status = $4, location = $5,
-            assignment = $6, image_url = $7, daily_rate = $8, service_notes = $9, updated_at = CURRENT_TIMESTAMP
-        WHERE id = $10
-      `, [
-        updates.make, updates.model, updates.registration, updates.status,
-        updates.location, updates.assignment, updates.imageUrl, updates.dailyRate,
-        updates.serviceNotes, id
-      ]);
+      const updateFields: string[] = [];
+      const values: any[] = [];
+      let paramIndex = 1;
+
+      // Only update fields that are provided
+      if (updates.make !== undefined) {
+        updateFields.push(`make = $${paramIndex++}`);
+        values.push(updates.make);
+      }
+      if (updates.model !== undefined) {
+        updateFields.push(`model = $${paramIndex++}`);
+        values.push(updates.model);
+      }
+      if (updates.registration !== undefined) {
+        updateFields.push(`registration = $${paramIndex++}`);
+        values.push(updates.registration);
+      }
+      if (updates.status !== undefined) {
+        updateFields.push(`status = $${paramIndex++}`);
+        values.push(updates.status);
+      }
+      if (updates.location !== undefined) {
+        updateFields.push(`location = $${paramIndex++}`);
+        values.push(updates.location);
+      }
+      if (updates.assignment !== undefined) {
+        updateFields.push(`assignment = $${paramIndex++}`);
+        values.push(updates.assignment);
+      }
+      if (updates.assigned_case_id !== undefined) {
+        updateFields.push(`assigned_case_id = $${paramIndex++}`);
+        values.push(updates.assigned_case_id);
+      }
+      if (updates.assignment_start_date !== undefined) {
+        updateFields.push(`assignment_start_date = $${paramIndex++}`);
+        values.push(updates.assignment_start_date);
+      }
+      if (updates.assignment_end_date !== undefined) {
+        updateFields.push(`assignment_end_date = $${paramIndex++}`);
+        values.push(updates.assignment_end_date);
+      }
+      if (updates.service_center_contact_id !== undefined) {
+        updateFields.push(`service_center_contact_id = $${paramIndex++}`);
+        values.push(updates.service_center_contact_id);
+      }
+      if (updates.image_url !== undefined) {
+        updateFields.push(`image_url = $${paramIndex++}`);
+        values.push(updates.image_url);
+      }
+      if (updates.daily_rate !== undefined) {
+        updateFields.push(`daily_rate = $${paramIndex++}`);
+        values.push(updates.daily_rate);
+      }
+      if (updates.daily_rate_a !== undefined) {
+        updateFields.push(`daily_rate_a = $${paramIndex++}`);
+        values.push(updates.daily_rate_a);
+      }
+      if (updates.daily_rate_b !== undefined) {
+        updateFields.push(`daily_rate_b = $${paramIndex++}`);
+        values.push(updates.daily_rate_b);
+      }
+      if (updates.service_notes !== undefined) {
+        updateFields.push(`service_notes = $${paramIndex++}`);
+        values.push(updates.service_notes);
+      }
+
+      // Always update the timestamp
+      updateFields.push(`updated_at = CURRENT_TIMESTAMP`);
+      values.push(id);
+
+      if (updateFields.length > 1) { // More than just the timestamp update
+        const query = `UPDATE bikes SET ${updateFields.join(', ')} WHERE id = $${paramIndex}`;
+        await client.query(query, values);
+      }
     } finally {
       client.release();
     }
@@ -1482,16 +1568,18 @@ const PostgreSQLService = {
         await client.query(`
           INSERT INTO bikes (
             id, make, model, registration, registration_expires, service_center,
-            delivery_street, delivery_suburb, delivery_state, delivery_postcode,
+            service_center_contact_id, delivery_street, delivery_suburb, delivery_state, delivery_postcode,
             last_service_date, service_notes, status, location, daily_rate,
-            image_url, image_hint, assignment
-          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
+            daily_rate_a, daily_rate_b, image_url, image_hint, assignment,
+            assigned_case_id, assignment_start_date, assignment_end_date
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)
           ON CONFLICT (id) DO UPDATE SET
             make = EXCLUDED.make,
             model = EXCLUDED.model,
             registration = EXCLUDED.registration,
             registration_expires = EXCLUDED.registration_expires,
             service_center = EXCLUDED.service_center,
+            service_center_contact_id = EXCLUDED.service_center_contact_id,
             delivery_street = EXCLUDED.delivery_street,
             delivery_suburb = EXCLUDED.delivery_suburb,
             delivery_state = EXCLUDED.delivery_state,
@@ -1501,15 +1589,19 @@ const PostgreSQLService = {
             status = EXCLUDED.status,
             location = EXCLUDED.location,
             daily_rate = EXCLUDED.daily_rate,
+            daily_rate_a = EXCLUDED.daily_rate_a,
+            daily_rate_b = EXCLUDED.daily_rate_b,
             image_url = EXCLUDED.image_url,
             image_hint = EXCLUDED.image_hint,
             assignment = EXCLUDED.assignment,
             updated_at = CURRENT_TIMESTAMP
         `, [
           bike.id, bike.make, bike.model, bike.registration, bike.registrationExpires,
-          bike.serviceCenter, bike.deliveryStreet, bike.deliverySuburb, bike.deliveryState,
+          bike.serviceCenter, bike.serviceCenterContactId || null, bike.deliveryStreet, bike.deliverySuburb, bike.deliveryState,
           bike.deliveryPostcode, bike.lastServiceDate, bike.serviceNotes, bike.status,
-          bike.location, bike.dailyRate, bike.imageUrl, bike.imageHint, bike.assignment
+          bike.location, bike.dailyRate, bike.dailyRateA || bike.dailyRate || 85, 
+          bike.dailyRateB || 95, bike.imageUrl, bike.imageHint, bike.assignment,
+          bike.assignedCaseId || null, bike.assignmentStartDate || null, bike.assignmentEndDate || null
         ]);
       }
       
