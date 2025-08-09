@@ -130,6 +130,7 @@ export interface Bike {
   registration?: string;
   registration_expires?: Date;
   service_center?: string;
+  service_center_contact_id?: string;
   delivery_street?: string;
   delivery_suburb?: string;
   delivery_state?: AustralianState;
@@ -139,9 +140,14 @@ export interface Bike {
   status: 'Available' | 'Assigned' | 'Maintenance' | 'Retired';
   location?: string;
   daily_rate?: number;
+  daily_rate_a?: number;
+  daily_rate_b?: number;
   image_url?: string;
   image_hint?: string;
   assignment?: string;
+  assigned_case_id?: string;
+  assignment_start_date?: Date;
+  assignment_end_date?: Date;
   workspace_id?: string;
   created_at: Date;
   updated_at: Date;
@@ -649,6 +655,7 @@ export class SchemaTransformers {
       registration: dbBike.registration,
       registrationExpires: dbBike.registration_expires,
       serviceCenter: dbBike.service_center,
+      serviceCenterContactId: dbBike.service_center_contact_id,
       deliveryStreet: dbBike.delivery_street,
       deliverySuburb: dbBike.delivery_suburb,
       deliveryState: dbBike.delivery_state,
@@ -658,10 +665,14 @@ export class SchemaTransformers {
       status: (dbBike.status?.toLowerCase?.() as any) || 'available',
       location: dbBike.location,
       dailyRate: dbBike.daily_rate,
+      dailyRateA: dbBike.daily_rate_a,
+      dailyRateB: dbBike.daily_rate_b,
       imageUrl: dbBike.image_url,
       imageHint: dbBike.image_hint,
       assignment: dbBike.assignment,
-      workspaceId: dbBike.workspace_id,
+      assignedCaseId: dbBike.assigned_case_id,
+      assignmentStartDate: dbBike.assignment_start_date,
+      assignmentEndDate: dbBike.assignment_end_date,
       createdDate: dbBike.created_at,
     } as any;
   }
