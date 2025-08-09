@@ -300,6 +300,9 @@ export default function FleetPage() {
               const rateInfo = calculateBikeRates(bike);
               const assignmentDuration = rateInfo?.days ?? null;
               
+              // Find the assigned case details
+              const assignedCase = bike.assignedCaseId ? cases.find(c => c.id === bike.assignedCaseId) : null;
+              
               return (
                 <Card key={bike.id}>
                   <CardHeader className="p-0">
@@ -337,6 +340,31 @@ export default function FleetPage() {
                       <span className="text-muted-foreground">|</span>
                       <span>Rate B: {formatCurrency(bike.dailyRateB || 95)}</span>
                     </div>
+                    
+                    {/* Assignment Details */}
+                    {bike.status === 'assigned' && assignedCase && (
+                      <div className="mt-3 p-3 bg-blue-50 rounded-md border border-blue-200">
+                        <div className="space-y-2">
+                          <div className="text-sm">
+                            <span className="font-semibold text-blue-900">Assigned to Case:</span>
+                            <span className="ml-2 text-blue-700">{assignedCase.caseNumber}</span>
+                          </div>
+                          <div className="text-sm">
+                            <span className="font-semibold text-blue-900">Customer:</span>
+                            <span className="ml-2 text-blue-700">{assignedCase.clientName}</span>
+                          </div>
+                          {assignedCase.clientStreetAddress && (
+                            <div className="text-sm">
+                              <span className="font-semibold text-blue-900">Delivery Address:</span>
+                              <div className="ml-2 text-blue-700 text-xs">
+                                {assignedCase.clientStreetAddress}<br/>
+                                {assignedCase.clientSuburb}, {assignedCase.clientState} {assignedCase.clientPostcode}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
                     
                     {/* Assignment Duration & Running Total */}
                     {bike.status === 'assigned' && rateInfo && (
@@ -445,7 +473,7 @@ export default function FleetPage() {
                 </DialogHeader>
                 <AssignCaseForm 
                     bike={selectedBike}
-                    cases={cases.filter(c => !(bikes as Bike[]).some(b => b.assignedCaseId === c.id.toString()))}
+                    cases={cases.filter(c => !(bikes as Bike[]).some(b => b.assignedCaseId === c.id))}
                     onAssign={handleAssignBikeToCase}
                     setDialogOpen={setAssignCaseDialogOpen}
                 />

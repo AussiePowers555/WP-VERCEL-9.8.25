@@ -73,6 +73,14 @@ export default function CasePage() {
           const freshBikes = await bikesResponse.json();
           setBikes(freshBikes);
           
+          // Debug: Log the comparison
+          console.log('Looking for bike assigned to case:', currentCase.id);
+          console.log('Available bikes with assignments:', freshBikes.filter((b: BikeFrontend) => b.assignedCaseId).map((b: BikeFrontend) => ({
+            bikeId: b.id,
+            assignedCaseId: b.assignedCaseId,
+            matches: b.assignedCaseId === currentCase.id
+          })));
+          
           // Find assigned bike by case ID using fresh data
           const bike = freshBikes.find((b: BikeFrontend) => b.assignedCaseId === currentCase.id);
           setAssignedBike(bike || null);
