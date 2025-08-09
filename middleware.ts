@@ -60,11 +60,30 @@ export function middleware(request: NextRequest) {
   // Read auth cookie set on login
   const authCookie = request.cookies.get('wpa_auth');
   const isAuthenticated = !!authCookie?.value;
+  let userRole: string | undefined = undefined;
+  if (authCookie?.value) {
+    try {
+      const parsed = JSON.parse(authCookie.value);
+      userRole = parsed?.role;
+    } catch {}
+  }
 
   if (isProtectedPath && !isAuthenticated) {
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('next', pathname);
     return NextResponse.redirect(loginUrl);
+  }
+
+  // Role-based redirects for non-admins
+  const isAdmin = userRole === 'admin' || userRole === 'developer';
+  if (isAuthenticated && !isAdmin) {
+    // If a non-admin hits admin-only areas, send to Interactions
+    const adminOnlyPaths = ['/cases', '/documents', '/'];
+    const isAdminArea = adminOnlyPaths.some(p => pathname === p || pathname.startsWith(`${p}/`));
+    if (isAdminArea) {
+      const interactionsUrl = new URL('/interactions', request.url);
+      return NextResponse.redirect(interactionsUrl);
+    }
   }
 
   // propagate cookie to downstream if present
