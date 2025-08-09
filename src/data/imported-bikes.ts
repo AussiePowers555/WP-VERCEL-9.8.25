@@ -2,7 +2,7 @@ import { BikeFrontend } from '@/lib/database-schema';
 
 export const importedBikes: BikeFrontend[] = [
   {
-    "id": "M1001",
+    "id": "5e7d9ce2-dce7-4e85-ae73-a9bbd4c75c88",
     "make": "Aprilia",
     "model": "RSV4 Factory",
     "registration": "BD20YZA",
@@ -28,7 +28,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1002",
+    "id": "53cac913-afc3-4ee1-9f7d-cda97ffe41d5",
     "make": "Aprilia",
     "model": "Tuono V4",
     "registration": "BD30CDE",
@@ -54,7 +54,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1003",
+    "id": "30efa425-1a2e-490b-816b-c76060508ac2",
     "make": "BMW",
     "model": "F850GS",
     "registration": "BD27TUV",
@@ -80,7 +80,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1004",
+    "id": "a4b5c6d7-e8f9-1234-5678-90abcdef1234",
     "make": "BMW",
     "model": "R1250GS",
     "registration": "BD37XYZ",
@@ -106,7 +106,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1005",
+    "id": "b5c6d7e8-f9a0-2345-6789-01bcdef23456",
     "make": "BMW",
     "model": "S1000RR",
     "registration": "BD17PQR",
@@ -132,7 +132,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1006",
+    "id": "c6d7e8f9-a0b1-3456-7890-12cdef345678",
     "make": "Ducati",
     "model": "899 Panigale",
     "registration": "BD42MNO",
@@ -158,7 +158,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1007",
+    "id": "d7e8f9a0-b1c2-4567-8901-23def4567890",
     "make": "Ducati",
     "model": "Monster 821",
     "registration": "BD26QRS",
@@ -184,7 +184,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1008",
+    "id": "e8f9a0b1-c2d3-5678-9012-34ef567890ab",
     "make": "Ducati",
     "model": "Panigale V4",
     "registration": "BD16MNO",
@@ -210,7 +210,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1009",
+    "id": "f9a0b1c2-d3e4-6789-0123-45f67890abcd",
     "make": "Harley-Davidson",
     "model": "Fat Boy",
     "registration": "BD31FGH",
@@ -236,7 +236,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1010",
+    "id": "a0b1c2d3-e4f5-7890-1234-567890abcdef",
     "make": "Harley-Davidson",
     "model": "Sportster S",
     "registration": "BD21BCD",
@@ -262,7 +262,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1011",
+    "id": "2d193ddc-fa51-4e80-abf2-8f1ab9054f3c",
     "make": "Honda",
     "model": "Africa Twin",
     "registration": "BD32IJK",
@@ -288,7 +288,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1012",
+    "id": "2fe61958-0e6a-401e-a472-04ee91a5920a",
     "make": "Honda",
     "model": "CB1000R",
     "registration": "BD22EFG",
@@ -314,7 +314,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1013",
+    "id": "1014748b-875f-4c51-918f-650c89dead0b",
     "make": "Honda",
     "model": "CBR1000RR",
     "registration": "BD38ABC",
@@ -340,7 +340,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1014",
+    "id": "4191f436-f670-474d-b8b7-bc0ee073ca79",
     "make": "Honda",
     "model": "CBR600RR",
     "registration": "BD12ABC",
@@ -366,7 +366,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1015",
+    "id": "87e8c9bd-ce5e-4ff2-b7c6-255f92038014",
     "make": "KTM",
     "model": "390 Duke",
     "registration": "BD19VWX",
@@ -392,7 +392,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1016",
+    "id": "1f592139-a67a-4aaf-990a-4170a8f51791",
     "make": "KTM",
     "model": "890 Adventure",
     "registration": "BD29ZAB",
@@ -418,7 +418,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1017",
+    "id": "7a79564b-9790-480b-9bdf-96627e186d8c",
     "make": "Kawasaki",
     "model": "Ninja ZX-10R",
     "registration": "BD14GHI",
@@ -444,7 +444,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1018",
+    "id": "5bc9a63e-764a-4fa2-a2c1-9038c83955a8",
     "make": "Kawasaki",
     "model": "Versys 1000",
     "registration": "BD34OPQ",
@@ -470,7 +470,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1019",
+    "id": "fcb448a5-8495-48a2-9d5a-e7afd081a972",
     "make": "Kawasaki",
     "model": "Z900",
     "registration": "BD24KLM",
@@ -496,7 +496,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1020",
+    "id": "776e35d0-b9d9-4ed3-859b-e58abc8d3479",
     "make": "Kawasaki",
     "model": "ZX-6R",
     "registration": "BD40GHI",
@@ -522,7 +522,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1021",
+    "id": "ee79c765-c8e4-4577-8715-a06752fe5303",
     "make": "Suzuki",
     "model": "GSX-R1000",
     "registration": "BD15JKL",
@@ -548,7 +548,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1022",
+    "id": "928d53c9-493b-4767-b40f-7f62df2b89e6",
     "make": "Suzuki",
     "model": "GSX-R750",
     "registration": "BD41JKL",
@@ -574,7 +574,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1023",
+    "id": "e44ae3df-95c2-4e22-bc25-49696e1416d9",
     "make": "Suzuki",
     "model": "SV650",
     "registration": "BD25NOP",
@@ -600,7 +600,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1024",
+    "id": "d544e7e1-c171-4cf9-a90e-611afc3df585",
     "make": "Suzuki",
     "model": "V-Strom 650",
     "registration": "BD35RST",
@@ -626,7 +626,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1025",
+    "id": "aa107c83-d37c-4073-9ce7-7b7e0cd0dbad",
     "make": "Triumph",
     "model": "Street Triple RS",
     "registration": "BD18STU",
@@ -652,7 +652,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1026",
+    "id": "7c043fba-0a75-44e0-97bc-b22025289361",
     "make": "Triumph",
     "model": "Tiger 900",
     "registration": "BD28WXY",
@@ -678,7 +678,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1027",
+    "id": "258b3e6d-a9c3-466b-9f16-38dc6786a6c1",
     "make": "Yamaha",
     "model": "R6",
     "registration": "BD39DEF",
@@ -704,7 +704,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1028",
+    "id": "03f5c29b-4ebd-4f3e-89dd-9737af42becc",
     "make": "Yamaha",
     "model": "Tenere 700",
     "registration": "BD33LMN",
@@ -730,7 +730,7 @@ export const importedBikes: BikeFrontend[] = [
     "assignmentEndDate": ""
   },
   {
-    "id": "M1029",
+    "id": "c39ffac7-fddb-4572-a266-00592c7cf49a",
     "make": "Yamaha",
     "model": "YZF-R1",
     "registration": "BD13DEF",
