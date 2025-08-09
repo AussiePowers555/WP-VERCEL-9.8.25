@@ -1525,17 +1525,20 @@ const PostgreSQLService = {
       }
       if (normalized.assigned_case_id !== undefined) {
         updateFields.push(`assigned_case_id = $${paramIndex++}`);
-        values.push(normalized.assigned_case_id);
+        // Convert empty string to null for UUID fields
+        values.push(normalized.assigned_case_id === '' ? null : normalized.assigned_case_id);
       }
       if (normalized.assignment_start_date !== undefined) {
         updateFields.push(`assignment_start_date = $${paramIndex++}`);
-        // Convert empty string to null for date fields
-        values.push(normalized.assignment_start_date === '' ? null : normalized.assignment_start_date);
+        // Convert empty string or null to proper null for date fields
+        const dateValue = normalized.assignment_start_date;
+        values.push(!dateValue || dateValue === '' ? null : dateValue);
       }
       if (normalized.assignment_end_date !== undefined) {
         updateFields.push(`assignment_end_date = $${paramIndex++}`);
-        // Convert empty string to null for date fields
-        values.push(normalized.assignment_end_date === '' ? null : normalized.assignment_end_date);
+        // Convert empty string or null to proper null for date fields
+        const dateValue = normalized.assignment_end_date;
+        values.push(!dateValue || dateValue === '' ? null : dateValue);
       }
       if (normalized.service_center_contact_id !== undefined) {
         updateFields.push(`service_center_contact_id = $${paramIndex++}`);
