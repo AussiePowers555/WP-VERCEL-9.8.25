@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { neon } from '@neondatabase/serverless';
-import bcrypt from 'bcryptjs';
+import { hashPassword } from '@/lib/passwords';
 import { v4 as uuidv4 } from 'uuid';
 
 const getDb = () => {
@@ -47,8 +47,8 @@ export async function POST(request: NextRequest) {
     const workspaceId = uuidv4();
     const userId = uuidv4();
 
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Hash the password using SHA256 (same as login system)
+    const hashedPassword = hashPassword(password);
 
     // Create workspace
     await sql`

@@ -353,21 +353,45 @@ export function WindowsExplorerView({
     if (!targetWorkspace || !shareEmail || !sharePassword) return;
 
     try {
-      // In a real implementation, this would update the workspace's credentials
-      // For now, we'll just display them
+      // Call API to create user with workspace access
+      const response = await fetch('/api/workspaces/share', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          workspaceId: targetWorkspace.id,
+          email: shareEmail,
+          password: sharePassword
+        })
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to share folder');
+      }
+
+      const result = await response.json();
+      
+      // Show credentials to user
       setSharedCredentials({ email: shareEmail, password: sharePassword });
       setShowShareFolder(false);
       setShowCredentials(true);
       
-      toast({
-        title: "Folder Shared",
-        description: `Login credentials have been set for ${targetWorkspace.name}.`,
-      });
+      if (result.isExistingUser) {
+        toast({
+          title: "Folder Access Updated",
+          description: `${shareEmail} now has access to ${targetWorkspace.name}.`,
+        });
+      } else {
+        toast({
+          title: "Folder Shared Successfully",
+          description: `New user created with access to ${targetWorkspace.name}.`,
+        });
+      }
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to share folder. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to share folder. Please try again.",
       });
     }
   };
