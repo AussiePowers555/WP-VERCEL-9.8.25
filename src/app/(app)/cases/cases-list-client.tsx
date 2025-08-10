@@ -6,7 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PlusCircle, ChevronDown, ChevronUp, ArrowUpDown, ArrowUp, ArrowDown, FilterX, Search, X, Trash2, Database, RefreshCw, LayoutGrid, TableProperties } from "lucide-react";
-import { FileExplorerEnhanced } from "@/components/cases/file-explorer-enhanced";
+import { WindowsExplorerView } from "@/components/cases/windows-explorer-view";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -710,7 +710,7 @@ export default function CasesListClient({
       
       {/* Explorer View */}
       {viewMode === 'explorer' ? (
-        <FileExplorerEnhanced
+        <WindowsExplorerView
           cases={filteredAndSortedCases}
           workspaces={initialWorkspaces as Workspace[]}
           onCaseMove={handleCaseMove}
