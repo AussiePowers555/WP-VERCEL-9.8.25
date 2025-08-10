@@ -4,14 +4,15 @@ import { useState, useEffect } from "react";
 import type { ContactFrontend as Contact } from "@/lib/database-schema";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, MoreVertical } from "lucide-react";
+import { PlusCircle, MoreVertical, Pencil, Trash2 } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AddContactForm } from "./add-contact-form";
+import { EditContactForm } from "./edit-contact-form";
 import { useContacts } from "@/hooks/use-database";
 import { useToast } from "@/hooks/use-toast";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/context/AuthContext";
 import { cookieForwardFetch } from "@/lib/auth-fetch";
 import { CredentialsModal } from "@/components/credentials-modal";
@@ -29,6 +30,8 @@ export default function ContactsPage() {
     const { user } = useAuth();
     const { data: contacts, loading: contactsLoading, error: contactsError, create: createContact, refresh: refreshContacts } = useContacts();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+    const [editingContact, setEditingContact] = useState<Contact | null>(null);
     const [activeTab, setActiveTab] = useState<Contact['type']>('Insurer');
     const [credentialsModalOpen, setCredentialsModalOpen] = useState(false);
     const [workspaceCredentials, setWorkspaceCredentials] = useState<WorkspaceCredentials | null>(null);
@@ -90,6 +93,36 @@ export default function ContactsPage() {
             });
         }
     }
+
+    const handleEditContact = (contact: Contact) => {
+        setEditingContact(contact);
+        setIsEditDialogOpen(true);
+    };
+
+    const handleUpdateContact = async (updatedContact: Contact) => {
+        try {
+            const response = await cookieForwardFetch(`/api/contacts/${updatedContact.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedContact),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to update contact");
+            }
+
+            toast({ title: "Contact Updated", description: "The contact has been updated successfully." });
+            setIsEditDialogOpen(false);
+            setEditingContact(null);
+            // Refresh contacts list
+            window.location.reload();
+        } catch (err) {
+            console.error("Update contact failed", err);
+            toast({ variant: "destructive", title: "Error", description: "Failed to update contact." });
+        }
+    };
 
     const handleDeleteContact = async (id: string) => {
         if (!confirm("Are you sure you want to delete this contact?")) return;
@@ -176,7 +209,15 @@ export default function ContactsPage() {
                                                                     <Button variant="ghost" size="icon"><MoreVertical className="h-4 w-4" /></Button>
                                                                 </DropdownMenuTrigger>
                                                                 <DropdownMenuContent align="end">
-                                                                    <DropdownMenuItem onSelect={() => handleDeleteContact(contact.id)}>Delete</DropdownMenuItem>
+                                                                    <DropdownMenuItem onSelect={() => handleEditContact(contact)}>
+                                                                        <Pencil className="mr-2 h-4 w-4" />
+                                                                        Edit
+                                                                    </DropdownMenuItem>
+                                                                    <DropdownMenuSeparator />
+                                                                    <DropdownMenuItem onSelect={() => handleDeleteContact(contact.id)} className="text-destructive">
+                                                                        <Trash2 className="mr-2 h-4 w-4" />
+                                                                        Delete
+                                                                    </DropdownMenuItem>
                                                                 </DropdownMenuContent>
                                                             </DropdownMenu>
                                                         </TableCell>
@@ -203,6 +244,26 @@ export default function ContactsPage() {
                 onOpenChange={setCredentialsModalOpen}
                 credentials={workspaceCredentials}
             />
+
+            {/* Edit Contact Dialog */}
+            <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+                <DialogContent className="max-h-[80vh] overflow-auto">
+                    <DialogHeader>
+                        <DialogTitle>Edit Contact</DialogTitle>
+                        <DialogDescription>Update the contact information.</DialogDescription>
+                    </DialogHeader>
+                    {editingContact && (
+                        <EditContactForm
+                            contact={editingContact}
+                            onSave={handleUpdateContact}
+                            onCancel={() => {
+                                setIsEditDialogOpen(false);
+                                setEditingContact(null);
+                            }}
+                        />
+                    )}
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
