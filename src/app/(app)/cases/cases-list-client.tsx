@@ -696,8 +696,8 @@ export default function CasesListClient({
         </div>
         
         <CardContent className="pt-4">
-          <div className="rounded-md border">
-            <Table>
+          <div className="rounded-md border overflow-x-hidden">
+            <Table className="table-fixed w-full whitespace-normal">
                 <TableHeader>
                     <TableRow>
                         <TableHead className="w-10"></TableHead>
@@ -721,11 +721,11 @@ export default function CasesListClient({
                             {getSortIcon('clientName')}
                           </Button>
                         </TableHead>
-                        <TableHead>Assigned Lawyer</TableHead>
-                        <TableHead>Assigned Rental Company</TableHead>
-                        <TableHead>At-Fault Insurer</TableHead>
-                        <TableHead>Workspace</TableHead>
-                        <TableHead>
+                        <TableHead className="hidden xl:table-cell">Assigned Lawyer</TableHead>
+                        <TableHead className="hidden xl:table-cell">Assigned Rental Company</TableHead>
+                        <TableHead className="hidden lg:table-cell">At-Fault Insurer</TableHead>
+                        <TableHead className="hidden lg:table-cell">Workspace</TableHead>
+                        <TableHead className="hidden md:table-cell">
                           <Button
                             variant="ghost"
                             className="h-auto p-0 font-medium hover:bg-transparent flex items-center gap-1"
@@ -735,7 +735,7 @@ export default function CasesListClient({
                             {getSortIcon('status')}
                           </Button>
                         </TableHead>
-                        <TableHead>
+                        <TableHead className="hidden md:table-cell">
                           <Button
                             variant="ghost"
                             className="h-auto p-0 font-medium hover:bg-transparent flex items-center gap-1"
@@ -762,13 +762,13 @@ export default function CasesListClient({
                           </TableCell>
                           <TableCell className="font-medium">{c.caseNumber}</TableCell>
                           <TableCell>{c.clientName}</TableCell>
-                          <TableCell>
+                          <TableCell className="hidden xl:table-cell">
                             <Select
                               value={c.assigned_lawyer_id || "none"}
                               onValueChange={(lawyerId) => handleLawyerAssignment(c.caseNumber, lawyerId)}
                               disabled={currentUser?.role === 'workspace_user' && currentUser.contactId !== c.assigned_lawyer_id}
                             >
-                              <SelectTrigger className="h-8 w-[140px] text-xs">
+                              <SelectTrigger className="h-8 max-w-[140px] text-xs">
                                 <SelectValue placeholder="No lawyer" />
                               </SelectTrigger>
                               <SelectContent>
@@ -784,13 +784,13 @@ export default function CasesListClient({
                               </SelectContent>
                             </Select>
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="hidden xl:table-cell">
                             <Select
                               value={c.assigned_rental_company_id || "none"}
                               onValueChange={(rentalCompanyId) => handleRentalCompanyAssignment(c.caseNumber, rentalCompanyId)}
                               disabled={currentUser?.role === 'workspace_user' && currentUser.contactId !== c.assigned_rental_company_id}
                             >
-                              <SelectTrigger className="h-8 w-[140px] text-xs">
+                              <SelectTrigger className="h-8 max-w-[140px] text-xs">
                                 <SelectValue placeholder="No rental company" />
                               </SelectTrigger>
                               <SelectContent>
@@ -806,12 +806,12 @@ export default function CasesListClient({
                               </SelectContent>
                             </Select>
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="hidden lg:table-cell">
                             <Select
                               value={getInsurerIdFromName(c.atFaultPartyInsuranceCompany)}
                               onValueChange={(insurerId) => handleInsurerAssignment(c.caseNumber, insurerId)}
                             >
-                              <SelectTrigger className="h-8 w-[160px] text-xs">
+                              <SelectTrigger className="h-8 max-w-[160px] text-xs">
                                 <SelectValue placeholder="No insurer" />
                               </SelectTrigger>
                               <SelectContent>
@@ -822,12 +822,12 @@ export default function CasesListClient({
                               </SelectContent>
                             </Select>
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="hidden lg:table-cell">
                             <Select
                               value={c.workspaceId || "none"}
                               onValueChange={(workspaceId) => handleWorkspaceAssignment(c.caseNumber, workspaceId)}
                             >
-                              <SelectTrigger className="h-8 w-[140px] text-xs">
+                              <SelectTrigger className="h-8 max-w-[140px] text-xs">
                                 <SelectValue placeholder="No workspace" />
                               </SelectTrigger>
                               <SelectContent>
@@ -843,9 +843,9 @@ export default function CasesListClient({
                               </SelectContent>
                             </Select>
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="hidden md:table-cell">
                             <Select value={c.status} onValueChange={(newStatus) => handleStatusChange(c.caseNumber, newStatus as Case['status'])}>
-                                <SelectTrigger className="h-8 w-[120px] text-xs">
+                                <SelectTrigger className="h-8 max-w-[120px] text-xs">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -853,9 +853,9 @@ export default function CasesListClient({
                                 </SelectContent>
                             </Select>
                           </TableCell>
-                          <TableCell>{c.lastUpdated instanceof Date ? c.lastUpdated.toLocaleString() : c.lastUpdated}</TableCell>
+                          <TableCell className="hidden md:table-cell">{c.lastUpdated instanceof Date ? c.lastUpdated.toLocaleString() : c.lastUpdated}</TableCell>
                           <TableCell>
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 flex-wrap">
                               <Button variant="outline" size="sm" onClick={() => router.push(`/cases/${c.id}`)}>
                                 View Details
                               </Button>
