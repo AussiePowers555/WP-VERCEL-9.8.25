@@ -62,11 +62,16 @@ export async function POST(request: NextRequest) {
     
     // Generate random password
     const tempPassword = generateRandomPassword();
+    const hashedPassword = hashPassword(tempPassword);
+    
+    console.log(`📝 Creating user: ${email}`);
+    console.log(`   Generated password: ${tempPassword}`);
+    console.log(`   Hashed password: ${hashedPassword}`);
     
     // Create user
     const newUser = await DatabaseService.createUserAccount({
       email,
-      password_hash: hashPassword(tempPassword),
+      password_hash: hashedPassword,
       role,
       status: 'active',  // Changed from 'pending_password_change' to allow login
       contact_id: contact_id || null,
@@ -94,6 +99,9 @@ export async function POST(request: NextRequest) {
       }
     }
     
+    // Always return credentials so admin can see them
+    console.log(`✅ User created: ${email} with password: ${tempPassword}`);
+    
     return NextResponse.json({
       success: true,
       message: 'User created successfully',
@@ -105,7 +113,7 @@ export async function POST(request: NextRequest) {
         workspace_id: newUser.workspace_id,
         contact_id: newUser.contact_id
       },
-      credentials: send_email ? null : {
+      credentials: {
         email,
         password: tempPassword
       },

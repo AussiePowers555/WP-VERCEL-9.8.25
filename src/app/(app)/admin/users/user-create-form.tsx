@@ -145,12 +145,21 @@ export default function UserCreateForm({ onClose, onUserCreated }: UserCreateFor
                 {result.message}
               </p>
               {result.credentials && (
-                <div className="mt-2 p-3 bg-white rounded border">
-                  <p className="font-medium text-sm">Login Credentials:</p>
-                  <p className="text-sm">Email: {result.credentials.email}</p>
-                  <p className="text-sm">Password: {result.credentials.password}</p>
-                  <p className="text-xs text-gray-600 mt-1">
-                    Please save these credentials securely
+                <div className="mt-2 p-3 bg-white rounded border border-green-400">
+                  <p className="font-bold text-sm text-green-800 mb-2">✅ Workspace User Created!</p>
+                  <div className="space-y-1">
+                    <p className="text-sm">
+                      <span className="font-semibold">Login URL:</span> {window.location.origin}/login
+                    </p>
+                    <p className="text-sm">
+                      <span className="font-semibold">Username:</span> <code className="bg-gray-100 px-1 rounded">{result.credentials.email}</code>
+                    </p>
+                    <p className="text-sm">
+                      <span className="font-semibold">Temporary Password:</span> <code className="bg-yellow-100 px-1 rounded font-mono">{result.credentials.password}</code>
+                    </p>
+                  </div>
+                  <p className="text-xs text-gray-600 mt-2 italic">
+                    Please login and change your password on first use.
                   </p>
                 </div>
               )}

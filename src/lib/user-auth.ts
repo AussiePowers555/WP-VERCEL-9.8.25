@@ -124,10 +124,22 @@ export const createUserAccount = async (email: string, role: UserRole, contactId
 // Authenticate user
 export const authenticateUser = async (email: string, password: string): Promise<{ success: boolean; user?: UserAccount; error?: string }> => {
   try {
+    console.log(`🔐 Authenticating user: ${email}`);
     const hashedPassword = hashPassword(password);
     const user = await DatabaseService.getUserByEmail(email);
     
-    if (!user || user.password_hash !== hashedPassword) {
+    if (!user) {
+      console.log(`❌ User not found: ${email}`);
+      return { success: false, error: 'Invalid email or password' };
+    }
+    
+    console.log(`🔐 Password check for ${email}:`);
+    console.log(`   Provided password: ${password}`);
+    console.log(`   Hashed provided: ${hashedPassword}`);
+    console.log(`   Stored hash: ${user.password_hash}`);
+    console.log(`   Match: ${user.password_hash === hashedPassword}`);
+    
+    if (user.password_hash !== hashedPassword) {
       return { success: false, error: 'Invalid email or password' };
     }
     
@@ -140,6 +152,7 @@ export const authenticateUser = async (email: string, password: string): Promise
       last_login: new Date().toISOString()
     });
     
+    console.log(`✅ Authentication successful for: ${email}`);
     return { success: true, user };
   } catch (error) {
     console.error('Error authenticating user:', error);
