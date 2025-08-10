@@ -65,10 +65,16 @@ export default function CasesListClient({
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { create: createCase } = useCases();
   const { id: workspaceIdCtx, name: workspaceNameCtx, backToMain, role: workspaceRole } = useWorkspace();
-  console.log('[DEBUG] Workspace Context:', { workspaceIdCtx, workspaceNameCtx, workspaceRole });
+  const [currentUser] = useSessionStorage<any>("currentUser", null);
   const [hydratedCases, setHydratedCases] = useState<Case[]>(initialCases);
   const [openRows, setOpenRows] = useState<Set<string>>(new Set());
-  const [currentUser] = useSessionStorage<any>("currentUser", null);
+  
+  console.log('[CasesListClient] Workspace Context:', { 
+    workspaceIdCtx, 
+    workspaceNameCtx, 
+    workspaceRole,
+    currentUser: currentUser?.email
+  });
 
   // Sorting state
   const [sortField, setSortField] = useState<'caseNumber' | 'clientName' | 'lastUpdated' | 'status'>('lastUpdated');
@@ -91,6 +97,15 @@ export default function CasesListClient({
       setHydratedCases(initialCases);
     }
   }, [isClient, initialCases]);
+  
+  // Refresh when workspace context changes
+  useEffect(() => {
+    if (isClient) {
+      console.log('[CasesListClient] Workspace changed, refreshing view:', workspaceIdCtx);
+      // Force re-render of filtered cases when workspace changes
+      setHydratedCases([...initialCases]);
+    }
+  }, [workspaceIdCtx, isClient, initialCases]);
   
   const toggleRow = (caseNumber: string) => {
     setOpenRows(prev => {
@@ -481,13 +496,18 @@ export default function CasesListClient({
       // First apply workspace/user visibility rules
       let visibilityPassed = false;
       
-      // If workspace user, implement strict visibility rules
+      // If workspace user, they should only see cases in their workspace
       if (currentUser?.role === 'workspace_user') {
-        const userContactId = currentUser.contactId;
-        if (!userContactId) return false;
+        // Workspace users see cases assigned to their workspace
+        const userWorkspaceId = currentUser.workspaceId || workspaceIdCtx;
+        visibilityPassed = c.workspaceId === userWorkspaceId;
         
-        // Check if case is assigned to this user's contact (either as lawyer or rental company)
-        visibilityPassed = c.assigned_lawyer_id === userContactId || c.assigned_rental_company_id === userContactId;
+        // Additional filter: if they have a contact ID, only show cases assigned to them
+        if (currentUser.contactId) {
+          visibilityPassed = visibilityPassed && 
+            (c.assigned_lawyer_id === currentUser.contactId || 
+             c.assigned_rental_company_id === currentUser.contactId);
+        }
       } else {
         // Admin/developer users: filter by active workspace context id. If undefined (Main) show all
         if (workspaceIdCtx) {
@@ -495,6 +515,17 @@ export default function CasesListClient({
         } else {
           visibilityPassed = true; // Main Workspace shows all
         }
+      }
+      
+      // Debug logging
+      if (c.workspaceId) {
+        console.log('[Filter Debug]', {
+          caseNumber: c.caseNumber,
+          caseWorkspaceId: c.workspaceId,
+          workspaceIdCtx,
+          userRole: currentUser?.role,
+          visibilityPassed
+        });
       }
       
       // If visibility check fails, exclude the case

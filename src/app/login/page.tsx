@@ -50,9 +50,18 @@ export default function LoginPage() {
       const userRole = data.user.role === 'admin' || data.user.role === 'developer' ? 'admin' : 'workspace';
       sessionStorage.setItem('role', JSON.stringify(userRole));
       
-      // Set active workspace
-      const activeWorkspace = data.user.workspaceId ?? 'MAIN';
+      // Set active workspace - for workspace users, use their workspace; for admins, default to Main (null)
+      const activeWorkspace = data.user.workspaceId && data.user.role === 'workspace_user' 
+        ? data.user.workspaceId 
+        : null;
       sessionStorage.setItem('activeWorkspace', JSON.stringify(activeWorkspace));
+      
+      // Log for debugging
+      console.log('[Login] Setting workspace context:', {
+        role: userRole,
+        workspaceId: data.user.workspaceId,
+        activeWorkspace
+      });
       
       window.dispatchEvent(
         new CustomEvent("sessionStorageChange", {

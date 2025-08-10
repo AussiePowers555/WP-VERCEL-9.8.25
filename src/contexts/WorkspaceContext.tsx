@@ -33,7 +33,18 @@ export function WorkspaceProvider({
   initialWorkspaceName = 'Main Workspace',
   initialContactType
 }: WorkspaceProviderProps) {
-  const [activeWorkspace, setActiveWorkspace] = useSessionStorage<string | null>('activeWorkspace', initialWorkspaceId || null);
+  // Initialize with session storage values first, then fall back to props
+  const [activeWorkspace, setActiveWorkspace] = useSessionStorage<string | null>(
+    'activeWorkspace', 
+    () => {
+      // If there's an initial workspace ID from props (user login), use it
+      if (initialWorkspaceId && initialWorkspaceId !== 'MAIN') {
+        return initialWorkspaceId;
+      }
+      // Otherwise default to null (Main workspace)
+      return null;
+    }
+  );
   const [role, setRole] = useSessionStorage<WorkspaceRole>('role', initialRole);
   const [workspaceName, setWorkspaceName] = useSessionStorage<string>('workspaceName', initialWorkspaceName);
   const [contactType, setContactType] = useSessionStorage<string | undefined>('contactType', initialContactType);
@@ -96,6 +107,8 @@ export function WorkspaceProvider({
       setWorkspaceName('Main Workspace');
       setContactType(undefined);
     }
+    // Log for debugging
+    console.log('[WorkspaceContext] Active workspace changed:', activeWorkspace);
   }, [activeWorkspace, setWorkspaceName, setContactType]);
   
   // Cleanup toast timer on unmount
@@ -108,7 +121,7 @@ export function WorkspaceProvider({
   }, []);
 
   const contextValue: WorkspaceContextValue = {
-    id: activeWorkspace === 'MAIN' ? undefined : activeWorkspace || undefined,
+    id: activeWorkspace === 'MAIN' || activeWorkspace === null ? undefined : activeWorkspace,
     name: displayName,
     role,
     contactType,
