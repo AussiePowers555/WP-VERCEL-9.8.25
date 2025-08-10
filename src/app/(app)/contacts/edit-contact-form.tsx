@@ -102,47 +102,7 @@ export function EditContactForm({ contact, onSave, onCancel }: EditContactFormPr
                 />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                    <Label htmlFor="city">City</Label>
-                    <Input
-                        id="city"
-                        value={formData.city || ''}
-                        onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                        placeholder="City"
-                    />
-                </div>
-
-                <div className="space-y-2">
-                    <Label htmlFor="state">State</Label>
-                    <Input
-                        id="state"
-                        value={formData.state || ''}
-                        onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-                        placeholder="State"
-                    />
-                </div>
-            </div>
-
-            <div className="space-y-2">
-                <Label htmlFor="postcode">Postcode</Label>
-                <Input
-                    id="postcode"
-                    value={formData.postcode || ''}
-                    onChange={(e) => setFormData({ ...formData, postcode: e.target.value })}
-                    placeholder="Postcode"
-                />
-            </div>
-
-            <div className="space-y-2">
-                <Label htmlFor="abn">ABN</Label>
-                <Input
-                    id="abn"
-                    value={formData.abn || ''}
-                    onChange={(e) => setFormData({ ...formData, abn: e.target.value })}
-                    placeholder="ABN"
-                />
-            </div>
+            {/* City, State, Postcode, and ABN fields removed - not in Contact schema */}
 
             <div className="flex justify-end gap-2 pt-4">
                 <Button type="button" variant="outline" onClick={onCancel}>

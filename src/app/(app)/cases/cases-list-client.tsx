@@ -698,9 +698,8 @@ export default function CasesListClient({
         <CardContent className="pt-4">
           <div className="rounded-md border overflow-x-hidden">
             <Table className="table-fixed w-full whitespace-normal">
-                <TableHeader>
+                <TableHeader className="hidden md:table-header-group">
                     <TableRow>
-                        <TableHead className="w-10"></TableHead>
                         <TableHead>
                           <Button
                             variant="ghost"
@@ -725,7 +724,7 @@ export default function CasesListClient({
                         <TableHead className="hidden xl:table-cell">Assigned Rental Company</TableHead>
                         <TableHead className="hidden lg:table-cell">At-Fault Insurer</TableHead>
                         <TableHead className="hidden lg:table-cell">Workspace</TableHead>
-                        <TableHead className="hidden md:table-cell">
+                        <TableHead>
                           <Button
                             variant="ghost"
                             className="h-auto p-0 font-medium hover:bg-transparent flex items-center gap-1"
@@ -735,7 +734,7 @@ export default function CasesListClient({
                             {getSortIcon('status')}
                           </Button>
                         </TableHead>
-                        <TableHead className="hidden md:table-cell">
+                        <TableHead>
                           <Button
                             variant="ghost"
                             className="h-auto p-0 font-medium hover:bg-transparent flex items-center gap-1"
@@ -753,13 +752,8 @@ export default function CasesListClient({
                   const isOpen = openRows.has(c.caseNumber);
                   return (
                     <React.Fragment key={c.caseNumber}>
-                      <TableRow data-test="case-row">
-                          <TableCell>
-                            <Button variant="ghost" size="sm" className="w-9 p-0" onClick={() => toggleRow(c.caseNumber)}>
-                              {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                              <span className="sr-only">Toggle</span>
-                            </Button>
-                          </TableCell>
+                      {/* Desktop view - single row */}
+                      <TableRow data-test="case-row" className="hidden md:table-row">
                           <TableCell className="font-medium">{c.caseNumber}</TableCell>
                           <TableCell>{c.clientName}</TableCell>
                           <TableCell className="hidden xl:table-cell">
@@ -843,7 +837,7 @@ export default function CasesListClient({
                               </SelectContent>
                             </Select>
                           </TableCell>
-                          <TableCell className="hidden md:table-cell">
+                          <TableCell>
                             <Select value={c.status} onValueChange={(newStatus) => handleStatusChange(c.caseNumber, newStatus as Case['status'])}>
                                 <SelectTrigger className="h-8 max-w-[120px] text-xs">
                                     <SelectValue />
@@ -853,7 +847,7 @@ export default function CasesListClient({
                                 </SelectContent>
                             </Select>
                           </TableCell>
-                          <TableCell className="hidden md:table-cell">{c.lastUpdated instanceof Date ? c.lastUpdated.toLocaleString() : c.lastUpdated}</TableCell>
+                          <TableCell>{c.lastUpdated instanceof Date ? c.lastUpdated.toLocaleString() : c.lastUpdated}</TableCell>
                           <TableCell>
                             <div className="flex gap-2 flex-wrap">
                               <Button variant="outline" size="sm" onClick={() => router.push(`/cases/${c.id}`)}>
@@ -871,12 +865,75 @@ export default function CasesListClient({
                                   <Trash2 className="h-4 w-4" />
                                 )}
                               </Button>
+                              <Button variant="ghost" size="sm" className="w-9 p-0" onClick={() => toggleRow(c.caseNumber)}>
+                                {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                                <span className="sr-only">Toggle</span>
+                              </Button>
+                            </div>
+                          </TableCell>
+                      </TableRow>
+                      
+                      {/* Mobile view - two rows */}
+                      <TableRow data-test="case-row-mobile" className="md:hidden border-b-0">
+                          <TableCell colSpan={9} className="p-3">
+                            <div className="space-y-3">
+                              {/* First row - Case Number, Client Name, Status, Actions */}
+                              <div className="flex items-center justify-between gap-2">
+                                <div className="flex-1 min-w-0">
+                                  <div className="font-medium text-sm">{c.caseNumber}</div>
+                                  <div className="text-sm text-muted-foreground truncate">{c.clientName}</div>
+                                </div>
+                                <Select value={c.status} onValueChange={(newStatus) => handleStatusChange(c.caseNumber, newStatus as Case['status'])}>
+                                  <SelectTrigger className="h-8 w-[130px] text-xs">
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {statusOptions.map(opt => <SelectItem key={opt} value={opt}>{opt}</SelectItem>)}
+                                  </SelectContent>
+                                </Select>
+                                <Button variant="outline" size="sm" onClick={() => router.push(`/cases/${c.id}`)}>
+                                  View
+                                </Button>
+                              </div>
+                              
+                              {/* Second row - Additional info and expand button */}
+                              <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
+                                <div className="flex flex-wrap gap-3">
+                                  <div>
+                                    <span className="font-medium">Lawyer:</span> {getContactName(c.assigned_lawyer_id) || 'None'}
+                                  </div>
+                                  <div>
+                                    <span className="font-medium">Rental:</span> {getContactName(c.assigned_rental_company_id) || 'None'}
+                                  </div>
+                                  <div>
+                                    <span className="font-medium">Updated:</span> {c.lastUpdated instanceof Date ? c.lastUpdated.toLocaleDateString() : c.lastUpdated}
+                                  </div>
+                                </div>
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm" 
+                                  className="h-8 px-2" 
+                                  onClick={() => toggleRow(c.caseNumber)}
+                                >
+                                  {isOpen ? (
+                                    <>
+                                      <ChevronUp className="h-4 w-4 mr-1" />
+                                      <span className="text-xs">Less</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <ChevronDown className="h-4 w-4 mr-1" />
+                                      <span className="text-xs">More</span>
+                                    </>
+                                  )}
+                                </Button>
+                              </div>
                             </div>
                           </TableCell>
                       </TableRow>
                       {isOpen && (
                         <TableRow>
-                          <TableCell colSpan={10} className="p-0">
+                          <TableCell colSpan={9} className="p-0">
                              <div className="p-4 bg-muted/50">
                               <CommunicationLog caseNumber={c.caseNumber} />
                             </div>
