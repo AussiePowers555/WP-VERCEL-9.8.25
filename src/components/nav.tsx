@@ -72,16 +72,11 @@ export function Nav() {
     const isFleetPage = pathname.startsWith('/fleet');
 
     return (
-        <div className="flex h-full flex-col glass-sidebar animate-slide-left">
-            <SidebarHeader className="border-b border-white/5 p-6">
-                <Link href={!isAdmin ? "/interactions" : "/"} className="flex items-center gap-3 group">
-                    <div className="icon-container p-2.5 rounded-xl group-hover:scale-110 transition-transform duration-300">
-                        <Bike className="h-6 w-6 text-blue-300" />
-                    </div>
-                    <div>
-                        <span className="text-xl font-bold text-white">PBikeRescue</span>
-                        <p className="text-xs text-gray-400">Fleet Management</p>
-                    </div>
+        <div className="flex h-full flex-col">
+            <SidebarHeader>
+                <Link href={!isAdmin ? "/interactions" : "/"} className="flex items-center gap-2">
+                    <Bike className="h-6 w-6 text-primary" />
+                    <span className="text-lg font-semibold">PBikeRescue</span>
                 </Link>
             </SidebarHeader>
             <SidebarContent className="flex-1">
@@ -104,25 +99,19 @@ export function Nav() {
                             <SidebarMenuButton
                                 asChild
                                 isActive={pathname === item.href || (item.href === "/fleet" && isRentalAgreementPage)}
-                                className={`rounded-xl transition-all duration-200 hover:bg-white/8 group ${
-                                    pathname === item.href ? 'bg-blue-500/15 border border-blue-500/20 text-blue-200' : 'text-gray-300 hover:text-white'
-                                }`}
                             >
-                                <Link href={item.href} className="flex items-center gap-3 px-4 py-3">
-                                    <item.icon className="w-5 h-5" />
-                                    <span className="font-medium">{item.label}</span>
-                                    {pathname === item.href && (
-                                        <div className="ml-auto w-2 h-2 rounded-full bg-blue-400"></div>
-                                    )}
+                                <Link href={item.href}>
+                                    <item.icon />
+                                    <span>{item.label}</span>
                                 </Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     ))}
                 </SidebarMenu>
             </SidebarContent>
-            <SidebarFooter className="border-t border-white/5">
+            <SidebarFooter>
                  <SidebarGroup>
-                    <SidebarGroupLabel className="text-xs uppercase tracking-wider text-gray-400 font-semibold mb-2 px-3">Settings</SidebarGroupLabel>
+                    <SidebarGroupLabel>Settings</SidebarGroupLabel>
                     <SidebarMenu>
                         {settingsNavItems
                             .filter(item => {
@@ -139,16 +128,10 @@ export function Nav() {
                             })
                             .map((item) => (
                              <SidebarMenuItem key={item.href}>
-                                <SidebarMenuButton 
-                                    asChild 
-                                    isActive={pathname.startsWith(item.href)}
-                                    className={`rounded-xl transition-all duration-200 hover:bg-white/8 group ${
-                                        pathname.startsWith(item.href) ? 'bg-purple-500/15 border border-purple-500/20 text-purple-200' : 'text-gray-300 hover:text-white'
-                                    }`}
-                                >
-                                    <Link href={item.href} className="flex items-center gap-3 px-4 py-3">
-                                        <item.icon className="w-5 h-5" />
-                                        <span className="font-medium">{item.label}</span>
+                                <SidebarMenuButton asChild isActive={pathname.startsWith(item.href)}>
+                                    <Link href={item.href}>
+                                        <item.icon />
+                                        <span>{item.label}</span>
                                     </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>

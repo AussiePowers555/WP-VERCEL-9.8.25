@@ -105,16 +105,16 @@ export default function LoginPage() {
 
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "#f9fafb", padding: "20px" }}>
-      <div style={{ width: "100%", maxWidth: "400px", backgroundColor: "white", padding: "40px", borderRadius: "8px", boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" }}>
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "#ffffff", padding: "20px" }}>
+      <div style={{ width: "100%", maxWidth: "400px", backgroundColor: "white", padding: "40px", borderRadius: "12px", boxShadow: "0 10px 25px rgba(0, 0, 0, 0.15)", border: "1px solid #e5e7eb" }}>
         <div style={{ textAlign: "center", marginBottom: "30px" }}>
-          <h1 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "8px" }}>PBikeRescue</h1>
-          <p style={{ color: "#666", fontSize: "14px" }}>Sign in to access your workspace</p>
+          <h1 style={{ fontSize: "28px", fontWeight: "bold", marginBottom: "8px", color: "#111827" }}>White Pointer Recoveries</h1>
+          <p style={{ color: "#374151", fontSize: "15px", fontWeight: "500" }}>Recovery Management System</p>
         </div>
 
         <form onSubmit={handleLogin} style={{ marginBottom: "20px" }}>
           <div style={{ marginBottom: "16px" }}>
-            <label htmlFor="email" style={{ display: "block", marginBottom: "6px", fontWeight: "500" }}>Email Address</label>
+            <label htmlFor="email" style={{ display: "block", marginBottom: "6px", fontWeight: "600", color: "#111827", fontSize: "14px" }}>Email Address</label>
             <input
               ref={emailRef}
               id="email"
@@ -124,17 +124,20 @@ export default function LoginPage() {
               required
               style={{
                 width: "100%",
-                padding: "10px",
-                border: "1px solid #ddd",
-                borderRadius: "4px",
-                fontSize: "14px",
-                boxSizing: "border-box"
+                padding: "12px",
+                border: "2px solid #d1d5db",
+                borderRadius: "6px",
+                fontSize: "15px",
+                boxSizing: "border-box",
+                backgroundColor: "#ffffff",
+                color: "#111827",
+                fontWeight: "500"
               }}
             />
           </div>
 
           <div style={{ marginBottom: "20px" }}>
-            <label htmlFor="password" style={{ display: "block", marginBottom: "6px", fontWeight: "500" }}>Password</label>
+            <label htmlFor="password" style={{ display: "block", marginBottom: "6px", fontWeight: "600", color: "#111827", fontSize: "14px" }}>Password</label>
             <input
               ref={passwordRef}
               id="password"
@@ -144,11 +147,14 @@ export default function LoginPage() {
               required
               style={{
                 width: "100%",
-                padding: "10px",
-                border: "1px solid #ddd",
-                borderRadius: "4px",
-                fontSize: "14px",
-                boxSizing: "border-box"
+                padding: "12px",
+                border: "2px solid #d1d5db",
+                borderRadius: "6px",
+                fontSize: "15px",
+                boxSizing: "border-box",
+                backgroundColor: "#ffffff",
+                color: "#111827",
+                fontWeight: "500"
               }}
             />
           </div>
@@ -158,14 +164,15 @@ export default function LoginPage() {
             disabled={isLoading}
             style={{
               width: "100%",
-              padding: "12px",
-              backgroundColor: isLoading ? "#94a3b8" : "#3b82f6",
+              padding: "14px",
+              backgroundColor: isLoading ? "#9ca3af" : "#2563eb",
               color: "white",
               border: "none",
-              borderRadius: "4px",
+              borderRadius: "6px",
               fontSize: "16px",
-              fontWeight: "500",
-              cursor: isLoading ? "not-allowed" : "pointer"
+              fontWeight: "600",
+              cursor: isLoading ? "not-allowed" : "pointer",
+              transition: "background-color 0.2s"
             }}
           >
             {isLoading ? "Signing In..." : "Sign In"}
@@ -175,10 +182,13 @@ export default function LoginPage() {
         {message && (
           <div style={{
             padding: "12px",
-            backgroundColor: "#f3f4f6",
-            borderRadius: "4px",
+            backgroundColor: message.includes("❌") ? "#fef2f2" : message.includes("✅") ? "#f0fdf4" : "#f9fafb",
+            borderRadius: "6px",
             marginBottom: "20px",
-            fontSize: "14px"
+            fontSize: "14px",
+            fontWeight: "500",
+            color: message.includes("❌") ? "#991b1b" : message.includes("✅") ? "#14532d" : "#111827",
+            border: message.includes("❌") ? "1px solid #fecaca" : message.includes("✅") ? "1px solid #bbf7d0" : "1px solid #e5e7eb"
           }}>
             {message}
           </div>

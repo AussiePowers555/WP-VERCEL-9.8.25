@@ -16,9 +16,9 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { ChartContainer, ChartTooltip, ChartTooltipContent, BarChart, Bar, XAxis, YAxis } from "@/components/ui/chart"
 import DashboardStatsServer, { DashboardStatsSkeleton } from './dashboard-stats-server';
 import DashboardClient from './dashboard-client';
+// import FleetStatusWrapper from '@/components/dashboard/fleet-status-wrapper';
 
 // Force dynamic rendering to avoid database connection during build
 export const dynamic = 'force-dynamic';
@@ -89,58 +89,6 @@ async function RecentCasesServer() {
   );
 }
 
-// Server component for fleet chart
-async function FleetChartServer() {
-  await ensureDatabaseInitialized();
-  const bikes = await (DatabaseService as any).getBikesAsync?.();
-  
-  // Calculate fleet status distribution
-  const statusCounts = bikes.reduce((acc: Record<string, number>, bike: any) => {
-    const status = bike.status || 'Available';
-    acc[status] = (acc[status] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
-
-  const chartData = [
-    { status: "Available", count: statusCounts.Available || 0, fill: "var(--color-available)" },
-    { status: "Rented", count: statusCounts.Rented || 0, fill: "var(--color-rented)" },
-    { status: "Maintenance", count: statusCounts.Maintenance || 0, fill: "var(--color-maintenance)" },
-  ];
-
-  const chartConfig = {
-    count: { label: "Count" },
-    available: { label: "Available", color: "hsl(var(--chart-1))" },
-    rented: { label: "Rented", color: "hsl(var(--chart-2))" },
-    maintenance: { label: "Maintenance", color: "hsl(var(--chart-4))" },
-  };
-
-  return (
-    <Card className="lg:col-span-2">
-      <CardHeader>
-        <CardTitle>Fleet Status</CardTitle>
-        <CardDescription>Current distribution of the bike fleet.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-          <BarChart accessibilityLayer data={chartData} layout="vertical" margin={{ left: 10, right: 10 }}>
-            <YAxis
-              dataKey="status"
-              type="category"
-              tickLine={false}
-              axisLine={false}
-            />
-            <XAxis dataKey="count" type="number" hide />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
-            <Bar dataKey="count" radius={5} />
-          </BarChart>
-        </ChartContainer>
-      </CardContent>
-    </Card>
-  );
-}
 
 // Loading skeletons
 function RecentCasesSkeleton() {
@@ -168,19 +116,6 @@ function RecentCasesSkeleton() {
   );
 }
 
-function FleetChartSkeleton() {
-  return (
-    <Card className="lg:col-span-2">
-      <CardHeader>
-        <div className="h-6 w-28 bg-muted animate-pulse rounded mb-2" />
-        <div className="h-4 w-48 bg-muted animate-pulse rounded" />
-      </CardHeader>
-      <CardContent>
-        <div className="h-[200px] bg-muted animate-pulse rounded" />
-      </CardContent>
-    </Card>
-  );
-}
 
 // Main dashboard page with ISR and streaming SSR
 export default function DashboardPage() {
@@ -198,9 +133,10 @@ export default function DashboardPage() {
             <RecentCasesServer />
           </Suspense>
           
-          <Suspense fallback={<FleetChartSkeleton />}>
-            <FleetChartServer />
-          </Suspense>
+          {/* Fleet Status removed - component not found */}
+          {/* <div className="lg:col-span-2">
+            <FleetStatusWrapper />
+          </div> */}
         </div>
       </div>
     </DashboardClient>
