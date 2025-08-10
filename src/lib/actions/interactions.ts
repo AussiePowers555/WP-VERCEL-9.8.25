@@ -45,16 +45,19 @@ export async function getInteractions(
     const queryParams: any[] = [];
     let paramIndex = 1;
     
-    // Filter by contact assignment (for workspace users - like Twitter followers)
+    // Filter by workspace for all users (unless viewing MAIN/all)
+    if (workspaceId) {
+      // Filter interactions by workspace ID directly (not by case workspace)
+      whereConditions.push(`i.workspace_id = $${paramIndex++}`);
+      queryParams.push(workspaceId);
+    }
+    
+    // Additional filter by contact assignment if needed
     if (contactId) {
       // Show interactions for cases where this contact is assigned as lawyer or rental company
       whereConditions.push(`(c.assigned_lawyer_id = $${paramIndex} OR c.assigned_rental_company_id = $${paramIndex})`);
       queryParams.push(contactId);
       paramIndex++;
-    } else if (workspaceId) {
-      // For admins filtering by workspace
-      whereConditions.push(`c.workspace_id = $${paramIndex++}`);
-      queryParams.push(workspaceId);
     }
     
     if (filters.caseNumber) {

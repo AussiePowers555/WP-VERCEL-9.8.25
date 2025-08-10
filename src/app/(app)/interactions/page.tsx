@@ -61,18 +61,18 @@ export default function InteractionsPage() {
   
   // Get workspace ID and contact ID based on user role
   const isAdmin = workspace.role === 'admin' || user?.role === 'admin' || user?.role === 'developer';
-  const isWorkspaceUser = user?.role === 'workspace_user';
+  const isWorkspaceUser = user?.role === 'workspace_user' || (!isAdmin && user?.workspaceId);
   const currentWorkspaceId = workspace.id || user?.workspaceId || 'MAIN';
   
-  // For filtering (Twitter-like feed logic):
-  // - Workspace users: filter by their contactId (see interactions for cases they're assigned to)
+  // For filtering:
+  // - Workspace users: filter by workspace ID to see all interactions in their workspace
   // - Admin in MAIN workspace: undefined (show all)
   // - Admin in specific workspace: that workspace ID
   const filterWorkspaceId = isAdmin && currentWorkspaceId === 'MAIN' 
     ? undefined 
-    : (isWorkspaceUser ? undefined : currentWorkspaceId);
+    : currentWorkspaceId; // Always use workspace ID for filtering
   
-  const filterContactId = isWorkspaceUser ? user?.contactId : undefined;
+  const filterContactId = undefined; // Don't filter by contact ID anymore
   
   // Fetch interactions
   const fetchInteractions = useCallback(async (pageNum: number = 1, reset: boolean = true) => {
