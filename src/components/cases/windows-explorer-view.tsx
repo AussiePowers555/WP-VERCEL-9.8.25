@@ -475,14 +475,16 @@ export function WindowsExplorerView({
                 {!selectedFolder && workspaces.map(workspace => {
                   const count = cases.filter(c => c.workspaceId === workspace.id).length;
                   return (
-                    <ContextMenuTrigger key={workspace.id}>
-                      <DroppableFolder
-                        workspace={workspace}
-                        count={count}
-                        isSelected={false}
-                        onOpen={() => setSelectedFolder(workspace.id)}
-                        viewMode="grid"
-                      />
+                    <ContextMenu key={workspace.id}>
+                      <ContextMenuTrigger>
+                        <DroppableFolder
+                          workspace={workspace}
+                          count={count}
+                          isSelected={false}
+                          onOpen={() => setSelectedFolder(workspace.id)}
+                          viewMode="grid"
+                        />
+                      </ContextMenuTrigger>
                       <ContextMenuContent>
                         <ContextMenuItem onClick={() => setSelectedFolder(workspace.id)}>
                           Open
@@ -505,7 +507,7 @@ export function WindowsExplorerView({
                           Delete
                         </ContextMenuItem>
                       </ContextMenuContent>
-                    </ContextMenuTrigger>
+                    </ContextMenu>
                   );
                 })}
 
@@ -538,14 +540,16 @@ export function WindowsExplorerView({
                 {!selectedFolder && workspaces.map(workspace => {
                   const count = cases.filter(c => c.workspaceId === workspace.id).length;
                   return (
-                    <ContextMenuTrigger key={workspace.id}>
-                      <DroppableFolder
-                        workspace={workspace}
-                        count={count}
-                        isSelected={false}
-                        onOpen={() => setSelectedFolder(workspace.id)}
-                        viewMode="list"
-                      />
+                    <ContextMenu key={workspace.id}>
+                      <ContextMenuTrigger>
+                        <DroppableFolder
+                          workspace={workspace}
+                          count={count}
+                          isSelected={false}
+                          onOpen={() => setSelectedFolder(workspace.id)}
+                          viewMode="list"
+                        />
+                      </ContextMenuTrigger>
                       <ContextMenuContent>
                         <ContextMenuItem onClick={() => setSelectedFolder(workspace.id)}>
                           Open
@@ -568,7 +572,7 @@ export function WindowsExplorerView({
                           Delete
                         </ContextMenuItem>
                       </ContextMenuContent>
-                    </ContextMenuTrigger>
+                    </ContextMenu>
                   );
                 })}
 
