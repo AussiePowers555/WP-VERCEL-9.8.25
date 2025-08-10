@@ -1,16 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { neon } from '@neondatabase/serverless';
-
-const getDb = () => {
-  const databaseUrl = process.env.DATABASE_URL;
-  if (!databaseUrl) {
-    throw new Error('DATABASE_URL environment variable is not set');
-  }
-  return neon(databaseUrl);
-};
+import { DatabaseService, ensureDatabaseInitialized } from '@/lib/database';
 
 export async function GET(request: NextRequest) {
   try {
+    // Ensure database is initialized
+    await ensureDatabaseInitialized();
+    
     const searchParams = request.nextUrl.searchParams;
     const email = searchParams.get('email');
 
@@ -18,31 +13,33 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Email parameter required' }, { status: 400 });
     }
 
-    const sql = getDb();
-    
-    const users = await sql`
-      SELECT 
-        u.id,
-        u.email,
-        u.role,
-        u.workspace_id,
-        u.status,
-        w.name as workspace_name
-      FROM users u
-      LEFT JOIN workspaces w ON u.workspace_id = w.id
-      WHERE u.email = ${email}
-    `;
+    // Get user with workspace info
+    const user = await DatabaseService.getUserByEmail(email);
 
-    if (users.length === 0) {
+    if (!user) {
       return NextResponse.json({ 
         exists: false,
         message: `No user found with email: ${email}` 
       });
     }
 
+    // Get workspace name if user has one
+    let workspaceName = null;
+    if (user.workspace_id) {
+      const workspace = await DatabaseService.getWorkspaceById(user.workspace_id);
+      workspaceName = workspace?.name || null;
+    }
+
     return NextResponse.json({
       exists: true,
-      user: users[0],
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        workspace_id: user.workspace_id,
+        status: user.status,
+        workspace_name: workspaceName
+      },
       message: `User found: ${email}`
     });
 

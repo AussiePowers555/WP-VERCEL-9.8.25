@@ -8,7 +8,8 @@
       "Bash(robocopy:*)",
       "Bash(powershell:*)",
       "Bash(npm install:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(vercel logs:*)"
     ],
     "deny": []
   }

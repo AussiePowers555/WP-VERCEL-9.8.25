@@ -1,18 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { neon } from '@neondatabase/serverless';
+import { DatabaseService, ensureDatabaseInitialized } from '@/lib/database';
 import { hashPassword } from '@/lib/passwords';
 import { v4 as uuidv4 } from 'uuid';
 
-const getDb = () => {
-  const databaseUrl = process.env.DATABASE_URL;
-  if (!databaseUrl) {
-    throw new Error('DATABASE_URL environment variable is not set');
-  }
-  return neon(databaseUrl);
-};
-
 export async function POST(request: NextRequest) {
   try {
+    // Ensure database is initialized
+    await ensureDatabaseInitialized();
+    
     const { workspaceId, email, password } = await request.json();
 
     if (!workspaceId || !email || !password) {
@@ -29,14 +24,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const sql = getDb();
-
     // Check if workspace exists
-    const workspace = await sql`
-      SELECT id, name FROM workspaces WHERE id = ${workspaceId}
-    `;
-
-    if (workspace.length === 0) {
+    const workspace = await DatabaseService.getWorkspaceById(workspaceId);
+    if (!workspace) {
       return NextResponse.json(
         { error: 'Workspace not found' },
         { status: 404 }
@@ -44,31 +34,23 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if email already exists
-    const existingUser = await sql`
-      SELECT id FROM users WHERE email = ${email}
-    `;
+    const existingUser = await DatabaseService.getUserByEmail(email);
 
-    if (existingUser.length > 0) {
+    if (existingUser) {
       // User exists - update their workspace access
-      const userId = existingUser[0].id;
-      
-      // Update existing user's workspace
-      await sql`
-        UPDATE users 
-        SET workspace_id = ${workspaceId},
-            updated_at = NOW()
-        WHERE id = ${userId}
-      `;
+      await DatabaseService.updateUserAccount(existingUser.id, {
+        workspace_id: workspaceId
+      });
 
       console.log('[Workspace Share] Updated existing user workspace access:', {
-        userId,
+        userId: existingUser.id,
         workspaceId,
         email
       });
 
       return NextResponse.json({
         workspaceId,
-        workspaceName: workspace[0].name,
+        workspaceName: workspace.name,
         email,
         message: 'User workspace access updated',
         isExistingUser: true
@@ -79,39 +61,26 @@ export async function POST(request: NextRequest) {
     const userId = uuidv4();
     const hashedPassword = hashPassword(password);
 
-    await sql`
-      INSERT INTO users (
-        id, 
-        email, 
-        password_hash, 
-        role, 
-        workspace_id,
-        status,
-        created_at, 
-        updated_at
-      )
-      VALUES (
-        ${userId}, 
-        ${email}, 
-        ${hashedPassword}, 
-        'workspace_user',
-        ${workspaceId},
-        'active',
-        NOW(), 
-        NOW()
-      )
-    `;
+    const newUser = await DatabaseService.createUser({
+      id: userId,
+      email,
+      password_hash: hashedPassword,
+      role: 'workspace_user',
+      workspace_id: workspaceId,
+      status: 'active',
+      first_login: false
+    });
 
     console.log('[Workspace Share] Created new user with workspace access:', {
       userId,
       workspaceId,
-      workspaceName: workspace[0].name,
+      workspaceName: workspace.name,
       email
     });
 
     return NextResponse.json({
       workspaceId,
-      workspaceName: workspace[0].name,
+      workspaceName: workspace.name,
       email,
       password, // Return the original password for display
       message: 'User created with workspace access',

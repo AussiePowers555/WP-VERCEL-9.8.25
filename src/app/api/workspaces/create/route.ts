@@ -1,18 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { neon } from '@neondatabase/serverless';
+import { DatabaseService, ensureDatabaseInitialized } from '@/lib/database';
 import { hashPassword } from '@/lib/passwords';
 import { v4 as uuidv4 } from 'uuid';
 
-const getDb = () => {
-  const databaseUrl = process.env.DATABASE_URL;
-  if (!databaseUrl) {
-    throw new Error('DATABASE_URL environment variable is not set');
-  }
-  return neon(databaseUrl);
-};
-
 export async function POST(request: NextRequest) {
   try {
+    // Ensure database is initialized
+    await ensureDatabaseInitialized();
+    
     const { name, email, password } = await request.json();
 
     if (!name || !email || !password) {
@@ -29,14 +24,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const sql = getDb();
-
     // Check if email already exists
-    const existingUser = await sql`
-      SELECT id FROM users WHERE email = ${email}
-    `;
+    const existingUser = await DatabaseService.getUserByEmail(email);
 
-    if (existingUser.length > 0) {
+    if (existingUser) {
       return NextResponse.json(
         { error: 'Email already exists' },
         { status: 409 }
@@ -51,32 +42,22 @@ export async function POST(request: NextRequest) {
     const hashedPassword = hashPassword(password);
 
     // Create workspace
-    await sql`
-      INSERT INTO workspaces (id, name, created_at, updated_at)
-      VALUES (${workspaceId}, ${name}, NOW(), NOW())
-    `;
+    const newWorkspace = await DatabaseService.createWorkspace({
+      id: workspaceId,
+      name,
+      contactId: null // No contact initially
+    });
 
     // Create user with workspace access
-    await sql`
-      INSERT INTO users (
-        id, 
-        email, 
-        password_hash, 
-        role, 
-        workspace_id,
-        created_at, 
-        updated_at
-      )
-      VALUES (
-        ${userId}, 
-        ${email}, 
-        ${hashedPassword}, 
-        'workspace_user',
-        ${workspaceId},
-        NOW(), 
-        NOW()
-      )
-    `;
+    const newUser = await DatabaseService.createUser({
+      id: userId,
+      email,
+      password_hash: hashedPassword,
+      role: 'workspace_user',
+      workspace_id: workspaceId,
+      status: 'active',
+      first_login: false
+    });
 
     console.log('[Workspace Create] Created workspace:', {
       workspaceId,
