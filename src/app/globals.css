@@ -4,6 +4,52 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  /* Prevent horizontal scroll */
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+  
+  /* Ensure proper scrolling on mobile */
+  body {
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+  }
+  
+  /* Improve touch targets */
+  button, 
+  a, 
+  input, 
+  select, 
+  textarea {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Better spacing for mobile */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Ensure tables are scrollable */
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  /* Improve form inputs on mobile */
+  input, 
+  select, 
+  textarea {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
 }
 
 @layer base {

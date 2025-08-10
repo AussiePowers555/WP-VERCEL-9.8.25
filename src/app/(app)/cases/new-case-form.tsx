@@ -148,7 +148,7 @@ export function NewCaseForm({ onCaseCreate, setDialogOpen, activeWorkspaceId }: 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
             <FormField
                 control={form.control}
                 name="rentalCompany"
@@ -180,7 +180,7 @@ export function NewCaseForm({ onCaseCreate, setDialogOpen, activeWorkspaceId }: 
                 </FormItem>
             )} />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
           {/* Client Column */}
           <Card>
             <CardHeader>
@@ -207,34 +207,76 @@ export function NewCaseForm({ onCaseCreate, setDialogOpen, activeWorkspaceId }: 
               )} />
               <div className="grid grid-cols-2 gap-4">
                 <FormField name="clientPhone" render={({ field }) => (
-                  <FormItem><FormLabel>Client Phone</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem>
+                    <FormLabel className="text-gray-900 font-semibold">Client Phone</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="text-gray-900 font-medium border-2 border-gray-300 bg-white focus:border-blue-500" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )} />
                 <FormField name="clientEmail" render={({ field }) => (
-                  <FormItem><FormLabel>Client Email</FormLabel><FormControl><Input type="email" {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem>
+                    <FormLabel className="text-gray-900 font-semibold">Client Email</FormLabel>
+                    <FormControl>
+                      <Input type="email" {...field} className="text-gray-900 font-medium border-2 border-gray-300 bg-white focus:border-blue-500" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )} />
               </div>
               <FormField name="clientStreetAddress" render={({ field }) => (
-                <FormItem><FormLabel>Client Street Address</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                <FormItem>
+                  <FormLabel className="text-gray-900 font-semibold">Client Street Address</FormLabel>
+                  <FormControl>
+                    <Input {...field} className="text-gray-900 font-medium border-2 border-gray-300 bg-white focus:border-blue-500" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )} />
               <div className="grid grid-cols-3 gap-4">
                  <FormField name="clientSuburb" render={({ field }) => (
-                  <FormItem><FormLabel>Suburb</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem>
+                    <FormLabel className="text-gray-900 font-semibold">Suburb</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="text-gray-900 font-medium border-2 border-gray-300 bg-white focus:border-blue-500" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )} />
                 <FormField name="clientState" render={({ field }) => (
                   <FormItem><FormLabel>State</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>{stateOptions.map(opt => <SelectItem key={opt} value={opt}>{opt}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
                 )} />
                 <FormField name="clientPostcode" render={({ field }) => (
-                  <FormItem><FormLabel>Postcode</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem>
+                    <FormLabel className="text-gray-900 font-semibold">Postcode</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="text-gray-900 font-medium border-2 border-gray-300 bg-white focus:border-blue-500" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )} />
               </div>
               <FormField name="clientClaimNumber" render={({ field }) => (
-                  <FormItem><FormLabel>Client Claim Number</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem>
+                    <FormLabel className="text-gray-900 font-semibold">Client Claim Number</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="text-gray-900 font-medium border-2 border-gray-300 bg-white focus:border-blue-500" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
               )} />
               <FormField name="clientInsuranceCompany" render={({ field }) => (
                   <FormItem><FormLabel>Client Insurance Company</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>{insuranceCompanyOptions.map(opt => <SelectItem key={opt} value={opt}>{opt}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
               )} />
                <FormField name="clientInsurer" render={({ field }) => (
-                  <FormItem><FormLabel>Client Insurer (manual)</FormLabel><FormControl><Input placeholder="Or enter manually" {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem>
+                    <FormLabel className="text-gray-900 font-semibold">Client Insurer (manual)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Or enter manually" {...field} className="text-gray-900 font-medium border-2 border-gray-300 bg-white focus:border-blue-500 placeholder:text-gray-500" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
               )} />
             </CardContent>
           </Card>
@@ -265,34 +307,76 @@ export function NewCaseForm({ onCaseCreate, setDialogOpen, activeWorkspaceId }: 
               )} />
               <div className="grid grid-cols-2 gap-4">
                 <FormField name="atFaultPartyPhone" render={({ field }) => (
-                  <FormItem><FormLabel>AF Phone</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem>
+                    <FormLabel className="text-gray-900 font-semibold">AF Phone</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="text-gray-900 font-medium border-2 border-gray-300 bg-white focus:border-blue-500" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )} />
                 <FormField name="atFaultPartyEmail" render={({ field }) => (
-                  <FormItem><FormLabel>AF Email</FormLabel><FormControl><Input type="email" {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem>
+                    <FormLabel className="text-gray-900 font-semibold">AF Email</FormLabel>
+                    <FormControl>
+                      <Input type="email" {...field} className="text-gray-900 font-medium border-2 border-gray-300 bg-white focus:border-blue-500" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )} />
               </div>
               <FormField name="atFaultPartyStreetAddress" render={({ field }) => (
-                <FormItem><FormLabel>AF Street Address</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                <FormItem>
+                  <FormLabel className="text-gray-900 font-semibold">AF Street Address</FormLabel>
+                  <FormControl>
+                    <Input {...field} className="text-gray-900 font-medium border-2 border-gray-300 bg-white focus:border-blue-500" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )} />
               <div className="grid grid-cols-3 gap-4">
                  <FormField name="atFaultPartySuburb" render={({ field }) => (
-                  <FormItem><FormLabel>AF Suburb</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem>
+                    <FormLabel className="text-gray-900 font-semibold">AF Suburb</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="text-gray-900 font-medium border-2 border-gray-300 bg-white focus:border-blue-500" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )} />
                 <FormField name="atFaultPartyState" render={({ field }) => (
                   <FormItem><FormLabel>AF State</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>{stateOptions.map(opt => <SelectItem key={opt} value={opt}>{opt}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
                 )} />
                 <FormField name="atFaultPartyPostcode" render={({ field }) => (
-                  <FormItem><FormLabel>AF Postcode</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem>
+                    <FormLabel className="text-gray-900 font-semibold">AF Postcode</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="text-gray-900 font-medium border-2 border-gray-300 bg-white focus:border-blue-500" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )} />
               </div>
               <FormField name="atFaultPartyClaimNumber" render={({ field }) => (
-                  <FormItem><FormLabel>AF Claim Number</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem>
+                    <FormLabel className="text-gray-900 font-semibold">AF Claim Number</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="text-gray-900 font-medium border-2 border-gray-300 bg-white focus:border-blue-500" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
               )} />
               <FormField name="atFaultPartyInsuranceCompany" render={({ field }) => (
                   <FormItem><FormLabel>AF Insurance Company</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent>{insuranceCompanyOptions.map(opt => <SelectItem key={opt} value={opt}>{opt}</SelectItem>)}</SelectContent></Select><FormMessage /></FormItem>
               )} />
                <FormField name="atFaultPartyInsurer" render={({ field }) => (
-                  <FormItem><FormLabel>AF Insurer (manual)</FormLabel><FormControl><Input placeholder="Or enter manually" {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem>
+                    <FormLabel className="text-gray-900 font-semibold">AF Insurer (manual)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Or enter manually" {...field} className="text-gray-900 font-medium border-2 border-gray-300 bg-white focus:border-blue-500 placeholder:text-gray-500" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
               )} />
             </CardContent>
           </Card>
