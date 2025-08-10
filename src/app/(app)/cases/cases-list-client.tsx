@@ -6,7 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PlusCircle, ChevronDown, ChevronUp, ArrowUpDown, ArrowUp, ArrowDown, FilterX, Search, X, Trash2, Database, RefreshCw, LayoutGrid, TableProperties } from "lucide-react";
-import { FileExplorerView } from "@/components/cases/file-explorer-view";
+import { FileExplorerEnhanced } from "@/components/cases/file-explorer-enhanced";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -608,13 +608,33 @@ export default function CasesListClient({
     router.push(`/cases/${caseId}`);
   };
 
-  const handleWorkspaceCreateFromExplorer = async (name: string) => {
-    // This would create a new workspace
-    // For now, just show a message
-    toast({
-      title: "Feature Coming Soon",
-      description: "Workspace creation from explorer will be implemented soon."
-    });
+  const handleWorkspaceCreateFromExplorer = async (name: string, email: string, password: string) => {
+    try {
+      const response = await fetch('/api/workspaces/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to create workspace');
+      }
+      
+      const result = await response.json();
+      
+      // Refresh the page to show the new workspace
+      window.location.reload();
+      
+      return result;
+    } catch (error) {
+      console.error('Error creating workspace:', error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to create workspace. Please try again."
+      });
+      throw error;
+    }
   };
 
   const handleWorkspaceDeleteFromExplorer = async (workspaceId: string) => {
@@ -690,7 +710,7 @@ export default function CasesListClient({
       
       {/* Explorer View */}
       {viewMode === 'explorer' ? (
-        <FileExplorerView
+        <FileExplorerEnhanced
           cases={filteredAndSortedCases}
           workspaces={initialWorkspaces as Workspace[]}
           onCaseMove={handleCaseMove}

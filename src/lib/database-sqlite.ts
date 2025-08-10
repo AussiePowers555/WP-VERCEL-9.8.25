@@ -223,6 +223,20 @@ export const SQLiteDatabase = {
     `);
     
     stmt.run(...values);
+    
+    // If workspace_id is being updated, also update related interactions
+    if ('workspace_id' in dbUpdates) {
+      const caseData = db.prepare('SELECT case_number FROM cases WHERE id = ?').get(id) as any;
+      if (caseData) {
+        const updateInteractionsStmt = db.prepare(`
+          UPDATE interactions 
+          SET workspace_id = ?
+          WHERE case_number = ? OR case_id = ?
+        `);
+        updateInteractionsStmt.run(dbUpdates.workspace_id || null, caseData.case_number, id);
+        console.log(`[Database] Updated interactions for case ${caseData.case_number} to workspace ${dbUpdates.workspace_id}`);
+      }
+    }
   },
 
   // Contact operations
