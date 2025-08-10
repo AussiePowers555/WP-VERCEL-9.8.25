@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PlusCircle, ChevronDown, ChevronUp, ArrowUpDown, ArrowUp, ArrowDown, FilterX, Search, X, Trash2, Database, RefreshCw } from "lucide-react";
+import { PlusCircle, ChevronDown, ChevronUp, ArrowUpDown, ArrowUp, ArrowDown, FilterX, Search, X, Trash2, Database, RefreshCw, LayoutGrid, TableProperties } from "lucide-react";
+import { FileExplorerView } from "@/components/cases/file-explorer-view";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -14,6 +15,7 @@ import { NewCaseForm } from "./new-case-form";
 import { useSessionStorage } from "@/hooks/use-session-storage";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { useCases } from "@/hooks/use-database";
+import { useToast } from "@/hooks/use-toast";
 /* Removed unused/invalid import - no exported member useAuthFetch */
 import CommunicationLog from "./[caseId]/communication-log";
 import RequireWorkspace from "@/components/RequireWorkspace";
@@ -86,7 +88,9 @@ export default function CasesListClient({
   const [isClient, setIsClient] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isCreatingMock, setIsCreatingMock] = useState(false);
+  const [viewMode, setViewMode] = useState<'explorer' | 'table'>('explorer');
   const router = useRouter();
+  const { toast } = useToast();
 
   useEffect(() => {
     setIsClient(true);
@@ -592,11 +596,64 @@ export default function CasesListClient({
     return <div className="flex items-center justify-center h-64 text-muted-foreground">Authenticating...</div>;
   }
   
+  // File Explorer handlers
+  const handleCaseMove = async (caseId: string, workspaceId: string | null) => {
+    const caseItem = hydratedCases.find(c => c.id === caseId);
+    if (!caseItem) return;
+    
+    await handleWorkspaceAssignment(caseItem.caseNumber, workspaceId || 'none');
+  };
+
+  const handleCaseOpen = (caseId: string) => {
+    router.push(`/cases/${caseId}`);
+  };
+
+  const handleWorkspaceCreateFromExplorer = async (name: string) => {
+    // This would create a new workspace
+    // For now, just show a message
+    toast({
+      title: "Feature Coming Soon",
+      description: "Workspace creation from explorer will be implemented soon."
+    });
+  };
+
+  const handleWorkspaceDeleteFromExplorer = async (workspaceId: string) => {
+    // This would delete a workspace
+    // For now, just show a message
+    toast({
+      title: "Feature Coming Soon",
+      description: "Workspace deletion from explorer will be implemented soon."
+    });
+  };
+
   return (
     <RequireWorkspace>
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Case List</h1>
+          <div className="flex items-center gap-4">
+            <h1 className="text-2xl font-bold">Case Management</h1>
+            {/* View Mode Toggle */}
+            <div className="flex items-center border rounded-md">
+              <Button
+                variant={viewMode === 'explorer' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('explorer')}
+                className="rounded-r-none"
+              >
+                <LayoutGrid className="h-4 w-4 mr-2" />
+                Explorer
+              </Button>
+              <Button
+                variant={viewMode === 'table' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('table')}
+                className="rounded-l-none"
+              >
+                <TableProperties className="h-4 w-4 mr-2" />
+                Classic
+              </Button>
+            </div>
+          </div>
         <div className="flex gap-2">
           <Button
             variant="outline"
@@ -631,6 +688,19 @@ export default function CasesListClient({
         </div>
       </div>
       
+      {/* Explorer View */}
+      {viewMode === 'explorer' ? (
+        <FileExplorerView
+          cases={filteredAndSortedCases}
+          workspaces={initialWorkspaces as Workspace[]}
+          onCaseMove={handleCaseMove}
+          onCaseOpen={handleCaseOpen}
+          onWorkspaceCreate={handleWorkspaceCreateFromExplorer}
+          onWorkspaceDelete={handleWorkspaceDeleteFromExplorer}
+        />
+      ) : (
+        <>
+      {/* Classic Table View */}
       {/* Search Field */}
       <div className="flex items-center gap-4">
         <div className="relative flex-1 max-w-sm">
@@ -979,6 +1049,8 @@ export default function CasesListClient({
           </div>
         </CardContent>
       </Card>
+        </>
+      )}
       </div>
     </RequireWorkspace>
   );
