@@ -10,13 +10,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { NewCaseForm } from "./new-case-form";
+import { NewCaseForm } from "../cases/new-case-form";
 import { useSessionStorage } from "@/hooks/use-session-storage";
 import { useWorkspace } from "@/contexts/WorkspaceContext";
 import { useCases } from "@/hooks/use-database";
 import { useToast } from "@/hooks/use-toast";
 /* Removed unused/invalid import - no exported member useAuthFetch */
-import CommunicationLog from "./[caseId]/communication-log";
+import CommunicationLog from "../cases/[caseId]/communication-log";
 import RequireWorkspace from "@/components/RequireWorkspace";
 import type {
   CaseFrontend as Case,
