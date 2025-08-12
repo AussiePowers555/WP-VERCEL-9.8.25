@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack -H 0.0.0.0 -p 3000",
-    "dev:clear": "next dev --turbopack -H 0.0.0.0 -p 3000 --clear",
-    "dev:replit": "next dev --turbopack -H 0.0.0.0 -p 3000",
+    "dev": "next dev --turbopack -H 0.0.0.0 -p 9015",
+    "dev:clear": "next dev --turbopack -H 0.0.0.0 -p 9015 --clear",
+    "dev:replit": "next dev --turbopack -H 0.0.0.0 -p 9015",
     "setup-local-ip": "node setup-local-ip.js",
     "dev:auto-restart": "node auto-restart-dev.js",
     "tunnel": "node start-cloudflare-tunnel.js",
