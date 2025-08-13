@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { PlusIcon, SearchIcon, EditIcon, TrashIcon, MailIcon, KeyRound } from 'lucide-react';
 import UserCreateForm from './user-create-form';
-import { CredentialsModal } from '@/components/credentials-modal';
+import { EnhancedCredentialsModal } from '@/components/enhanced-credentials-modal';
 import { useSafeDate } from '@/lib/date-utils';
 
 // Component to handle date formatting safely
@@ -54,7 +54,13 @@ export default function UsersPage() {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [credentialsModalOpen, setCredentialsModalOpen] = useState(false);
-  const [workspaceCredentials, setWorkspaceCredentials] = useState<WorkspaceCredentials | null>(null);
+  const [displayCredentials, setDisplayCredentials] = useState<{
+    username: string;
+    password: string;
+    email?: string;
+    workspaceName?: string;
+    workspaceId?: string;
+  } | null>(null);
 
   const filteredUsers = users.filter(user =>
     user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -159,12 +165,12 @@ export default function UsersPage() {
         throw new Error(data.error || 'Failed to generate temporary password');
       }
       // Open modal with returned password
-      setWorkspaceCredentials({
-        contactName: user.email,           // we don't have contact name here
-        workspaceName: user.workspace_id || 'Workspace User',
+      setDisplayCredentials({
         username: user.email,
-        tempPassword: data.tempPassword,
-        contactEmail: user.email
+        password: data.tempPassword,
+        email: user.email,
+        workspaceName: user.workspace_id || 'General User',
+        workspaceId: user.workspace_id
       });
       setCredentialsModalOpen(true);
       // refresh list to show status change (pending_password_change)
@@ -236,12 +242,12 @@ export default function UsersPage() {
         throw new Error(genData.error || 'Failed to generate temporary password');
       }
 
-      setWorkspaceCredentials({
-        contactName: user.email,
-        workspaceName: user.workspace_id || 'Workspace User',
+      setDisplayCredentials({
         username: user.email,
-        tempPassword: genData.tempPassword,
-        contactEmail: user.email
+        password: genData.tempPassword,
+        email: user.email,
+        workspaceName: user.workspace_id || 'General User',
+        workspaceId: user.workspace_id
       });
       setCredentialsModalOpen(true);
     } catch (err) {
@@ -401,10 +407,14 @@ export default function UsersPage() {
         />
       )}
 
-      <CredentialsModal
+      <EnhancedCredentialsModal
         open={credentialsModalOpen}
         onOpenChange={setCredentialsModalOpen}
-        credentials={workspaceCredentials}
+        credentials={displayCredentials}
+        onDistributed={(method, notes) => {
+          console.log(`Credentials distributed via ${method}`, notes);
+          // Here you could make an API call to track distribution
+        }}
       />
 
       {editingUser && (

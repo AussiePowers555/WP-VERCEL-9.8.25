@@ -49,9 +49,11 @@ export async function POST(request: NextRequest) {
       });
 
       return NextResponse.json({
-        workspaceId,
-        workspaceName: workspace.name,
-        email,
+        success: true,
+        workspace: {
+          id: workspaceId,
+          name: workspace.name
+        },
         message: 'User workspace access updated',
         isExistingUser: true
       });
@@ -61,7 +63,7 @@ export async function POST(request: NextRequest) {
     const userId = uuidv4();
     const hashedPassword = hashPassword(password);
 
-    const newUser = await DatabaseService.createUser({
+    const newUser = await DatabaseService.createUserAccount({
       id: userId,
       email,
       password_hash: hashedPassword,
@@ -79,10 +81,16 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({
-      workspaceId,
-      workspaceName: workspace.name,
-      email,
-      password, // Return the original password for display
+      success: true,
+      workspace: {
+        id: workspaceId,
+        name: workspace.name
+      },
+      credentials: {
+        email,
+        password, // Return the original password for display
+        username: email
+      },
       message: 'User created with workspace access',
       isNewUser: true
     });

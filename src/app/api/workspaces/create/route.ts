@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Create user with workspace access
-    const newUser = await DatabaseService.createUser({
+    const newUser = await DatabaseService.createUserAccount({
       id: userId,
       email,
       password_hash: hashedPassword,
@@ -67,11 +67,17 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({
-      id: workspaceId,
-      name,
-      email,
-      password, // Return the original password for display to the user
-      message: 'Workspace created successfully'
+      success: true,
+      workspace: {
+        id: workspaceId,
+        name
+      },
+      credentials: {
+        email,
+        password, // Return the original password for display to the user
+        username: email
+      },
+      message: 'Workspace and user created successfully'
     });
 
   } catch (error) {

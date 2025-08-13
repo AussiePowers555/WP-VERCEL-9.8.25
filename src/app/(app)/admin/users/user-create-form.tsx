@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { X, Loader2 } from 'lucide-react';
+import { EnhancedCredentialsModal } from '@/components/enhanced-credentials-modal';
 
 interface Workspace {
   id: string;
@@ -38,10 +39,12 @@ export default function UserCreateForm({ onClose, onUserCreated }: UserCreateFor
     contact_id: '',
     send_email: true
   });
-  const [result, setResult] = useState<{
-    success: boolean;
-    message: string;
-    credentials?: { email: string; password: string };
+  const [showCredentialsModal, setShowCredentialsModal] = useState(false);
+  const [createdCredentials, setCreatedCredentials] = useState<{
+    username: string;
+    password: string;
+    email?: string;
+    workspaceName?: string;
   } | null>(null);
 
   useEffect(() => {
@@ -76,7 +79,6 @@ export default function UserCreateForm({ onClose, onUserCreated }: UserCreateFor
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setResult(null);
 
     try {
       const response = await fetch('/api/users', {
@@ -90,29 +92,38 @@ export default function UserCreateForm({ onClose, onUserCreated }: UserCreateFor
       });
 
       const data = await response.json();
-      setResult(data);
 
-      if (data.success) {
+      if (data.success && data.credentials) {
+        // Get workspace name if selected
+        const workspace = workspaces.find(w => w.id === formData.workspace_id);
+        
+        // Show credentials in enhanced modal
+        setCreatedCredentials({
+          username: data.credentials.email,
+          password: data.credentials.password,
+          email: data.credentials.email,
+          workspaceName: workspace?.name
+        });
+        setShowCredentialsModal(true);
+        
         // Reset form
         setFormData({
           email: '',
           role: '',
           workspace_id: '',
           contact_id: '',
-          send_email: true
+          send_email: false
         });
         
-        // If successful, close after showing result for a moment
-        setTimeout(() => {
-          onUserCreated();
-        }, 2000);
+        // Notify parent after modal is closed
+        onUserCreated();
+      } else {
+        // Show error in toast or alert
+        alert(data.error || 'Failed to create user');
       }
     } catch (error) {
       console.error('Error creating user:', error);
-      setResult({
-        success: false,
-        message: 'Failed to create user'
-      });
+      alert('Failed to create user');
     } finally {
       setLoading(false);
     }
@@ -135,37 +146,6 @@ export default function UserCreateForm({ onClose, onUserCreated }: UserCreateFor
           </div>
         </CardHeader>
         <CardContent>
-          {result && (
-            <div className={`p-4 rounded-lg mb-4 ${
-              result.success 
-                ? 'bg-green-50 border border-green-200' 
-                : 'bg-red-50 border border-red-200'
-            }`}>
-              <p className={result.success ? 'text-green-800' : 'text-red-800'}>
-                {result.message}
-              </p>
-              {result.credentials && (
-                <div className="mt-2 p-3 bg-white rounded border border-green-400">
-                  <p className="font-bold text-sm text-green-800 mb-2">✅ Workspace User Created!</p>
-                  <div className="space-y-1">
-                    <p className="text-sm">
-                      <span className="font-semibold">Login URL:</span> {window.location.origin}/login
-                    </p>
-                    <p className="text-sm">
-                      <span className="font-semibold">Username:</span> <code className="bg-gray-100 px-1 rounded">{result.credentials.email}</code>
-                    </p>
-                    <p className="text-sm">
-                      <span className="font-semibold">Temporary Password:</span> <code className="bg-yellow-100 px-1 rounded font-mono">{result.credentials.password}</code>
-                    </p>
-                  </div>
-                  <p className="text-xs text-gray-600 mt-2 italic">
-                    Please login and change your password on first use.
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
-
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <Label htmlFor="email">Email Address *</Label>
@@ -247,9 +227,10 @@ export default function UserCreateForm({ onClose, onUserCreated }: UserCreateFor
                 id="send_email"
                 checked={formData.send_email}
                 onCheckedChange={(checked) => setFormData({ ...formData, send_email: !!checked })}
+                disabled
               />
-              <Label htmlFor="send_email" className="text-sm">
-                Send login credentials via email
+              <Label htmlFor="send_email" className="text-sm text-muted-foreground">
+                Email sending disabled (credentials shown on screen)
               </Label>
             </div>
 
@@ -271,6 +252,22 @@ export default function UserCreateForm({ onClose, onUserCreated }: UserCreateFor
           </form>
         </CardContent>
       </Card>
+      
+      {/* Enhanced Credentials Modal */}
+      <EnhancedCredentialsModal
+        open={showCredentialsModal}
+        onOpenChange={(open) => {
+          setShowCredentialsModal(open);
+          if (!open) {
+            setCreatedCredentials(null);
+            onClose();
+          }
+        }}
+        credentials={createdCredentials}
+        onDistributed={(method, notes) => {
+          console.log(`Credentials distributed via ${method}`, notes);
+        }}
+      />
     </div>
   );
 }
