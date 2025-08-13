@@ -50,6 +50,7 @@ In your Stripe Dashboard:
 2. Select a plan to test Stripe Checkout
 3. Use Stripe test cards for testing
 4. Verify webhook events in Stripe Dashboard
+5. Test the complete subscription flow
 
 ## Features
 
@@ -60,7 +61,6 @@ In your Stripe Dashboard:
 
 ### Access Control
 - Non-subscribers are redirected to `/subscribe/pricing`
-- Existing subscribers can login at `/subscribe/login`
 - All subscription routes are public
 - Main app routes are protected by subscription middleware
 
@@ -76,12 +76,10 @@ lib/
 app/
 ├── api/
 │   ├── subscribe/[plan]/  # Plan selection and checkout redirect
-│   ├── subscription/verify # Customer access verification
 │   └── webhooks/stripe    # Stripe webhook handler
 └── subscribe/
     ├── pricing/           # Pricing page with plan selection
-    ├── success/           # Post-purchase success page
-    └── login/             # Subscriber login page
+    └── success/           # Post-purchase success page
 
 scripts/
 └── setup-stripe-products.ts # Stripe product creation script
