@@ -44,10 +44,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Update last login
+    // Track first login if applicable
+    const isFirstLogin = user.first_login;
+    const ipAddress = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined;
+    const userAgent = request.headers.get('user-agent') || undefined;
+    
+    // Update last login and first_login status
     await DatabaseService.updateUserAccount(user.id, {
-      last_login: new Date().toISOString()
+      last_login: new Date().toISOString(),
+      first_login: false // Mark as no longer first login after successful login
     });
+    
+    // Track first login in credential distributions
+    if (isFirstLogin) {
+      await DatabaseService.trackFirstLogin(user.id, ipAddress || undefined, userAgent || undefined);
+    }
 
     // Create JWT token
     const token = createToken({
@@ -66,7 +77,8 @@ export async function POST(request: NextRequest) {
         role: user.role,
         workspaceId: user.workspace_id || null,
         contactId: user.contact_id || null,
-        firstLogin: user.first_login
+        firstLogin: isFirstLogin,
+        needsOnboarding: isFirstLogin
       },
       token
     });

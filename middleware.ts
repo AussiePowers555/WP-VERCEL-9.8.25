@@ -13,6 +13,8 @@ const PUBLIC_PATHS = [
   '/sign-agreement',
   '/test-email',
   '/test-signature',
+  '/subscribe', // Stripe subscription routes
+  '/api/webhooks/stripe', // Stripe webhooks
 ];
 
 function isPublicPath(pathname: string): boolean {

@@ -71,20 +71,19 @@ export default function LoginPage() {
 
       setMessage("✅ Login successful! Redirecting...");
 
-      // Check if this is the user's first login (disabled - no forced password change)
-      if (data.firstLogin && false) {
-        // This code is disabled - users just use temp password
-        // Store email for first-login page
-        sessionStorage.setItem('firstLoginEmail', email);
-        // Redirect to first-login page with email in URL as backup
+      // Check if user needs onboarding (first login)
+      if (data.needsOnboarding || data.firstLogin) {
+        // Store email for onboarding page
+        sessionStorage.setItem('onboardingEmail', email);
+        // Redirect to onboarding page
         setTimeout(() => {
           try {
-            window.location.href = `/first-login?email=${encodeURIComponent(email)}`;
+            window.location.href = `/onboarding`;
           } catch {
             try {
-              window.location.replace(`/first-login?email=${encodeURIComponent(email)}`);
+              window.location.replace(`/onboarding`);
             } catch {
-              window.location.assign(`/first-login?email=${encodeURIComponent(email)}`);
+              window.location.assign(`/onboarding`);
             }
           }
         }, 200);

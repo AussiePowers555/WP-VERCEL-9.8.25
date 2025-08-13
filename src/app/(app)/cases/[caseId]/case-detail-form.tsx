@@ -10,13 +10,15 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription }
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Loader2, User, ShieldAlert, Save, Banknote, Handshake, Landmark, FileWarning, PiggyBank, DollarSign, Scale } from "lucide-react";
+import { Loader2, User, ShieldAlert, Save, Banknote, Handshake, Landmark, FileWarning, PiggyBank, DollarSign, Scale, Building2 } from "lucide-react";
 import { ContactPicker } from "../contact-picker";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Badge } from "@/components/ui/badge";
+import type { WorkspaceFrontend } from "@/lib/database-schema";
 
 const formSchema = z.object({
   caseNumber: z.string().nullable().optional().transform(val => val || ""),
+  workspaceId: z.string().nullable().optional().transform(val => val || ""),
   rentalCompany: z.string().nullable().optional().transform(val => val || ""),
   lawyer: z.string().nullable().optional().transform(val => val || ""),
   
@@ -68,16 +70,41 @@ export function CaseDetailForm({ caseData, onCaseUpdate, contacts, onAddContact 
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [workspaces, setWorkspaces] = useState<WorkspaceFrontend[]>([]);
+  const [loadingWorkspaces, setLoadingWorkspaces] = useState(true);
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const form = useForm<CaseFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       ...caseData,
+      workspaceId: caseData.workspaceId || "",
       clientEmail: caseData.clientEmail || "",
       atFaultPartyEmail: caseData.atFaultPartyEmail || "",
     },
   });
+
+  // Fetch workspaces on component mount
+  useEffect(() => {
+    const fetchWorkspaces = async () => {
+      setLoadingWorkspaces(true);
+      try {
+        const response = await fetch('/api/workspaces/list');
+        if (response.ok) {
+          const data = await response.json();
+          setWorkspaces(data);
+        } else {
+          console.error('Failed to fetch workspaces');
+        }
+      } catch (error) {
+        console.error('Error fetching workspaces:', error);
+      } finally {
+        setLoadingWorkspaces(false);
+      }
+    };
+
+    fetchWorkspaces();
+  }, []);
 
   // Auto-save function with debouncing
   const debouncedSave = useCallback(async (values: CaseFormValues) => {
@@ -144,6 +171,7 @@ export function CaseDetailForm({ caseData, onCaseUpdate, contacts, onAddContact 
   useEffect(() => {
     form.reset({
       ...caseData,
+      workspaceId: caseData.workspaceId || "",
       clientEmail: caseData.clientEmail || "",
       atFaultPartyEmail: caseData.atFaultPartyEmail || "",
     });
@@ -195,6 +223,49 @@ export function CaseDetailForm({ caseData, onCaseUpdate, contacts, onAddContact 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {/* Workspace Assignment Section */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Building2 className="h-5 w-5" />
+              Workspace Assignment
+            </CardTitle>
+            <CardDescription>
+              Assign this case to a workspace for better organization and access control
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <FormField
+              name="workspaceId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Assigned Workspace</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    disabled={loadingWorkspaces}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder={loadingWorkspaces ? "Loading workspaces..." : "Select a workspace"} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="">No Workspace</SelectItem>
+                      {workspaces.map(workspace => (
+                        <SelectItem key={workspace.id} value={workspace.id}>
+                          {workspace.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+        </Card>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
                 name="rentalCompany"

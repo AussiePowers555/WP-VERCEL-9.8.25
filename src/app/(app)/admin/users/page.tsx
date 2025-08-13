@@ -5,8 +5,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { PlusIcon, SearchIcon, EditIcon, TrashIcon, MailIcon, KeyRound } from 'lucide-react';
+import { PlusIcon, SearchIcon, EditIcon, TrashIcon, MailIcon, KeyRound, Users } from 'lucide-react';
 import UserCreateForm from './user-create-form';
+import { BulkUserCreation } from '@/components/bulk-user-creation';
 import { EnhancedCredentialsModal } from '@/components/enhanced-credentials-modal';
 import { useSafeDate } from '@/lib/date-utils';
 
@@ -51,6 +52,7 @@ export default function UsersPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showBulkCreateForm, setShowBulkCreateForm] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [credentialsModalOpen, setCredentialsModalOpen] = useState(false);
@@ -127,6 +129,11 @@ export default function UsersPage() {
 
   const handleUserCreated = () => {
     setShowCreateForm(false);
+    fetchUsers();
+  };
+
+  const handleBulkCreateComplete = () => {
+    setShowBulkCreateForm(false);
     fetchUsers();
   };
 
@@ -294,16 +301,50 @@ export default function UsersPage() {
             Manage user accounts and permissions for the PBike Rescue system
           </p>
         </div>
-        <Button onClick={() => setShowCreateForm(true)}>
-          <PlusIcon className="w-4 h-4 mr-2" />
-          Add User
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={() => setShowCreateForm(true)}>
+            <PlusIcon className="w-4 h-4 mr-2" />
+            Add User
+          </Button>
+          <Button onClick={() => setShowBulkCreateForm(true)} variant="outline">
+            <Users className="w-4 h-4 mr-2" />
+            Bulk Create
+          </Button>
+        </div>
       </div>
 
       {error && (
         <Card className="border-red-200 bg-red-50">
           <CardContent className="pt-6">
             <p className="text-red-800">{error}</p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Bulk Creation Form */}
+      {showBulkCreateForm && (
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between items-center">
+              <div>
+                <CardTitle>Bulk User Creation</CardTitle>
+                <CardDescription>
+                  Create multiple user accounts at once with automatic password generation
+                </CardDescription>
+              </div>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => setShowBulkCreateForm(false)}
+              >
+                ✕
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <BulkUserCreation 
+              onComplete={handleBulkCreateComplete}
+            />
           </CardContent>
         </Card>
       )}

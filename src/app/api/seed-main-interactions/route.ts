@@ -76,7 +76,7 @@ export async function GET() {
               ${interaction.status},
               ${interaction.workspace_id},
               ${interaction.created_by},
-              ${interaction.timestamp}
+              ${interaction.timestamp.toISOString()}
             )
             RETURNING id, case_number, workspace_id
           `;

@@ -33,6 +33,15 @@ interface CredentialsData {
   email?: string;
   loginUrl?: string;
   workspaceId?: string;
+  userId?: string;
+  multipleUsers?: Array<{
+    userId?: string;
+    email: string;
+    name: string;
+    password: string;
+    workspace: string;
+    url: string;
+  }>;
 }
 
 interface EnhancedCredentialsModalProps {
@@ -106,7 +115,27 @@ export function EnhancedCredentialsModal({
 
   // Copy all credentials in formatted text
   const copyAllCredentials = async () => {
-    const credentialsText = `
+    let credentialsText = '';
+    
+    if (credentials.multipleUsers && credentials.multipleUsers.length > 0) {
+      // Format multiple users' credentials
+      credentialsText = `Bulk User Credentials Created
+================================
+Workspace: ${credentials.multipleUsers[0].workspace}
+Login URL: ${credentials.multipleUsers[0].url}
+
+Users Created:
+--------------
+${credentials.multipleUsers.map((user, index) => `
+${index + 1}. ${user.name}
+   Email: ${user.email}
+   Password: ${user.password}
+`).join('\n')}
+
+Please distribute these credentials securely to each user.`;
+    } else {
+      // Single user format
+      credentialsText = `
 ${credentials.workspaceName ? `Workspace: ${credentials.workspaceName}\n` : ''}
 Login Credentials
 ================
@@ -117,21 +146,50 @@ Password: ${credentials.password}
 Please save these credentials securely.
 ${credentials.workspaceName ? `You now have access to the ${credentials.workspaceName} workspace.` : ''}
     `.trim();
+    }
 
     await copyField("All Credentials", credentialsText);
   };
 
   // Copy as JSON format
   const copyAsJson = async () => {
-    const jsonData = JSON.stringify({
-      workspace: credentials.workspaceName,
-      loginUrl,
-      username: credentials.username || credentials.email,
-      password: credentials.password,
-      timestamp: new Date().toISOString()
-    }, null, 2);
+    let jsonData;
+    
+    if (credentials.multipleUsers && credentials.multipleUsers.length > 0) {
+      jsonData = JSON.stringify({
+        workspace: credentials.multipleUsers[0].workspace,
+        loginUrl: credentials.multipleUsers[0].url,
+        users: credentials.multipleUsers.map(user => ({
+          email: user.email,
+          name: user.name,
+          password: user.password
+        })),
+        timestamp: new Date().toISOString()
+      }, null, 2);
+    } else {
+      jsonData = JSON.stringify({
+        workspace: credentials.workspaceName,
+        loginUrl,
+        username: credentials.username || credentials.email,
+        password: credentials.password,
+        timestamp: new Date().toISOString()
+      }, null, 2);
+    }
 
     await copyField("JSON", jsonData);
+  };
+
+  // Export as CSV for bulk users
+  const exportAsCSV = async () => {
+    if (!credentials.multipleUsers || credentials.multipleUsers.length === 0) return;
+    
+    const csvHeader = 'Name,Email,Password,Workspace,Login URL';
+    const csvRows = credentials.multipleUsers.map(user =>
+      `"${user.name}","${user.email}","${user.password}","${user.workspace}","${user.url}"`
+    );
+    const csvContent = [csvHeader, ...csvRows].join('\n');
+    
+    await copyField("CSV", csvContent);
   };
 
   // Print credentials
@@ -255,23 +313,57 @@ ${credentials.workspaceName ? `You now have access to the ${credentials.workspac
   };
 
   // Mark as distributed
-  const markAsDistributed = (method: string) => {
-    setDistributionMethod(method);
-    setIsDistributed(true);
-    
-    if (onDistributed) {
-      onDistributed(method, distributionNotes);
+  const markAsDistributed = async (method: string) => {
+    try {
+      // Make API call to track the distribution
+      const response = await fetch('/api/credentials/track-distribution', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: credentials.userId || credentials.workspaceId, // Use userId if available, fallback to workspaceId
+          workspaceId: credentials.workspaceId,
+          recipientEmail: credentials.email,
+          recipientName: credentials.workspaceName,
+          distributionMethod: method,
+          distributionNotes,
+          credentialsData: {
+            url: loginUrl,
+            username: credentials.username || credentials.email,
+            workspace: credentials.workspaceName
+          }
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to track distribution');
+      }
+
+      setDistributionMethod(method);
+      setIsDistributed(true);
+      
+      if (onDistributed) {
+        onDistributed(method, distributionNotes);
+      }
+      
+      toast({
+        title: "Marked as distributed",
+        description: `Credentials distributed via ${method}`,
+      });
+      
+      // Close modal after brief delay
+      setTimeout(() => {
+        onOpenChange(false);
+      }, 1500);
+    } catch (error) {
+      console.error('Error tracking distribution:', error);
+      toast({
+        title: "Error",
+        description: "Failed to record distribution. Please try again.",
+        variant: "destructive",
+      });
     }
-    
-    toast({
-      title: "Marked as distributed",
-      description: `Credentials distributed via ${method}`,
-    });
-    
-    // Close modal after brief delay
-    setTimeout(() => {
-      onOpenChange(false);
-    }, 1500);
   };
 
   // Generate WhatsApp share URL
@@ -293,12 +385,16 @@ Password: ${credentials.password}
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <CheckCircle className="h-5 w-5 text-green-600" />
-            User Created Successfully!
+            {credentials.multipleUsers && credentials.multipleUsers.length > 0
+              ? `${credentials.multipleUsers.length} Users Created Successfully!`
+              : 'User Created Successfully!'}
           </DialogTitle>
           <DialogDescription>
-            {credentials.workspaceName 
-              ? `User account created for ${credentials.workspaceName}`
-              : 'New user account has been created'}
+            {credentials.multipleUsers && credentials.multipleUsers.length > 0
+              ? `${credentials.multipleUsers.length} user accounts created for ${credentials.multipleUsers[0].workspace}`
+              : credentials.workspaceName
+                ? `User account created for ${credentials.workspaceName}`
+                : 'New user account has been created'}
           </DialogDescription>
         </DialogHeader>
 
@@ -313,94 +409,159 @@ Password: ${credentials.password}
               </Alert>
 
               {/* Credential Fields */}
-              <div className="space-y-3">
-                {credentials.workspaceName && (
+              {credentials.multipleUsers && credentials.multipleUsers.length > 0 ? (
+                <div className="space-y-3">
                   <div className="space-y-1">
                     <Label className="text-sm font-medium text-muted-foreground">
                       Workspace
                     </Label>
+                    <Input
+                      value={credentials.multipleUsers[0].workspace}
+                      readOnly
+                      className="font-mono bg-muted"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <Label className="text-sm font-medium text-muted-foreground">
+                      Login URL
+                    </Label>
                     <div className="flex gap-2">
-                      <Input 
-                        value={credentials.workspaceName} 
-                        readOnly 
+                      <Input
+                        value={credentials.multipleUsers[0].url}
+                        readOnly
                         className="font-mono bg-muted"
                       />
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => copyField("URL", credentials.multipleUsers?.[0]?.url || '')}
+                      >
+                        {copiedField === "URL" ? (
+                          <Check className="h-4 w-4" />
+                        ) : (
+                          <Copy className="h-4 w-4" />
+                        )}
+                      </Button>
                     </div>
                   </div>
-                )}
 
-                <div className="space-y-1">
-                  <Label className="text-sm font-medium text-muted-foreground">
-                    Login URL
-                  </Label>
-                  <div className="flex gap-2">
-                    <Input 
-                      value={loginUrl} 
-                      readOnly 
-                      className="font-mono bg-muted"
-                    />
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => copyField("URL", loginUrl)}
-                    >
-                      {copiedField === "URL" ? (
-                        <Check className="h-4 w-4" />
-                      ) : (
-                        <Copy className="h-4 w-4" />
-                      )}
-                    </Button>
+                  <div className="space-y-1">
+                    <Label className="text-sm font-medium text-muted-foreground">
+                      Users Created ({credentials.multipleUsers.length})
+                    </Label>
+                    <div className="max-h-[200px] overflow-y-auto border rounded-lg">
+                      <table className="w-full text-sm">
+                        <thead className="bg-muted">
+                          <tr>
+                            <th className="text-left p-2">Name</th>
+                            <th className="text-left p-2">Email</th>
+                            <th className="text-left p-2">Password</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {credentials.multipleUsers.map((user, index) => (
+                            <tr key={index} className="border-t">
+                              <td className="p-2">{user.name}</td>
+                              <td className="p-2 font-mono text-xs">{user.email}</td>
+                              <td className="p-2 font-mono text-xs bg-yellow-50">{user.password}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
+              ) : (
+                <div className="space-y-3">
+                  {credentials.workspaceName && (
+                    <div className="space-y-1">
+                      <Label className="text-sm font-medium text-muted-foreground">
+                        Workspace
+                      </Label>
+                      <div className="flex gap-2">
+                        <Input
+                          value={credentials.workspaceName}
+                          readOnly
+                          className="font-mono bg-muted"
+                        />
+                      </div>
+                    </div>
+                  )}
 
-                <div className="space-y-1">
-                  <Label className="text-sm font-medium text-muted-foreground">
-                    Username
-                  </Label>
-                  <div className="flex gap-2">
-                    <Input 
-                      value={credentials.username || credentials.email || ''} 
-                      readOnly 
-                      className="font-mono bg-muted"
-                    />
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => copyField("Username", credentials.username || credentials.email || '')}
-                    >
-                      {copiedField === "Username" ? (
-                        <Check className="h-4 w-4" />
-                      ) : (
-                        <Copy className="h-4 w-4" />
-                      )}
-                    </Button>
+                  <div className="space-y-1">
+                    <Label className="text-sm font-medium text-muted-foreground">
+                      Login URL
+                    </Label>
+                    <div className="flex gap-2">
+                      <Input
+                        value={loginUrl}
+                        readOnly
+                        className="font-mono bg-muted"
+                      />
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => copyField("URL", loginUrl)}
+                      >
+                        {copiedField === "URL" ? (
+                          <Check className="h-4 w-4" />
+                        ) : (
+                          <Copy className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <Label className="text-sm font-medium text-muted-foreground">
+                      Username
+                    </Label>
+                    <div className="flex gap-2">
+                      <Input
+                        value={credentials.username || credentials.email || ''}
+                        readOnly
+                        className="font-mono bg-muted"
+                      />
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => copyField("Username", credentials.username || credentials.email || '')}
+                      >
+                        {copiedField === "Username" ? (
+                          <Check className="h-4 w-4" />
+                        ) : (
+                          <Copy className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <Label className="text-sm font-medium text-muted-foreground">
+                      Password
+                    </Label>
+                    <div className="flex gap-2">
+                      <Input
+                        value={credentials.password}
+                        readOnly
+                        className="font-mono bg-yellow-50 border-yellow-200"
+                      />
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => copyField("Password", credentials.password)}
+                      >
+                        {copiedField === "Password" ? (
+                          <Check className="h-4 w-4" />
+                        ) : (
+                          <Copy className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
                   </div>
                 </div>
-
-                <div className="space-y-1">
-                  <Label className="text-sm font-medium text-muted-foreground">
-                    Password
-                  </Label>
-                  <div className="flex gap-2">
-                    <Input 
-                      value={credentials.password} 
-                      readOnly 
-                      className="font-mono bg-yellow-50 border-yellow-200"
-                    />
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => copyField("Password", credentials.password)}
-                    >
-                      {copiedField === "Password" ? (
-                        <Check className="h-4 w-4" />
-                      ) : (
-                        <Copy className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </div>
-                </div>
-              </div>
+              )}
 
               {/* Quick Actions */}
               <div className="grid grid-cols-2 gap-2">
@@ -431,23 +592,43 @@ Password: ${credentials.password}
                   Print
                 </Button>
                 
-                <Button
-                  variant="outline"
-                  onClick={copyAsJson}
-                  className="w-full"
-                >
-                  {copiedField === "JSON" ? (
-                    <>
-                      <Check className="mr-2 h-4 w-4" />
-                      JSON Copied!
-                    </>
-                  ) : (
-                    <>
-                      <Download className="mr-2 h-4 w-4" />
-                      Copy as JSON
-                    </>
-                  )}
-                </Button>
+                {credentials.multipleUsers && credentials.multipleUsers.length > 0 ? (
+                  <Button
+                    variant="outline"
+                    onClick={exportAsCSV}
+                    className="w-full"
+                  >
+                    {copiedField === "CSV" ? (
+                      <>
+                        <Check className="mr-2 h-4 w-4" />
+                        CSV Copied!
+                      </>
+                    ) : (
+                      <>
+                        <Download className="mr-2 h-4 w-4" />
+                        Copy as CSV
+                      </>
+                    )}
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    onClick={copyAsJson}
+                    className="w-full"
+                  >
+                    {copiedField === "JSON" ? (
+                      <>
+                        <Check className="mr-2 h-4 w-4" />
+                        JSON Copied!
+                      </>
+                    ) : (
+                      <>
+                        <Download className="mr-2 h-4 w-4" />
+                        Copy as JSON
+                      </>
+                    )}
+                  </Button>
+                )}
                 
                 <Button
                   variant="outline"

@@ -385,6 +385,31 @@ async function createTables() {
       )
     `);
 
+    // Credential distributions table for tracking credential sharing
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS credential_distributions (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        user_id UUID NOT NULL,
+        workspace_id UUID,
+        recipient_email VARCHAR(255) NOT NULL,
+        recipient_name VARCHAR(255),
+        distribution_method VARCHAR(50) NOT NULL,
+        distribution_notes TEXT,
+        credentials_data TEXT,
+        is_distributed BOOLEAN DEFAULT FALSE,
+        distributed_at TIMESTAMP WITH TIME ZONE,
+        distributed_by UUID,
+        first_login_at TIMESTAMP WITH TIME ZONE,
+        ip_address INET,
+        user_agent TEXT,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES user_accounts (id) ON DELETE CASCADE,
+        FOREIGN KEY (workspace_id) REFERENCES workspaces (id) ON DELETE SET NULL,
+        FOREIGN KEY (distributed_by) REFERENCES user_accounts (id) ON DELETE SET NULL
+      )
+    `);
+
     // Create indexes for better performance
     await client.query(`
       CREATE INDEX IF NOT EXISTS idx_cases_case_number ON cases (case_number);
@@ -394,6 +419,9 @@ async function createTables() {
       CREATE INDEX IF NOT EXISTS idx_signature_tokens_token ON signature_tokens (token);
       CREATE INDEX IF NOT EXISTS idx_signature_tokens_case_id ON signature_tokens (case_id);
       CREATE INDEX IF NOT EXISTS idx_bikes_status ON bikes (status);
+      CREATE INDEX IF NOT EXISTS idx_credential_distributions_user_id ON credential_distributions (user_id);
+      CREATE INDEX IF NOT EXISTS idx_credential_distributions_workspace_id ON credential_distributions (workspace_id);
+      CREATE INDEX IF NOT EXISTS idx_credential_distributions_distributed ON credential_distributions (is_distributed);
     `);
 
     console.log('✅ Database tables and indexes created');
@@ -2046,6 +2074,169 @@ const PostgreSQLService = {
     };
     // Store audit logs (could be added to a separate table if needed)
     console.log('Audit log created:', auditLog);
+  },
+
+  // Credential Distribution methods
+  createCredentialDistribution: async (distributionData: any): Promise<any> => {
+    ensureServerSide();
+    const client = await pool!.connect();
+    
+    try {
+      const result = await client.query(`
+        INSERT INTO credential_distributions (
+          user_id, workspace_id, recipient_email, recipient_name,
+          distribution_method, distribution_notes, credentials_data,
+          is_distributed, distributed_at, distributed_by, ip_address, user_agent
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+        RETURNING *
+      `, [
+        distributionData.user_id,
+        distributionData.workspace_id || null,
+        distributionData.recipient_email,
+        distributionData.recipient_name || null,
+        distributionData.distribution_method,
+        distributionData.distribution_notes || null,
+        JSON.stringify(distributionData.credentials_data),
+        distributionData.is_distributed || false,
+        distributionData.distributed_at || null,
+        distributionData.distributed_by || null,
+        distributionData.ip_address || null,
+        distributionData.user_agent || null
+      ]);
+
+      return result.rows[0];
+    } finally {
+      client.release();
+    }
+  },
+
+  updateCredentialDistribution: async (id: string, updates: any): Promise<void> => {
+    ensureServerSide();
+    const client = await pool!.connect();
+    
+    try {
+      const setFields = [];
+      const values = [];
+      let paramCount = 1;
+
+      for (const [key, value] of Object.entries(updates)) {
+        setFields.push(`${key} = $${paramCount}`);
+        values.push(value);
+        paramCount++;
+      }
+
+      setFields.push(`updated_at = $${paramCount}`);
+      values.push(new Date().toISOString());
+      paramCount++;
+
+      values.push(id);
+
+      await client.query(`
+        UPDATE credential_distributions
+        SET ${setFields.join(', ')}
+        WHERE id = $${paramCount}
+      `, values);
+    } finally {
+      client.release();
+    }
+  },
+
+  markCredentialAsDistributed: async (
+    userId: string,
+    distributionMethod: string,
+    notes?: string,
+    distributedBy?: string
+  ): Promise<void> => {
+    ensureServerSide();
+    const client = await pool!.connect();
+    
+    try {
+      await client.query(`
+        UPDATE credential_distributions
+        SET is_distributed = true,
+            distributed_at = CURRENT_TIMESTAMP,
+            distribution_method = $2,
+            distribution_notes = $3,
+            distributed_by = $4,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE user_id = $1 AND is_distributed = false
+      `, [userId, distributionMethod, notes || null, distributedBy || null]);
+    } finally {
+      client.release();
+    }
+  },
+
+  getCredentialDistributions: async (filters?: {
+    workspace_id?: string;
+    is_distributed?: boolean;
+    user_id?: string;
+  }): Promise<any[]> => {
+    ensureServerSide();
+    const client = await pool!.connect();
+    
+    try {
+      let query = 'SELECT * FROM credential_distributions WHERE 1=1';
+      const values = [];
+      let paramCount = 1;
+
+      if (filters?.workspace_id) {
+        query += ` AND workspace_id = $${paramCount}`;
+        values.push(filters.workspace_id);
+        paramCount++;
+      }
+
+      if (filters?.is_distributed !== undefined) {
+        query += ` AND is_distributed = $${paramCount}`;
+        values.push(filters.is_distributed);
+        paramCount++;
+      }
+
+      if (filters?.user_id) {
+        query += ` AND user_id = $${paramCount}`;
+        values.push(filters.user_id);
+        paramCount++;
+      }
+
+      query += ' ORDER BY created_at DESC';
+
+      const result = await client.query(query, values);
+      return result.rows;
+    } finally {
+      client.release();
+    }
+  },
+
+  getCredentialDistributionById: async (id: string): Promise<any> => {
+    ensureServerSide();
+    const client = await pool!.connect();
+    
+    try {
+      const result = await client.query(
+        'SELECT * FROM credential_distributions WHERE id = $1',
+        [id]
+      );
+      return result.rows[0] || null;
+    } finally {
+      client.release();
+    }
+  },
+
+  trackFirstLogin: async (userId: string, ipAddress?: string, userAgent?: string): Promise<void> => {
+    ensureServerSide();
+    const client = await pool!.connect();
+    
+    try {
+      await client.query(`
+        UPDATE credential_distributions
+        SET first_login_at = CURRENT_TIMESTAMP,
+            ip_address = COALESCE($2, ip_address),
+            user_agent = COALESCE($3, user_agent),
+            updated_at = CURRENT_TIMESTAMP
+        WHERE user_id = $1 AND first_login_at IS NULL
+      `, [userId, ipAddress || null, userAgent || null]);
+    } finally {
+      client.release();
+    }
   },
 };
 

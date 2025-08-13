@@ -72,4 +72,11 @@ export interface IDatabaseService {
   createDocumentRecord(docData: any): Promise<any>;
   addDocumentToCase(caseId: string, documentId: string): Promise<boolean>;
   createAuditLog(logData: any): Promise<void>;
+  
+  // Credential Distributions
+  createCredentialDistribution(data: any): Promise<any>;
+  getCredentialDistributions(filter?: any): Promise<any[]>;
+  updateCredentialDistribution(id: string, updates: any): Promise<void>;
+  markCredentialAsDistributed(id: string, distributedAt: Date): Promise<void>;
+  trackFirstLogin(userId: string, ipAddress?: string, userAgent?: string): Promise<void>;
 }

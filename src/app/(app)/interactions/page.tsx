@@ -428,7 +428,7 @@ export default function InteractionsPage() {
         <InteractionCreateEnhanced
           workspaceId={currentWorkspaceId}
           contactId={filterContactId}
-          isWorkspaceUser={isWorkspaceUser}
+          isWorkspaceUser={!!isWorkspaceUser}
           onSuccess={handleInteractionCreated}
           onCancel={() => setShowCreateDialog(false)}
           open={showCreateDialog}

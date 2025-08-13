@@ -45,6 +45,8 @@ export default function UserCreateForm({ onClose, onUserCreated }: UserCreateFor
     password: string;
     email?: string;
     workspaceName?: string;
+    userId?: string;
+    workspaceId?: string;
   } | null>(null);
 
   useEffect(() => {
@@ -102,7 +104,9 @@ export default function UserCreateForm({ onClose, onUserCreated }: UserCreateFor
           username: data.credentials.email,
           password: data.credentials.password,
           email: data.credentials.email,
-          workspaceName: workspace?.name
+          workspaceName: workspace?.name,
+          userId: data.user?.id,
+          workspaceId: formData.workspace_id || undefined
         });
         setShowCredentialsModal(true);
         

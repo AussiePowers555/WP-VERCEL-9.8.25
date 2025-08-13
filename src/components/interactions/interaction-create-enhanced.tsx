@@ -232,7 +232,7 @@ export function InteractionCreateEnhanced({
           insuranceCompany: '',
           lawyerAssigned: '',
           rentalCompany: '',
-          incidentDate: new Date(),
+          incidentDate: new Date().toISOString(),
           createdByName: user.name || user.email || 'Unknown',
           createdByEmail: user.email || '',
         };

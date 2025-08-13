@@ -93,6 +93,7 @@ export async function GET() {
           const hoursAgo = Math.floor(Math.random() * 48);
           const timestamp = new Date();
           timestamp.setHours(timestamp.getHours() - hoursAgo);
+          const timestampStr = timestamp.toISOString();
           
           const result = await sql`
             INSERT INTO interactions (
@@ -113,7 +114,7 @@ export async function GET() {
               ${interaction.status},
               ${interaction.workspace_id},
               ${interaction.created_by},
-              ${timestamp}
+              ${timestampStr}
             )
             RETURNING id, case_number, workspace_id
           `;
